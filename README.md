@@ -116,7 +116,7 @@ You could:
 - Read the [detailed narrative][1] of the assembly.
 - Do a `make terse` to see just the code please, thanks. (My kinda reading!)
 - Explore [the forth code][2] beyond the race to hello world.
-- Try to find more bytes while staying "fun to read and hack on." (Tall ask, I'd be floored!)
+- Try to find more bytes while staying "fun to read and hack on." Which is extremely subjective but hey, throw something at me.
 
 Moving forward I'll probably continue to polish prose, I'm never satisfied with it.
 
