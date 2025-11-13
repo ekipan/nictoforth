@@ -3,7 +3,9 @@
 
 # nictoforth
 
-If you're impatient: `nix-shell` then `make run` to jump in.
+If you're impatient: nix-shell then make run to jump in.
+
+Heads up though: this is more an art piece exploring a crazy constrained problem space than a practical thing you'd wanna write software for.
 
     ; after enjoying sectorforth and milliforth, I wondered:
     ; how much useful (and flexible!) forth can I cram into

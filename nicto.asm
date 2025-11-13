@@ -32,7 +32,7 @@
         bits 16
         cpu 386
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
-        jmp 0x05c0:abort
+        jmp 0x05c0:abort ; cs = 0x05c0.
 
 ; segment 0x05c0 memory map:
 ;   0000..0fff   text input buffer (zero-terminated).
