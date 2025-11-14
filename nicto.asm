@@ -13,7 +13,7 @@
 ;
 ; the name squishes 'nick's sector' into five characters,
 ; a nod to the filename limit that gave us 'forth'.
-; my biggest win: almost [8e] every byte of kernel code
+; my biggest win: almost [8g] every byte of kernel code
 ; is reusable from forth. proud of that.
 ;
 ; I started with milliforth's code but after a good
@@ -107,13 +107,13 @@ drop:   ; drop ( n -- ) free tail word!
         INC2 bp
         ret
 
-%if 1 ; 5 bytes, plus 2 in c.list [8].
+%if 1 ; 5 bytes, plus 1 in c.list [8].
 dup:    ; dup ( n -- n n )
         mov ax,W[bp]
         jmp pushax
 %endif
 
-%if 0 ; 8 plus 2 bytes.
+%if 0 ; 8 plus 1 bytes.
 swap:   ; swap ( x y -/- y x )
         mov ax,W[bp]
         xchg W[bp+2],ax
@@ -465,18 +465,20 @@ c: ; the story of a typical colon word:
 .prim:  ; ; ( "name" -- )
         call lex
         call .head      ; compile link and name.
-.8a:    mov al,B[.list] ; [8a] load offset byte.
-        inc W[.8a+1]    ; [8b] modify instruction [8a].
-        cbw
-        xchg bx,ax      ; bx = offset word.
+.8a:    mov al,B[.list] ; [8a] load offset.
+        inc W[.8a+1]    ; [8b] prepare next offset.
+        cbw             ; -128 <= offset <= 127.
+        xchg bx,ax      ; bx = offset.
 .8c:    mov ax,plus2    ; [8c] load xt.
-        add W[.8c+1],bx ; [8d] modify instruction [8c].
+        add W[.8c+1],bx ; [8d] prepare next xt.
         jmp .ax         ; compile xt.
 
-; WIP (docs in progress.)
-; each call, [8a] loads an xt to compile from the list,
-; then [8b] modifies [8a]'s operand to point to the next
-; one for the next call. why? code bytes of course.
+; ignore most of it the first time through: first call
+; lex and c.head, load plus2 [8c], then jump to c.ax,
+; making a complete entry. the rest changes the load at
+; [8c] into udiv2 from c.list below. I'll leave *how*
+; it does this as an exercise. the self-modifying code
+; saves extra variable bytes. code *is* data, anyways.
 
 %define DBO.PREV plus2
 %macro DBO 1-* ; data byte offsets, each from previous.
@@ -484,33 +486,33 @@ c: ; the story of a typical colon word:
         db %1-DBO.PREV
         %define DBO.PREV %1
         %rotate 1
-    %endrep
-%endmacro
+    %endrep ; example:  DBO udiv2, nand
+%endmacro   ; gives:    db udiv2-plus2, nand-udiv2
 
 .list:  DBO udiv2, nand, invert, equal0, plus,
         DBO drop, dup, rpush, rpop,
         DBO cin, dptr, sptr, rptr, fetch, store,
-        DBO key, emit, line, lex,
+        DBO key, emit, line, lex, ; [8e]
         DBO find, execute, abort, quit,
         DBO .head, .comma, .on, .call,
-        DBO .immed, .ret, .semi,
+        DBO .immed, .ret, .semi, ; [8f]
 
-; 2+ ; 2u/ ; nand ; invert ; 0= ; +
-; drop ; dup ; >r ; r>
-; >in ; dp ; sp@ ; rp@ ; @ ; !
-; key ; emit ; \ ; lex  lex 3 drop @ 2+ emit
-; find ; execute ; abort ; quit
-; head, ; , ; ] ; compile, ; immediate
-; exit immediate ; ; immediate
-
-; [8d] c.ret becomes forth `exit`, but immediate. then
-; c.semi, `;`, shadowing c.prim. c.prim and c.list
-; become dead code. see nicto.fs for details.
+; see nicto.fs for full bootstrap. [8e] is enough for
+; a quick smoke test:
 ;
-; [8e] besides c.prim and c.list (and sadly dispatch [5c]),
-; every byte of kernel code is available. `interpret` you
-; can fetch from MAIN. most words from then on will have
-; xt fields that point to their next address. waste later
+;   ; 2+ ; 2u/ ; nand ; invert ; 0= ; +
+;   ( ... etc until: ... ) ; lex
+;   lex 3 drop @ 2+ emit \ should print 5.
+;   ( ... bootstrap continues ... )
+;
+; [8f] c.ret becomes forth `exit`, but immediate. then
+; c.semi, `;`, shadows c.prim. c.prim and c.list
+; become dead code.
+;
+; [8g] besides c.prim, c.list, and dispatch [5c], every
+; byte of kernel code is available. `interpret` you can
+; fetch from MAIN. most words from then on will have xt
+; fields that point to their next address. waste later
 ; to save now.
 
 .here: ; be dragons! and future dictionary entries.
