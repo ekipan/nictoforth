@@ -1,0 +1,5 @@
+- rename nicto.fs -> hello.fs
+- rename d/s/rptr.
+- rename c.immed, equal0, all the abbrs.
+- dbo: docs, update nicto.fs, merge.
+- decide where to spend bytes.

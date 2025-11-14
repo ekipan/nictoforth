@@ -1,23 +1,18 @@
-; \ \ (c) 2025, see LICENSE. -*- mode: forth -*-
+; 2+ ; 2u/ ; nand ; invert ; 0= ; + ; drop ; dup ; >r ; r>
+; >in ; dp ; sp@ ; rp@ ; @ ; ! ; key ; emit ; \ ; lex
+; find ; execute ; abort ; quit ; head, ; , ; ] ; compile,
+; immediate ; exit immediate ; ; immediate
+
+\ (c) 2025, see LICENSE. -*- mode: forth -*-
 
 \ nictoforth: nick's 16-bit x86 bootsector forth.
 
-\ the only word `;` gives a name to a builtin word from
-\ an internal list. above, we named `\` which lets us
-\ write comments.
+\ the primordial word `;` gives a name to a builtin
+\ word from an internal list. the list above includes
+\ `\` which lets us write comments.
 
-\ first a smoke test in honor of some jackson brothers:
-; lex ; drop ; @ ; 2+ ; emit
-lex 3 drop @ 2+ emit \ testing:
-
-\ good. now to bootstrap the rest of the dictionary:
-; 2u/ ; nand ; invert ; 0=   \ arithmetic
-; + ; >r ; r> ; dup \ ; swap \ and stack,
-; >in ; dp ; sp@ ; rp@ ; !   \ memory,
-; key ; find ; execute       \ i/o and
-; abort ; quit               \ interpreter,
-; head, ; , ; ] ; compile,   \ and compiler.
-; immediate ; exit immediate ; ; immediate
+\ first a few smoke tests:
+lex 3 drop @ 2+ emit \ honoring the jackson:
 lex 3 drop @ >in 0= + emit \ 3:
 lex 3 drop @ >in 0= 0= + emit \ 2:
 
