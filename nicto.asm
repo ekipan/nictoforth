@@ -450,34 +450,59 @@ c: ; the story of a typical colon word:
 
 ; -- [8] BOOTSTRAP --
 
+; okay lean the fuck in, this is unbelievably complex.
+; the core idea is straightforward enough:
+;
 ; the xt field in the dictionary format [5] lets me
 ; split code from names, so I omit precious name bytes
 ; from the kernel. after boot, c.prim (named `;`) will
-; name the builtins one at a time from c.list.
+; name the builtins one at a time, constructing their
+; xts from a list of offsets.
+;
+; read that a couple more times then take a second to
+; gawk at the code:
 
 .prim:  ; ; ( "name" -- )
         call lex
         call .head      ; compile link and name.
-        mov ax,W[.list] ; [8a] load xt.
-        add W[$-2],2    ; [8b] modify instruction [8a].
+.8a:    mov al,B[.list] ; [8a] load offset byte.
+        inc W[.8a+1]    ; [8b] modify instruction [8a].
+        cbw
+        xchg bx,ax      ; bx = offset word.
+.8c:    mov ax,plus2    ; [8c] load xt.
+        add W[.8c+1],bx ; [8d] modify instruction [8c].
         jmp .ax         ; compile xt.
 
+; WIP (docs in progress.)
 ; each call, [8a] loads an xt to compile from the list,
 ; then [8b] modifies [8a]'s operand to point to the next
 ; one for the next call. why? code bytes of course.
 
-.list:  dw line, lex, drop, fetch, plus2, emit, ; [8c]
-        dw udiv2, nand, invert, equal0,
-        dw plus, rpush, rpop, dup, ; swap,
-        dw cin, dptr, sptr, rptr, store,
-        dw key, find, execute, abort, quit,
-        dw .head, .comma, .on, .call,
-        dw .immed, .ret, .semi, ; [8d]
+%define DBO.PREV plus2
+%macro DBO 1-* ; data byte offsets, each from previous.
+    %rep %0
+        db %1-DBO.PREV
+        %define DBO.PREV %1
+        %rotate 1
+    %endrep
+%endmacro
 
-; [8c] enough for a smoke test:
-;   ; \ ; lex ; drop ; @ ; 2+ ; emit
-;   lex 3 drop @ 2+ emit \ 3 + 2 =
-;
+.list:  DBO udiv2, nand, invert, equal0, plus,
+        DBO drop, dup, rpush, rpop,
+        DBO cin, dptr, sptr, rptr, fetch, store,
+        DBO key, emit, line, lex,
+        DBO find, execute, abort, quit,
+        DBO .head, .comma, .on, .call,
+        DBO .immed, .ret, .semi,
+
+; 2+ ; 2u/ ; nand ; invert ; 0= ; +
+; drop ; dup ; >r ; r>
+; >in ; dp ; sp@ ; rp@ ; @ ; !
+; key ; emit ; \ ; lex  lex 3 drop @ 2+ emit
+; find ; execute ; abort ; quit
+; head, ; , ; ] ; compile, ; immediate
+; exit immediate ; ; immediate
+
 ; [8d] c.ret becomes forth `exit`, but immediate. then
 ; c.semi, `;`, shadowing c.prim. c.prim and c.list
 ; become dead code. see nicto.fs for details.
