@@ -1,5 +1,5 @@
 [1]: ./nicto.asm
-[2]: ./nicto.fs
+[2]: ./hello.fs
 
 # nictoforth
 

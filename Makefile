@@ -18,7 +18,7 @@ run: $(O)
 	#
 	#  ctrl-a, x to quit.
 	#  ctrl-a, c to swap serial<->monitor.
-	#  see nicto.fs for some code to paste.
+	#  see hello.fs for some code to paste.
 	#
 	#  make sure your terminal sends backspace 127's.
 	#  it does delete from the buffer but not your screen.
