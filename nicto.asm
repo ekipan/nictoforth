@@ -502,7 +502,7 @@ c: ; the story of a typical colon word:
 ;   ; 2+ ; 2u/ ; nand ; invert ; 0= ; +
 ;   ( ... etc until: ... ) ; lex
 ;   lex 3 drop @ 2+ emit \ test, should print 5.
-;   ( ... see nicto.fs for full bootstrap ... )
+;   ( ... see hello.fs for full bootstrap ... )
 ;   ; immediate ; exit immediate ; ; immediate
 ;
 ; [8f] c.ret becomes forth `exit`, but immediate. then
