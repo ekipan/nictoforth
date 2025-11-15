@@ -497,17 +497,17 @@ c: ; the story of a typical colon word:
         DBO .head, .comma, .on, .call,
         DBO .immed, .ret, .semi, ; [8f]
 
-; see nicto.fs for full bootstrap. [8e] is enough for
-; a quick smoke test:
+; [8e] enough for a quick smoke test:
 ;
 ;   ; 2+ ; 2u/ ; nand ; invert ; 0= ; +
 ;   ( ... etc until: ... ) ; lex
-;   lex 3 drop @ 2+ emit \ should print 5.
-;   ( ... bootstrap continues ... )
+;   lex 3 drop @ 2+ emit \ test, should print 5.
+;   ( ... see nicto.fs for full bootstrap ... )
+;   ; immediate ; exit immediate ; ; immediate
 ;
 ; [8f] c.ret becomes forth `exit`, but immediate. then
-; c.semi, `;`, shadows c.prim. c.prim and c.list
-; become dead code.
+; c.semi becomes `;`, shadowing c.prim. c.prim and
+; c.list become dead code.
 ;
 ; [8g] besides c.prim, c.list, and dispatch [5c], every
 ; byte of kernel code is available. `interpret` you can
