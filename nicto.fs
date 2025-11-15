@@ -1,6 +1,9 @@
-; 2+ ; 2u/ ; nand ; invert ; 0= ; + ; drop ; dup ; >r ; r>
-; >in ; dp ; sp@ ; rp@ ; @ ; ! ; key ; emit ; \ ; lex
-; find ; execute ; abort ; quit ; head, ; , ; ] ; compile,
+; 2+ ; 2u/ ; nand ; invert ; 0= ; +
+; drop ; dup ; >r ; r>
+; >in ; dp ; sp@ ; rp@ ; @ ; !
+; key ; emit ; \ ; lex
+; find ; execute ; abort ; quit
+; head, ; , ; ] ; compile,
 ; immediate ; exit immediate ; ; immediate
 
 \ (c) 2025, see LICENSE. -*- mode: forth -*-
