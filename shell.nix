@@ -1,4 +1,4 @@
 { pkgs ? import <nixpkgs> {} }:
-pkgs.mkShell {
-  nativeBuildInputs = with pkgs; [ git yasm qemu ];
+with pkgs; mkShell {
+  nativeBuildInputs = [ git yasm qemu ];
 }
