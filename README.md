@@ -11,7 +11,7 @@ Heads up though: this is more an art piece exploring a crazy constrained problem
     ; how much useful (and flexible!) forth can I cram into
     ; 510 bytes while being fun to read and hack on?
     ;
-    ; -- nictoforth: nick's 16-bit x86 bootsector forth. --
+    ;   nictoforth: nick's 16-bit x86 bootsector forth.
 
 ## ...the hell is an "x86 bootsector forth"?
 
@@ -49,11 +49,10 @@ You'll have to [read the source][1]. Can't spoil all the surprises.
 
 Available Forth words (after [proper bootstrap][2]):
 
-    [nix-shell:~/nicto]$ make outline
+    [nix-shell:~/forth/nicto]$ make outline
     ; for an outline: grep -- -- nicto.asm.
-    ; -- [0] INTRODUCTION --
-    ; -- nictoforth: nick's 16-bit x86 bootsector forth. --
-    ; -- [1] ARITHMETIC, STACK --
+    ; -- [0] INTRODUCTION.
+    ; -- [1] ARITHMETIC, STACK.
     plus2:  ; 2+ ( n -- n+2 )
     udiv2:  ; 2u/ ( u -- u/2 )
     nand:   ; nand ( n1 n2 -- ~(n1&n2) )
@@ -64,27 +63,27 @@ Available Forth words (after [proper bootstrap][2]):
     dup:    ; dup ( n -- n n )
     rpush:  ; >r ( n -- r:n )
     rpop:   ; r> ( r:n -- n )
-    ; -- [2] MEMORY --
+    ; -- [2] MEMORY.
     cin:    ; >in ( -- addr )
     dptr:   ; dp ( -- addr ) address of `here`.
     sptr:   ; sp@ ( -- addr )
     rptr:   ; rp@ ( -- addr )
     fetch:  ; @ ( addr -- n )
     store:  ; ! ( n addr -- )
-    ; -- [3] INPUT/OUTPUT --
+    ; -- [3] INPUT/OUTPUT.
     key:    ; key ( -- c )
     emit:   ; emit ( c -- )
     line:   ; line ( -- ) reset `>in`, fill buffer.
-    ; -- [4] PARSING --
+    ; -- [4] PARSING.
     lex:    ; parse-name ( "name" -- addr len )
-    ; -- [5] TEXT INTERPRETER --
+    ; -- [5] TEXT INTERPRETER.
     find:   ; find ( addr len -- xt nt | addr 0 )
     interpret: ; ( ... "name" -- ... )
     execute: ; execute ( ... xt -- ... )
-    ; -- [6] INITIALIZATION, MAIN LOOP --
+    ; -- [6] INITIALIZATION, MAIN LOOP.
     abort:  ; abort ( -- ) reset param stack and:
     quit:   ; quit ( -- ) everything else, then loop.
-    ; -- [7] COMPILER --
+    ; -- [7] COMPILER.
     .head:  ; head, ( addr len -- )
     .comma: ; , ( n -- )
     .on:    ; ] ( -- )
@@ -92,7 +91,7 @@ Available Forth words (after [proper bootstrap][2]):
     .semi:  ; ; ( -- ) immediate
     .ret:   ; exit ( -- ) immediate
     .immed: ; immediate ( -- )
-    ; -- [8] BOOTSTRAP --
+    ; -- [8] BOOTSTRAP.
     .prim:  ; ; ( "name" -- )
 
 ## How do I use it?
