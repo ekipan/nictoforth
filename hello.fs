@@ -1,5 +1,5 @@
 ; 2+ ; 2u/ ; nand ; invert ; 0= ; +
-; drop ; dup ; >r ; r>
+; drop ; dup ; swap ; >r ; r>
 ; >in ; dp ; sp@ ; rp@ ; @ ; !
 ; key ; emit ; \ ; lex
 ; find ; execute ; abort ; quit
@@ -87,7 +87,7 @@ here x 3 2+ , @ 2+ emit \ 7:
 : 2dup over over ;
 : 2drop drop drop ;
 : 3rd sp@ 2+ 2+ ;
-: swap dup 3rd @ 3rd ! 3rd ! ;
+\ : swap dup 3rd @ 3rd ! 3rd ! ;
 \ prefer `over ... nip` etc vs this slow `swap`.
 x a x b x c nip swap emit emit \ ac:
 
