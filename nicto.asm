@@ -487,10 +487,11 @@ c: ; the story of a typical colon word:
         db %1-DBO.PREV
         %define DBO.PREV %1
         %rotate 1
-    %endrep ; example:  DBO udiv2, nand
-%endmacro   ; gives:    db udiv2-plus2, nand-udiv2
+    %endrep
+%endmacro
 
-.list:  DBO udiv2, nand, invert, equal0, plus,
+.list:  ; db udiv2-plus2, nand-udiv2, invert-nand, ...
+        DBO udiv2, nand, invert, equal0, plus,
         DBO drop, dup, swap, rpush, rpop,
         DBO cin, dptr, sptr, rptr, fetch, store,
         DBO key, emit, line, lex, ; [8e]
