@@ -26,20 +26,22 @@
 ;   [dw link] [db 6,'double'] [dw double] ; dict data
 ;   double: [call dup] [call plus] [ret]  ; instructions
 ;
-; I chose a higher segment for dict space. kept tib-at-0
-; trick from sectorforth: `>in` is a direct pointer.
+; I chose an unconventional segment so the dictionary
+; has more space to grow without having to move code.
+; no bios variables, though.
 
         bits 16
         cpu 386
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
         jmp 0x05c0:abort ; cs = 0x05c0.
 
-; segment 0x05c0 memory map:
+; memory map, segment 0x05c0 for all cs/ds/es/ss:
 ;   0000..0fff   text input buffer (zero-terminated).
 ;   1000..1003   variables CIN and STATE.
 ;   1004..1fff   return stack (sp, grows down).
 ;   2000..<here  kernel and dictionary (grows up).
 ;   here..ffff   main parameter stack (bp, grows down).
+; putting the tib at 0 also saves addr calc code.
 ;
 ; registers:  bp = param stack,  sp = return stack.
 
