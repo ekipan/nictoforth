@@ -1,39 +1,47 @@
 ; (c) 2025, see LICENSE (it's MIT). -*- mode: nasm -*-
-
-; NAV: lines with forth entrypoints have two dashes.
-; for an outline: grep -- -- nicto.asm.
-
-; -- [0] INTRODUCTION.
-
+;
+; nictoforth: nick's 16-bit x86 bootsector forth.
+;
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
 ;
-;   nictoforth: nick's 16-bit x86 bootsector forth.
-;
 ; the name squishes 'nick's sector' into five characters,
 ; a nod to the filename limit that gave us 'forth'.
-; my biggest win: almost [8g] every byte of kernel code
+; I started with milliforth's code but after a good
+; hacksawing it's probably more sectorforthy.
+;
+; MY BIGGEST WIN: almost [8g] every byte of kernel code
 ; is reusable from forth. proud of that.
 ;
-; I started with milliforth's code but after a good
-; hacksawing it's probably more sectorforthy. subroutine
-; threaded because I like how it reads and writes
-; (shoutouts to durexforth!). this forth code:
+; FUTURE: nice-to-haves if I can find bytes for them:
+; words: rp! sp! xor move. "ok". uflow check.
+; case insens. c.ret tco, infeasible tbh.
+
+; the bits [1-4], the heart [5-6], the tools [7-8].
+
+; -- [0] ARCHITECTURE.
+
+; subroutine threaded because I like how it reads and
+; writes (shoutouts to durexforth!). this forth code:
 ;
 ;   : double dup + ; \ compiles to:
 ;
-;   dw link | db 6,'double' | dw double ; dict data
-;   double: call dup | call plus | ret  ; instructions
+;   dw link | db 6,'double' | dw double ; dict data.
+;   double: call dup | call plus | ret  ; instructions.
 ;
-; I chose an unconventional segment so the dictionary
-; has more space to grow without having to move code.
-; no bios variables, though.
+; registers:  bp = param stack,  sp = return stack.
+;
+; I chose an unconventional segment. implications:
+;   1. I can store the tib at 0 to save addr calc code,
+;   2. but lose access to bios variables.
+;   3. the dictionary has more space to grow without
+;      having to move code.
 
         bits 16
         cpu 386
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
-        jmp 0x05c0:abort ; cs = 0x05c0.
+        jmp 0x05c0:abort ; set cs = 0x05c0.
 
 ; memory map, segment 0x05c0 for all cs/ds/es/ss:
 ;   0000..0fff   text input buffer (zero-terminated).
@@ -41,9 +49,6 @@
 ;   1004..1fff   return stack (sp, grows down).
 ;   2000..<here  kernel and dictionary (grows up).
 ;   here..ffff   main parameter stack (bp, grows down).
-; putting the tib at 0 also saves addr calc code.
-;
-; registers:  bp = param stack,  sp = return stack.
 
 CIN     equ 0x1000    ; next unparsed character.
 STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5b]
@@ -57,10 +62,6 @@ MAIN:   dw interpret  ; main loop vector. [6b]
 ; built a hairy bootstrap [8] that buys me more bytes.
 ; bytes aren't cheap.
 ;
-; FUTURE: nice-to-haves if I can find bytes for them:
-; words: swap/dup rp! sp! xor move. "ok". uflow check.
-; case insens. c.ret tco, infeasible tbh.
-;
 ; time to dive in. good luck and happy reading!
 
 %define INC2 times 2 inc ; every byte is sacred.
@@ -70,8 +71,6 @@ MAIN:   dw interpret  ; main loop vector. [6b]
 
 ; (B/W are mainly taste, but they do allow you to search
 ; byte/word in these comments and get less noise.)
-
-; the bits [1-4], the heart [5-6], the tools [7-8].
 
 ; -- [1] ARITHMETIC, STACK.
 
