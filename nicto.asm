@@ -3,13 +3,13 @@
 ; NAV: lines with forth entrypoints have two dashes.
 ; for an outline: grep -- -- nicto.asm.
 
-; -- [0] INTRODUCTION --
+; -- [0] INTRODUCTION.
 
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
 ;
-; -- nictoforth: nick's 16-bit x86 bootsector forth. --
+;   nictoforth: nick's 16-bit x86 bootsector forth.
 ;
 ; the name squishes 'nick's sector' into five characters,
 ; a nod to the filename limit that gave us 'forth'.
@@ -71,7 +71,7 @@ MAIN:   dw interpret  ; main loop vector. [6b]
 
 ; the bits [1-4], the heart [5-6], the tools [7-8].
 
-; -- [1] ARITHMETIC, STACK --
+; -- [1] ARITHMETIC, STACK.
 
 plus2:  ; 2+ ( n -- n+2 )
         add W[bp],2
@@ -140,7 +140,7 @@ rpop:   ; r> ( r:n -- n )
 ; (I bet you're curious about the lack of dictionary
 ; headers. better keep your boots on.)
 
-; -- [2] MEMORY --
+; -- [2] MEMORY.
 
 ; shared tails pushax/putax live here so surrounding
 ; code saves bytes with short jumps.
@@ -176,7 +176,7 @@ store:  ; ! ( n addr -- )
         mov W[bx],ax
         ret
 
-; -- [3] INPUT/OUTPUT --
+; -- [3] INPUT/OUTPUT.
 
 key:    ; key ( -- c )
         call .al
@@ -236,7 +236,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
         stosw           ; [3a]
         jmp emit.al     ; friendly space.
 
-; -- [4] PARSING --
+; -- [4] PARSING.
 
 ; `lex` is just my quirky name for standard `parse-name`.
 ; it's short and more precise imo. lemme have this.
@@ -272,7 +272,7 @@ lex:    ; parse-name ( "name" -- addr len )
 ; a numbers parser, even single digits, costs tens of
 ; bytes of code. I'd rather spend them on `swap`.
 
-; -- [5] TEXT INTERPRETER --
+; -- [5] TEXT INTERPRETER.
 
 immed_flag  equ 0x80 ; execute even in compile mode.
 hidden_flag equ 0x20 ; ignore when `find`ing words.
@@ -356,7 +356,7 @@ execute: ; execute ( ... xt -- ... )
 ; from the stack. costs instructions though. maybe it's
 ; okay to keep the sharp edge in the drawer.
 
-; -- [6] INITIALIZATION, MAIN LOOP --
+; -- [6] INITIALIZATION, MAIN LOOP.
 
 ; variables: (a) CIN STATE (b) HERE LATEST MAIN. either:
 ; all five at 0x1000, but need (b) inits before abort.
@@ -389,7 +389,7 @@ quit:   ; quit ( -- ) everything else, then loop.
 ; parsing or whatever, then store it into MAIN and it
 ; becomes the new main loop:  ' my-interpret MAIN !
 
-; -- [7] COMPILER --
+; -- [7] COMPILER.
 
 ; format[5]:  [dw link] [db len,'name'] [dw xt]
 ; shared tails c.ax/al/done sync di and W[HERE].
@@ -448,7 +448,7 @@ c: ; the story of a typical colon word:
         or B[bx+2],immed_flag
         ret
 
-; -- [8] BOOTSTRAP --
+; -- [8] BOOTSTRAP.
 
 ; okay lean the fuck in, this is unbelievably complex.
 ; the core idea is straightforward enough:
