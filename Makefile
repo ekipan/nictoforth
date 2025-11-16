@@ -2,19 +2,21 @@ ASM ?= yasm # nasm probably works, haven't tested tho.
 I ?= nicto.asm
 O ?= nicto.bin
 
-$(O): $(I)
+o/$(O): $(I) o
 	# try: make outline, make count, make run.
 	$(ASM) -f bin -o $@ $<
-unpadded-$(O): $(I)
+o/unpadded-$(O): $(I) o
 	$(ASM) -f bin -D NOPAD -o $@ $<
+o:
+	mkdir -p o
 
 .PHONY: clean count run
 
 clean:
-	rm -f *.bin
-count: unpadded-$(O)
-	wc -c $< && rm $<
-run: $(O)
+	rm -rf o
+count: o/unpadded-$(O)
+	wc -c $<
+run: o/$(O)
 	#
 	#  ctrl-a, x to quit.
 	#  ctrl-a, c to swap serial<->monitor.
@@ -31,7 +33,7 @@ run: $(O)
 .PHONY: outline terse read story
 
 outline: # system capabilities: the what.
-	@grep -- -- $(I)
+	grep -- -- $(I)
 terse: # implementation details: the how.
 	@echo '; (see $(I) for tradeoffs and tricky bits.)'
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
