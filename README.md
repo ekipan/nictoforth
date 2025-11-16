@@ -61,6 +61,7 @@ Available Forth words (after [proper bootstrap][2]):
     plus:   ; + ( n1 n2 -- n1+n2 )
     drop:   ; drop ( n -- ) free tail word!
     dup:    ; dup ( n -- n n )
+    swap:   ; swap ( x y -- y x )
     rpush:  ; >r ( n -- r:n )
     rpop:   ; r> ( r:n -- n )
     ; -- [2] MEMORY.

@@ -115,8 +115,8 @@ dup:    ; dup ( n -- n n )
         jmp pushax
 %endif
 
-%if 0 ; 8 plus 1 bytes.
-swap:   ; swap ( x y -/- y x )
+%if 1 ; 8 plus 1 bytes.
+swap:   ; swap ( x y -- y x )
         mov ax,W[bp]
         xchg W[bp+2],ax
         jmp putax
@@ -492,7 +492,7 @@ c: ; the story of a typical colon word:
 %endmacro   ; gives:    db udiv2-plus2, nand-udiv2
 
 .list:  DBO udiv2, nand, invert, equal0, plus,
-        DBO drop, dup, rpush, rpop,
+        DBO drop, dup, swap, rpush, rpop,
         DBO cin, dptr, sptr, rptr, fetch, store,
         DBO key, emit, line, lex, ; [8e]
         DBO find, execute, abort, quit,
