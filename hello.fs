@@ -10,21 +10,20 @@
 
 \ nictoforth: nick's 16-bit x86 bootsector forth.
 
-\ the primordial word `;` gives a name to a builtin
-\ word from an internal list. the list above includes
-\ `\` which lets us write comments.
-
-\ first a few smoke tests:
-lex 3 drop @ 2+ emit \ honoring the jackson:
-lex 3 drop @ >in 0= + emit \ 3:
-lex 3 drop @ >in 0= 0= + emit \ 2:
-
-\ the last word was the usual forth `;`, shadowing the
+\ the initial bootstrapping word `;` gives a name to a
+\ builtin word from an internal list. the list above
+\ includes `\` which lets us write comments, and the
+\ last word was the usual forth `;`, shadowing the
 \ bootstrapping word underneath it. some notes:
 
 \ lex ( -- addr len ) standard `parse-name`.
 \ head, ( addr len -- ) need to `,` an xt after it.
 \ find ( addr len -- xt nt | addr 0 ) very nonstandard.
+
+\ some smoke tests to make sure things are working:
+lex 3 drop @ 2+ emit \ honoring the jackson:
+lex 3 drop @ >in 0= + emit \ 3:
+lex 3 drop @ >in 0= 0= + emit \ 2:
 
 \ bootstrapping the compiler is a bit circular.
 
