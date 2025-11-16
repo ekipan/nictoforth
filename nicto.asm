@@ -23,8 +23,8 @@
 ;
 ;   : double dup + ; \ compiles to:
 ;
-;   [dw link] [db 6,'double'] [dw double] ; dict data
-;   double: [call dup] [call plus] [ret]  ; instructions
+;   dw link | db 6,'double' | dw double ; dict data
+;   double: call dup | call plus | ret  ; instructions
 ;
 ; I chose an unconventional segment so the dictionary
 ; has more space to grow without having to move code.
@@ -393,7 +393,7 @@ quit:   ; quit ( -- ) everything else, then loop.
 
 ; -- [7] COMPILER.
 
-; format[5]:  [dw link] [db len,'name'] [dw xt]
+; format[5]:  dw link | db len,'name' | dw xt
 ; shared tails c.ax/al/done sync di and W[HERE].
 
 c: ; the story of a typical colon word:
