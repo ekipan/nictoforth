@@ -14,10 +14,6 @@
 ; MY BIGGEST WIN: almost [8g] every byte of kernel code
 ; is reusable from forth. proud of that.
 ;
-; FUTURE: nice-to-haves if I can find bytes for them:
-; words: rp! sp! xor move. "ok". uflow check.
-; case insens. c.ret tco, infeasible tbh.
-
 ; the bits [1-4], the heart [5-6], the tools [7-8].
 
 ; -- [0] ARCHITECTURE.
@@ -30,25 +26,29 @@
 ;   dw link | db 6,'double' | dw double ; dict data.
 ;   double: call dup | call plus | ret  ; instructions.
 ;
-; registers:  bp = param stack,  sp = return stack.
-;
 ; I chose an unconventional segment. implications:
 ;   1. I can store the tib at 0 to save addr calc code,
 ;   2. but lose access to bios variables.
-;   3. the dictionary has more space to grow without
-;      having to move code.
+;   3. but! possible underflow self-correction [5b].
+;   4. more space to grow the dictionary,
+;   5. without needing to move code.
 
         bits 16
         cpu 386
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
         jmp 0x05c0:abort ; set cs = 0x05c0.
 
-; memory map, segment 0x05c0 for all cs/ds/es/ss:
-;   0000..0fff   text input buffer (zero-terminated).
-;   1000..1003   variables CIN and STATE.
-;   1004..1fff   return stack (sp, grows down).
-;   2000..<here  kernel and dictionary (grows up).
-;   here..ffff   main parameter stack (bp, grows down).
+; memory map (cs ds es ss = 0x05c0):
+;   0000 [tib->0........] text buffer, zero terminated.
+;   1000 [CIN][STATE]     interpreter variables.
+;   1004 [....sp<-rstack] return addresses.
+;   2000 [dict->here....] kernel and dictionary.
+;    top [....bp<-pstack] parameter data.
+;
+; registers:
+;   bp = param stack pointer, sp = return stack pointer.
+;   ax bx cx dx si di = available to words.
+;   subroutine threaded so forth ip = x86 ip.
 
 CIN     equ 0x1000    ; next unparsed character.
 STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5b]
@@ -61,6 +61,10 @@ MAIN:   dw interpret  ; main loop vector. [6b]
 ; cost. I split variables to simplify init [6] and
 ; built a hairy bootstrap [8] that buys me more bytes.
 ; bytes aren't cheap.
+;
+; FUTURE: nice-to-haves if I can find bytes for them:
+; words: rp! sp! xor move. "ok".
+; case insens. c.ret tco, infeasible tbh.
 ;
 ; time to dive in. good luck and happy reading!
 
