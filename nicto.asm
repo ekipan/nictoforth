@@ -51,7 +51,7 @@
 ;   subroutine threaded so forth ip = x86 ip.
 
 CIN     equ 0x1000    ; next unparsed character.
-STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5b]
+STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5c]
 HERE:   dw c.here     ; next free byte to compile to.
 LATEST: dw dictionary ; last dictionary definition.
 MAIN:   dw interpret  ; main loop vector. [6b]
@@ -291,7 +291,7 @@ dictionary: ; starts with only one word. the format:
 
 ; the xt field is mainly for byte savings [8].
 ; it looks like indirect threading but don't be fooled:
-; `find` fetches direct addresses for dispatch.
+; `find` fetches direct addresses [5a] for dispatch.
 
 find:   ; find ( addr len -- xt nt | addr 0 )
         ;DEBUG 'F'
@@ -302,7 +302,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
-        mov ah,al       ; for `dispatch`. [5c]
+        mov ah,al       ; for `dispatch`. [5d]
         and al,len_mask|hidden_flag
         cmp al,B[bp+0]  ; same length and not hidden?
         jne .prev
@@ -310,7 +310,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov cx,W[bp+0]
         repe cmpsb      ; name characters match?
         jne .prev
-        mov dx,W[si]    ; dx = xt.
+        mov dx,W[si]    ; dx = xt. [5a]
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
         test bx,bx      ; nz if found.
@@ -325,12 +325,12 @@ interpret: ; ( ... "name" -- ... )
         jcxz ok         ; end of line?
         call find
         jnz dispatch    ; found a word?
-        ; possible underflow self-correction. [5a]
+error:  ; possible underflow self-correction. [5b]
         mov al,'?'
         call emit.al
         jmp abort
 
-; [5a] underflowing the stack wraps bp to low addresses.
+; [5b] underflowing the stack wraps bp to low addresses.
 ; pushing values there corrupts the in buffer, and a
 ; malformed name causes an abort, correcting underflow.
 ; but bp and CIN have to collide *just so*.
@@ -341,23 +341,23 @@ interpret: ; ( ... "name" -- ... )
 ; before. it's kinda magical. go implement a forth, it
 ; opens your eyes!)
 
-dispatch: ; [5c] coupled to `find`: ah = len+flags.
+dispatch: ; [5d] coupled to `find`: ah = len+flags.
         INC2 bp         ; ( xt nt ) drop
         ; word type:      immediate | nonimmediate
         ; current state:    exe com | exe com
         and ah,immed_flag ;  80  80 |  0   0
-        or ah,B[STATE]  ;    80  81 |  0   1  [5b]
+        or ah,B[STATE]  ;    80  81 |  0   1  [5c]
         dec ah          ;    7f  80 | ff  *0*
         jz c.call       ; compile nonimmediate word.
 execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]     ; execute other cases.
 
-; [5b] /!\ `and or dec` dispatch needs STATE low byte of
+; [5c] /!\ `and or dec` dispatch needs STATE low byte of
 ; exactly 1 to compile! it's a sharp edge, but it's code
 ; dense. (thanks, sectorforth!)
 
-; [5c] could reuse from forth if the flags were taken
+; [5d] could reuse from forth if the flags were taken
 ; from the stack. costs instructions though. maybe it's
 ; okay to keep the sharp edge in the drawer.
 
@@ -515,7 +515,7 @@ c: ; the story of a typical colon word:
 ; c.semi becomes `;`, shadowing c.prim. c.prim and
 ; c.list become dead code.
 ;
-; [8g] besides c.prim, c.list, and dispatch [5c], every
+; [8g] besides c.prim, c.list, and dispatch [5d], every
 ; byte of kernel code is available. `interpret` you can
 ; fetch from MAIN. most words from then on will have xt
 ; fields that point to their next address. waste later
