@@ -8,6 +8,10 @@
 
 \ (c) 2025, see LICENSE. -*- mode: forth -*-
 
+lex 3 drop @ \ some smoke tests. ( $2033 )
+dup 2+ emit \ honoring the jackson:
+dup >in 0= + emit  >in 0= 0= + emit \ 32:
+
 \ nictoforth: nick's 16-bit x86 bootsector forth.
 
 \ the initial bootstrapping word `;` gives a name to a
@@ -19,11 +23,6 @@
 \ lex ( -- addr len ) standard `parse-name`.
 \ head, ( addr len -- ) need to `,` an xt after it.
 \ find ( addr len -- xt nt | addr 0 ) very nonstandard.
-
-\ some smoke tests to make sure things are working:
-lex 3 drop @ 2+ emit \ honoring the jackson:
-lex 3 drop @ >in 0= + emit \ 3:
-lex 3 drop @ >in 0= 0= + emit \ 2:
 
 \ bootstrapping the compiler is a bit circular.
 
