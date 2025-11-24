@@ -88,15 +88,15 @@ udiv2:  ; 2u/ ( u -- u/2 )
 
 nand:   ; nand ( n1 n2 -- ~(n1&n2) )
         mov ax,W[bp]
-        INC2 bp
-        and W[bp],ax
-        ; ret           ; [1a]
+        and W[bp+2],ax
+        INC2 bp         ; [1a]
 invert: ; invert ( n -- ~n )
         not W[bp]
         ret
 
-; [1a] would only cost one `ret` byte to decouple `nand`.
+; [1a] `jmp drop` here would decouple `nand` into `and`.
 ; good silly energy tho. and homage to my parentforths.
+; honestly I'm really torn. might decouple.
 
 equal0: ; 0= ( n -- flag )
         xor ax,ax
