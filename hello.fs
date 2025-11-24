@@ -47,12 +47,19 @@ dp
 
 \ a confession: `\` isn't actually a comment word. like
 \ standard `refill` it gets new input so the side-effect
-\ is the same but that's only because there's no "ok"
-\ prompt, which would be skipped. also it's not
-\ immediate, which we could fix if we care enough:
-\ : line \ ;   : \ line ; immediate
+\ is the same but only if there's no "ok" prompt, which
+\ gets skipped. it's also not immediate. let's rename:
+: ' lex find drop ; \ ( "name" -- xt ) no error check.
+: alias lex head, , ; \ ( xt "name" -- )
+' \ alias line
+line testing, this should still be ignored.
 
-\ time to roll up your sleeves,
+\ `>in` is right after the buffer and its low address
+\ byte is a zero so we'll reuse it as end-of-input.
+\ it's hacky but hey it beats having to scan for a zero.
+: \ >in >in ! ; immediate
+
+\ alright, it's time to roll up your sleeves,
 \ let's get this thing going.
 
 \ -----
@@ -107,7 +114,6 @@ x a 1 16* + emit \ q:
 x a x b = x 5 + emit \ 5:
 
 \ TODO non-recursive `:` so words may extend themselves.
-: ' lex find drop ; \ missing word gives a buffer addr.
 : flags latest 2+ ;
 : smudge lit [ 2 16* , ] flags @ or flags ! ;
 : reveal lit [ 2 16* invert , ] flags @ and flags ! ;
@@ -135,8 +141,7 @@ x a x b = x 5 + emit \ 5:
   if 2drop 2+ >r exit then >r >r @ >r ;
 : do lit [ ' 2>r , ] compile, here ; immediate
 : loop lit [ ' (loop) , ] compile, , ; immediate
-: i rp@ 2+ @ ; \ or if r@ were defined:
-\ ' r@ lex i head, , \ ' r@ alias i
+: i rp@ 2+ @ ; \ or if r@ were defined: ' r@ alias i
 
 \ string typer.
 : $ff lit [ -1 16u/ 16u/ , ] ;
