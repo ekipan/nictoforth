@@ -1,6 +1,3 @@
-[1]: ./nicto.asm
-[2]: ./hello.fs
-
 # nictoforth
 
 *nick's 16-bit x86 bootsector forth.*
@@ -28,16 +25,16 @@ extend the compiler and interpreter in the language
 itself. More collaborator than consumer. I could talk
 your ear off.
 
-**Learn more:** | [Wikipedia][3] | the beloved
-[Starting Forth][4] | the dense [ANS Forth glossary][5]
+**Learn more:** | [Wikipedia][wik] | the beloved
+[Starting Forth][sta] | the dense [ANS Forth glossary][ans]
 
-[3]: https://en.wikipedia.org/wiki/Forth_(programming_language)
-[4]: https://www.forth.com/starting-forth/
-[5]: https://forth-standard.org/standard/alpha
+[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
+[sta]: https://www.forth.com/starting-forth/
+[ans]: https://forth-standard.org/standard/alpha
 
 Forth was made to be a practical tool to solve problems.
 nictoforth, however, is more of an exploration of how much
-(subjectively) readable language can fit entirely within a:
+readable language can fit entirely within the:
 
 ### Boot sector
 
@@ -56,18 +53,22 @@ lots.
 
 ### "nictoforth"?
 
-You'll have to [read the source][1]. Can't spoil all the surprises.
+You'll have to [read the source][asm].
+Can't spoil all the surprises.
 
-*Inspired by the lovely [sectorforth][6],
-[milliforth][7], and [durexforth][8].*
+[asm]: ./nicto.asm
+[fs]: ./hello.fs
 
-[6]: https://github.com/cesarblum/sectorforth
-[7]: https://github.com/fuzzballcat/milliForth
-[8]: https://github.com/jkotlinski/durexforth
+*Inspired by the lovely [sectorforth][sec],
+[milliforth][mil], and [durexforth][dur].*
+
+[sec]: https://github.com/cesarblum/sectorforth
+[mil]: https://github.com/fuzzballcat/milliForth
+[dur]: https://github.com/jkotlinski/durexforth
 
 ## What can it do?
 
-Available Forth words (after [proper bootstrap][2]):
+Available Forth words (after [proper bootstrap][fs]):
 
     [nix-shell:~/forth/nicto]$ make outline
     grep -- -- nicto.asm
@@ -120,10 +121,10 @@ Available Forth words (after [proper bootstrap][2]):
     nix-shell  # get yasm and qemu.
     make run   # assemble and enter serial session.
 
-The `run` target points you towards [code to
-copypaste][2], and gives details about the quirky
-input. Only backspace and return, other controls put
-garbage in the buffer.
+The `run` target points you towards
+[code to copypaste][fs], and gives details about the
+quirky input. Only backspace and return, other controls
+put garbage in the buffer.
 
 If you don't have nix, I'm sure you can figure out how
 to get `yasm` and `qemu`. We're adults here.
@@ -140,9 +141,9 @@ head.
 
 You could:
 
-- Read the [detailed narrative][1] of the assembly.
+- Read the [detailed narrative][asm] of the assembly.
 - Do a `make terse` to see just the code please, thanks. (My kinda reading!)
-- Explore [the forth code][2] beyond the race to hello world.
+- Explore [the forth code][fs] beyond the race to hello world.
 - Try to find more bytes while staying "fun to read and hack on." Which is extremely subjective but hey, throw something at me.
 
 Moving forward I'll probably continue to polish prose,
