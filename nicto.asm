@@ -131,16 +131,16 @@ swap:   ; swap ( x y -- y x )
 ; I'm tired of editing.)
 
 rpush:  ; >r ( n -- r:n )
-        pop ax
+        pop bx
         push W[bp]
-        INC2 bp
-        jmp ax
+        push bx
+        jmp drop
 
 rpop:   ; r> ( r:n -- n )
+        pop bx
         pop ax
-        DEC2 bp
-        pop W[bp]
-        jmp ax
+        push bx
+        jmp pushax
 
 ; (I bet you're curious about the lack of dictionary
 ; headers. better keep your boots on.)
