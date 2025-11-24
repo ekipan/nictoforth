@@ -63,7 +63,7 @@ MAIN:   dw interpret  ; main loop vector. [6b]
 ; bytes aren't cheap.
 ;
 ; FUTURE: nice-to-haves if I can find bytes for them:
-; words: rp! sp! xor move. "ok".
+; words: rp! sp! xor move.
 ; case insens. c.ret tco, infeasible tbh.
 ;
 ; time to dive in. good luck and happy reading!
@@ -317,16 +317,16 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         ret
 
 ok:     ;DEBUG 'K'
-        ; underflow check, "ok" prompt. need bytes.
         add bp,4        ; drop empty lex.
+        jg error        ; underflow?
         call line
 interpret: ; ( ... "name" -- ... )
         call lex
         jcxz ok         ; end of line?
         call find
         jnz dispatch    ; found a word?
-error:  ; possible underflow self-correction. [5b]
-        mov al,'?'
+        ; possible underflow self-correction. [5b]
+error:  mov al,'?'
         call emit.al
         jmp abort
 
