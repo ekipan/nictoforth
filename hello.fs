@@ -168,3 +168,29 @@ lex testing type
 : .( ')' parse type ; immediate
 
 .( hello, forth )
+
+\ -----
+
+\ so where to next?
+
+\ we can parse and type strings. that's exciting, but
+\ it'd be nice to compile them too so we could use them
+\ at runtime. though it's tedious without builtin `c,`
+\ or `move`.
+
+\ then the next glaring hole is numbers. we have `lit`
+\ and enough arithmetic to implement a hex parser and
+\ printer but again it's quite tedious.
+
+\ all of this bootstrap tedium should honestly live in
+\ source blocks on disk, but once nicto.asm gives access
+\ to disk it doesn't really have *any* constraints any
+\ more and just becomes another typical, useful, forth.
+
+\ I haven't read much of it myself but apparently
+\ miniforth is exactly that. I'm sure there's lots of
+\ others.
+
+\ sectorforth has example source that gets to fizzbuzz
+\ and milliforth to a brainfuck interpreter. but for now,
+\ nictoforth is good enough.
