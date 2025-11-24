@@ -66,7 +66,7 @@ line testing, this should still be ignored.
 
 \ for more testing. gets two bytes from the buffer,
 \ so good enough to compute and emit with.
-: x lex drop @ ;
+: x lex drop @ ; \ ( "name" -- 'a'*256+'n' )
 x o emit x k emit \ annie are you:
 
 \ no builtin literals, sadly. need code bytes!

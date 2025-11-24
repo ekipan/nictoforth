@@ -213,7 +213,7 @@ emit:   ; emit ( c -- )
 line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
         call emit.al    ; move to next line.
-        xor di,di
+        xor di,di       ; buffer at addr 0.
         mov W[CIN],di
         jmp .wait
 .store: stosb           ; store and loop.
@@ -326,7 +326,7 @@ ok:     ;DEBUG 'K'
         call emit.al
 %endif
         call line
-interpret: ; ( ... "name" -- ... )
+interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         call lex
         jcxz ok         ; end of line?
         call find
