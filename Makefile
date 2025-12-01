@@ -30,10 +30,12 @@ run: o/$(O)
 	  -drive file=$<,format=raw,if=floppy \
 	  -no-reboot -display none -serial mon:stdio
 
-.PHONY: outline terse read story
+.PHONY: words outline terse read story
 
-outline: # system capabilities: the what.
-	grep -- -- $(I)
+words: # system capabilities: the what.
+	@awk '/--/ && !/^(;|inte)/ {print $$3}' ${I} | xargs
+outline: # with sections and stack effects.
+	@awk '/--/' $(I)
 terse: # implementation details: the how.
 	@echo '; (see $(I) for tradeoffs and tricky bits.)'
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'

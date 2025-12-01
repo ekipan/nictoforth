@@ -68,53 +68,72 @@ Can't spoil all the surprises.
 
 ## What can it do?
 
-Available Forth words (after [proper bootstrap][fs]):
+After [proper bootstrap][fs] the following words are
+available:
 
-    [nix-shell:~/forth/nicto]$ make outline
-    grep -- -- nicto.asm
-    ; -- [0] ARCHITECTURE.
-    ; -- [1] ARITHMETIC, STACK.
-    plus2:  ; 2+ ( n -- n+2 )
-    udiv2:  ; 2u/ ( u -- u/2 )
-    nand:   ; nand ( n1 n2 -- ~(n1&n2) )
-    invert: ; invert ( n -- ~n )
-    equal0: ; 0= ( n -- flag )
-    plus:   ; + ( n1 n2 -- n1+n2 )
-    drop:   ; drop ( n -- ) free tail word!
-    dup:    ; dup ( n -- n n )
-    swap:   ; swap ( x y -- y x )
-    rpush:  ; >r ( n -- r:n )
-    rpop:   ; r> ( r:n -- n )
-    ; -- [2] MEMORY.
-    cin:    ; >in ( -- addr )
-    dptr:   ; dp ( -- addr ) address of `here`.
-    sptr:   ; sp@ ( -- addr )
-    rptr:   ; rp@ ( -- addr )
-    fetch:  ; @ ( addr -- n )
-    store:  ; ! ( n addr -- )
-    ; -- [3] INPUT/OUTPUT.
-    key:    ; key ( -- c )
-    emit:   ; emit ( c -- )
-    line:   ; line ( -- ) reset `>in`, fill buffer.
-    ; -- [4] PARSING.
-    lex:    ; parse-name ( "name" -- addr len )
-    ; -- [5] TEXT INTERPRETER.
-    find:   ; find ( addr len -- xt nt | addr 0 )
-    interpret: ; ( ... "name" -- ... )
-    execute: ; execute ( ... xt -- ... )
-    ; -- [6] INITIALIZATION, MAIN LOOP.
-    abort:  ; abort ( -- ) reset param stack and:
-    quit:   ; quit ( -- ) everything else, then loop.
-    ; -- [7] COMPILER.
-    .head:  ; head, ( addr len -- )
-    .comma: ; , ( n -- )
-    .on:    ; ] ( -- )
-    .call:  ; compile, ( xt -- )
-    .semi:  ; ; ( -- ) immediate
-    .ret:   ; exit ( -- ) immediate
-    .immed: ; immediate ( -- )
-    ; -- [8] BOOTSTRAP.
-    .prim:  ; ; ( "name" -- )
+```forth
+[nix-shell:~/forth/nicto]$ make words
+2+ 2u/ nand invert 0= + drop dup swap >r r> >in dp
+sp@ rp@ @ ! key emit line parse-name find execute
+abort quit head, , ] compile, ; exit immediate ;
+```
+
+- `line` is `0 4096 accept`,
+- `parse-name` is nonstandard: it rewinds `>in`
+  onto the delimiter,
+- `find` is very nonstandard (see below),
+- The second `;` is the bootstrapper, but note:
+- There is **no builtin number parser!** You'll have to
+  calculate numbers until you can write one in Forth.
+
+Details:
+
+```nasm
+[nix-shell:~/forth/nicto]$ make outline
+; -- [0] ARCHITECTURE.
+; -- [1] ARITHMETIC, STACK.
+plus2:  ; 2+ ( n -- n+2 )
+udiv2:  ; 2u/ ( u -- u/2 )
+nand:   ; nand ( n1 n2 -- ~(n1&n2) )
+invert: ; invert ( n -- ~n )
+equal0: ; 0= ( n -- flag )
+plus:   ; + ( n1 n2 -- n1+n2 )
+drop:   ; drop ( n -- ) free tail word!
+dup:    ; dup ( n -- n n )
+swap:   ; swap ( x y -- y x )
+rpush:  ; >r ( n -- r:n )
+rpop:   ; r> ( r:n -- n )
+; -- [2] MEMORY.
+cin:    ; >in ( -- addr )
+dptr:   ; dp ( -- addr ) address of `here`.
+sptr:   ; sp@ ( -- addr )
+rptr:   ; rp@ ( -- addr )
+fetch:  ; @ ( addr -- n )
+store:  ; ! ( n addr -- )
+; -- [3] INPUT/OUTPUT.
+key:    ; key ( -- c )
+emit:   ; emit ( c -- )
+line:   ; line ( -- ) reset `>in`, fill buffer.
+; -- [4] PARSING.
+lex:    ; parse-name ( "name" -- addr len )
+; -- [5] TEXT INTERPRETER.
+find:   ; find ( addr len -- xt nt | addr 0 )
+interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
+execute: ; execute ( ... xt -- ... )
+; -- [6] INITIALIZATION, MAIN LOOP.
+abort:  ; abort ( -- ) reset param stack and:
+quit:   ; quit ( -- ) everything else, then loop.
+; -- [7] COMPILER.
+.head:  ; head, ( addr len -- )
+.comma: ; , ( n -- )
+.on:    ; ] ( -- )
+.call:  ; compile, ( xt -- )
+.semi:  ; ; ( -- ) immediate
+.ret:   ; exit ( -- ) immediate
+.immed: ; immediate ( -- )
+; -- [8] BOOTSTRAP.
+.prim:  ; ; ( "name" -- )
+```
 
 ## How do I use it?
 
