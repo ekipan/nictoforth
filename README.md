@@ -2,9 +2,11 @@
 
 *nick's 16-bit x86 bootsector forth.*
 
-    ; after enjoying sectorforth and milliforth, I wondered:
-    ; how much useful (and flexible!) forth can I cram into
-    ; 510 bytes while being fun to read and hack on?
+```nasm
+; after enjoying sectorforth and milliforth, I wondered:
+; how much useful (and flexible!) forth can I cram into
+; 510 bytes while being fun to read and hack on?
+```
 
 If you're impatient: `nix-shell` then `make run` to jump in. Though:
 
@@ -137,8 +139,10 @@ quit:   ; quit ( -- ) everything else, then loop.
 
 ## How do I use it?
 
-    nix-shell  # get yasm and qemu.
-    make run   # assemble and enter serial session.
+```bash
+nix-shell  # get yasm and qemu.
+make run   # assemble and enter serial session.
+```
 
 The `run` target points you towards
 [code to copypaste][fs], and gives details about the
@@ -150,8 +154,10 @@ to get `yasm` and `qemu`. We're adults here.
 
 ## What's the status?
 
-    ; my biggest win: almost [8e] every byte of kernel code
-    ; is reusable from forth. proud of that.
+```nasm
+; my biggest win: almost [8e] every byte of kernel code
+; is reusable from forth. proud of that.
+```
 
 The core assembly feels pretty done I think. A few
 tradeoffs are illustrated with `%if 0/1` macros but a
