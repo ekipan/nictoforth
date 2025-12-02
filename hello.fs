@@ -20,7 +20,7 @@ dup >in 0= + emit  >in 0= 0= + emit \ 32:
 \ last word was the usual forth `;`, shadowing the
 \ bootstrapping word underneath it. some notes:
 
-\ lex ( -- addr len ) standard `parse-name`.
+\ lex ( -- addr len ) like standard `parse-name`.
 \ head, ( addr len -- ) need to `,` an xt after it.
 \ find ( addr len -- xt nt | addr 0 ) very nonstandard.
 

@@ -75,13 +75,13 @@ available:
 
 ```forth
 [nix-shell:~/forth/nicto]$ make words
-2+ 2u/ nand invert 0= + drop dup swap >r r> >in dp
-sp@ rp@ @ ! key emit line parse-name find execute
+2+ 2u/ nand invert 0= + drop dup swap >r r>
+>in dp sp@ rp@ @ ! key emit line lex find execute
 abort quit head, , ] compile, ; exit immediate ;
 ```
 
 - `line` is `0 4096 accept`,
-- `parse-name` is nonstandard: it rewinds `>in`
+- `lex` is nonstandard `parse-name`: it rewinds `>in`
   onto the delimiter,
 - `find` is very nonstandard (see below),
 - The second `;` is the bootstrapper, but note:
@@ -117,7 +117,7 @@ key:    ; key ( -- c )
 emit:   ; emit ( c -- )
 line:   ; line ( -- ) reset `>in`, fill buffer.
 ; -- [4] PARSING.
-lex:    ; parse-name ( "name" -- addr len )
+lex:    ; lex ( "name" -- addr len )
 ; -- [5] TEXT INTERPRETER.
 find:   ; find ( addr len -- xt nt | addr 0 )
 interpret: ; ( ... "name" -- ... ) default MAIN. [6b]

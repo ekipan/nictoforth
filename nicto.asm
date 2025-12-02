@@ -246,7 +246,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 ; `lex` is just my quirky name for standard `parse-name`.
 ; it's short and more precise imo. lemme have this.
 
-lex:    ; parse-name ( "name" -- addr len )
+lex:    ; lex ( "name" -- addr len )
         ;DEBUG 'L'
         mov di,W[CIN]
         xor cx,cx
@@ -273,6 +273,10 @@ lex:    ; parse-name ( "name" -- addr len )
 ; trailing space (fragile), or rewind (nonstandard).
 ; `line` always stores a space [3a] but a custom
 ; interpreter [6b] might not.
+
+; could also recover standard `parse-name`:
+;   : parse-name lex 1 >in +! ;
+; after defining `+!` and `1`, or possibly:
 
 ; a numbers parser, even single digits, costs tens of
 ; bytes of code. I'd rather spend them on `swap`.
