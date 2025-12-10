@@ -115,12 +115,13 @@ x 3 x 6 and emit \ 2:
 x a 1 16* + emit \ q:
 x a x b = x 5 + emit \ 5:
 
-\ TODO non-recursive `:` so words may extend themselves.
+\ non-recursive `:` so words may extend themselves.
 : flags latest 2+ ;
-: smudge lit [ 2 16* , ] flags @ or flags ! ;
-: reveal lit [ 2 16* invert , ] flags @ and flags ! ;
-\ ' : : : [ compile, ] smudge ; \ don't think too hard.
-\ : ; ; reveal ; immediate reveal
+: bl lit [ 2 16* , ] ;
+: smudge bl flags @ or flags ! ;
+: reveal lit [ bl invert , ] flags @ and flags ! ;
+' : : : [ compile, ] smudge ; \ don't think too hard.
+' ; : ; [ compile, ] reveal ; reveal immediate
 
 \ control flow. runtime 0branch is a bit hairy.
 : branch r> @ >r ;
