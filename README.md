@@ -168,8 +168,8 @@ head.
 You could:
 
 - Read the [detailed narrative][asm] of the assembly.
-- Do a `make terse` to see just the code please, thanks.
-  (My kinda reading!)
+- Do a `make terse | less` to see just the code please, 
+  thanks. (My kinda reading!)
 - Explore [the forth code][fs] beyond the race to hello
   world.
 - Try to find more bytes while staying "fun to read and hack
