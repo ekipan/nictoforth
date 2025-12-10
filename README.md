@@ -179,17 +179,21 @@ Uh, actually. About that:
 ## Some messy human shit.
 
 A disclosure: I made extensive use of LLMs as personal
-copyeditor to polish the comment copy in nicto.asm. 25%
-of the shit it came up with was nonsense, another 70%
-was kinda bad, but the real value I extracted was the
-back-and-forth, bouncing ideas off, getting feedback to
-jump off from. It's... a complicated feeling. This is
-professional labor that I didn't pay for.
+copyeditor to polish the comment copy in nicto.asm.
+However I want you to understand that 99.9% of the
+words (and 99% of the code) and are still my own (or
+milliforth's or sectorforth's).
 
-I showed it this section and you should see what it
-gave me back, ha ha. "...having someone to bounce ideas
-off, even if that someone was a language model." Yeah,
-no. Stay in your box.
+25% of the shit it came up with was nonsense, another
+70% was kinda bad, but the real value I extracted was
+the back-and-forth, bouncing ideas off, getting
+feedback to jump off from. I have strong mixed
+feelings. This is professional labor that I didn't pay
+for.
+
+I showed it the last paragraph. "...having someone to
+bounce ideas off, even if that someone was a language
+model." Ahaha, no. Stay in your lane.
 
 At LLM suggestion, though, I migrated from BIOS I/O to
 serial for better DX. It guided me through the specific
@@ -200,10 +204,9 @@ backspace. That was an adventure. Had to sell `swap`,
 after spending lots of effort on its bittersweet return
 story. I don't wanna talk about it.
 
-When I struggled with impostor syndrome vs the other
-two Forths it showed me my code without all the
-comments, which was super helpful psychologically so I
-got the idea for `make terse`.
+When I felt overcommenting dread it showed me my code
+without them, which was super helpful psychologically
+so I got the idea for `make terse`.
 
 That's all. I figured you should know.
 
