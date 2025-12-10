@@ -73,14 +73,15 @@ Can't spoil all the surprises.
 After [proper bootstrap][fs] the following words are
 available:
 
-```forth
+```
 [nix-shell:~/forth/nicto]$ make words
 2+ 2u/ nand invert 0= + drop dup swap >r r>
 >in dp sp@ rp@ @ ! key emit line lex find execute
 abort quit head, , ] compile, ; exit immediate ;
 ```
 
-- `line` is `0 4096 accept`,
+- `line` gets input, so to a first approximation:
+  `0 4096 accept`,
 - `lex` is nonstandard `parse-name`: it rewinds `>in`
   onto the delimiter,
 - `find` is very nonstandard (see below),
@@ -90,7 +91,7 @@ abort quit head, , ] compile, ; exit immediate ;
 
 Details:
 
-```nasm
+```
 [nix-shell:~/forth/nicto]$ make outline
 ; -- [0] ARCHITECTURE.
 ; -- [1] ARITHMETIC, STACK.
@@ -167,9 +168,13 @@ head.
 You could:
 
 - Read the [detailed narrative][asm] of the assembly.
-- Do a `make terse` to see just the code please, thanks. (My kinda reading!)
-- Explore [the forth code][fs] beyond the race to hello world.
-- Try to find more bytes while staying "fun to read and hack on." Which is extremely subjective but hey, throw something at me.
+- Do a `make terse` to see just the code please, thanks.
+  (My kinda reading!)
+- Explore [the forth code][fs] beyond the race to hello
+  world.
+- Try to find more bytes while staying "fun to read and hack
+  on." Which is extremely subjective but hey, throw something
+  at me.
 
 Moving forward I'll probably continue to polish prose,
 I'm never satisfied with it.

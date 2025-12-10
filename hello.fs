@@ -24,6 +24,8 @@ dup >in 0= + emit  >in 0= 0= + emit \ 32:
 \ head, ( addr len -- ) need to `,` an xt after it.
 \ find ( addr len -- xt nt | addr 0 ) very nonstandard.
 
+\ -----
+
 \ bootstrapping the compiler is a bit circular.
 
 lex : head,
@@ -154,7 +156,7 @@ lex testing type
 
 \ parsed ( start delim -- start len )
 : parsed drop >in @ over - ;
-: in+ >in @ 1 + >in ! ;
+: in+ 1 >in @ + >in ! ;
 : in@ >in @ c@ ;
 : parse in+ >in @ swap begin
     in@ 0= if parsed exit then
