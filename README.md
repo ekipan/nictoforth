@@ -186,7 +186,7 @@ Uh, actually. About that:
 A disclosure: I made extensive use of LLMs as personal
 copyeditor to polish the comment copy in nicto.asm.
 However I want you to understand that 99.9% of the
-words (and 99% of the code) and are still my own (or
+words (and 99% of the code) are still my own (or
 milliforth's or sectorforth's).
 
 25% of the shit it came up with was nonsense, another
