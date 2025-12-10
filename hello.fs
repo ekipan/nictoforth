@@ -105,7 +105,7 @@ x a x b x c nip swap emit emit \ ac:
 
 \ some arithmetic.
 : and nand invert ;
-: or invert over invert nand nip ;
+: or invert swap invert nand ;
 : - -1 + invert + ;
 : = - 0= ;
 : 2* dup + ;
