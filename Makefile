@@ -33,7 +33,7 @@ run: o/$(O)
 .PHONY: words outline terse story
 
 words: # system capabilities: the what.
-	@awk '/--/ && !/^(;|inte)/ {print $$3}' ${I} | xargs
+	@awk '/--/ && !/^(;|inte)/ {print $$3}' $(I) | xargs
 outline: # with sections and stack effects.
 	@awk '/--/' $(I)
 
