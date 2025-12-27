@@ -1,4 +1,6 @@
-# nictoforth
+
+nictoforth
+==========
 
 *nick's 16-bit x86 bootsector forth.*
 
@@ -14,7 +16,8 @@ Heads up: this is more an art piece exploring a
 constrained problem space than something you'd
 wanna write software for.
 
-## ...the hell is an "x86 bootsector forth"?
+...the hell is an "x86 bootsector forth"?
+-----------------------------------------
 
 ### Forth
 
@@ -68,7 +71,8 @@ Can't spoil all the surprises.
 [mil]: https://github.com/fuzzballcat/milliForth
 [dur]: https://github.com/jkotlinski/durexforth
 
-## What can it do?
+What can it do?
+---------------
 
 After [proper bootstrap][fs] the following words are
 available:
@@ -138,7 +142,8 @@ quit:   ; quit ( -- ) everything else, then loop.
 .prim:  ; ; ( "name" -- )
 ```
 
-## How do I use it?
+How do I use it?
+----------------
 
 ```bash
 nix-shell  # get yasm and qemu.
@@ -153,7 +158,8 @@ put garbage in the buffer.
 If you don't have nix, I'm sure you can figure out how
 to get `yasm` and `qemu`. We're adults here.
 
-## What's the status?
+What's the status?
+------------------
 
 ```nasm
 ; my biggest win: almost [8e] every byte of kernel code
@@ -181,7 +187,8 @@ I'm never satisfied with it.
 
 Uh, actually. About that:
 
-## Some messy human shit.
+Some messy human shit.
+----------------------
 
 A disclosure: I made extensive use of LLMs as personal
 copyeditor to polish the comment copy in nicto.asm.
