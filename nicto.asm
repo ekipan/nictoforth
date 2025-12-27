@@ -11,7 +11,7 @@
 ; I started with milliforth's code but after a good
 ; hacksawing it's probably more sectorforthy.
 ;
-; MY BIGGEST WIN: almost [8g] every byte of kernel code
+; my biggest win: almost [8g] every byte of kernel code
 ; is reusable from forth. proud of that.
 ;
 ; the bits [1-4], the heart [5-6], the tools [7-8].
