@@ -1,4 +1,4 @@
-ASM ?= yasm # nasm probably works, haven't tested tho.
+ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386
 I ?= nicto.asm
 O ?= nicto.bin

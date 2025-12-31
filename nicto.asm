@@ -505,13 +505,13 @@ c: ; the story of a typical colon word:
 %endmacro
 
 .list:  ; db udiv2-plus2, nand-udiv2, invert-nand, ...
-        DBO udiv2, nand, invert, equal0, plus,
-        DBO drop, dup, swap, rpush, rpop,
-        DBO cin, dptr, sptr, rptr, fetch, store,
-        DBO key, emit, line, lex, ; [8e]
-        DBO find, execute, abort, quit,
-        DBO .head, .comma, .on, .call,
-        DBO .immed, .ret, .semi, ; [8f]
+        DBO udiv2, nand, invert, equal0, plus
+        DBO drop, dup, swap, rpush, rpop
+        DBO cin, dptr, sptr, rptr, fetch, store
+        DBO key, emit, line, lex ; [8e]
+        DBO find, execute, abort, quit
+        DBO .head, .comma, .on, .call
+        DBO .immed, .ret, .semi ; [8f]
 
 ; [8e] enough for a quick smoke test:
 ;
