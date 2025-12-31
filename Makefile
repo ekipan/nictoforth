@@ -1,4 +1,5 @@
 ASM ?= yasm # nasm probably works, haven't tested tho.
+QEMU ?= qemu-system-i386
 I ?= nicto.asm
 O ?= nicto.bin
 
@@ -18,7 +19,7 @@ count: o/unpadded-$(O)
 	wc -c $<
 run: o/$(O)
 	#
-	#  ctrl-a, x to quit.
+	#  ctrl-a, x to quit qemu.
 	#  ctrl-a, c to swap serial<->monitor.
 	#  see hello.fs for some code to paste.
 	#
@@ -26,8 +27,7 @@ run: o/$(O)
 	#  it does delete from the buffer but not your screen.
 	#  no "ok" prompt, but an unknown word gives "?".
 	#
-	qemu-system-i386 \
-	  -drive file=$<,format=raw,if=floppy \
+	$(QEMU) -drive file=$<,format=raw,if=floppy \
 	  -no-reboot -display none -serial mon:stdio
 
 .PHONY: words outline terse story
