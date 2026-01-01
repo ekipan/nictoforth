@@ -1,4 +1,4 @@
 { pkgs ? import <nixpkgs> {} }:
-with pkgs; mkShell {
-  nativeBuildInputs = [ nasm qemu ];
+let p = pkgs; in p.mkShell {
+  nativeBuildInputs = [ p.nasm p.qemu_test ];
 }
