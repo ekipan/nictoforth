@@ -1,4 +1,4 @@
-; (c) 2025, see LICENSE (it's MIT). -*- mode: nasm -*-
+; (c) 2025, see LICENSE (it's MIT).
 ;
 ; nictoforth: nick's 16-bit x86 bootsector forth.
 ;
@@ -538,5 +538,6 @@ c: ; the story of a typical colon word:
         dw 0xaa55             ; with 510 bytes?)
 %endif
 
+; kate: hl Intel x86 (NASM); word-wrap-column 55
 ; *** end of assembly program file. ***
 
