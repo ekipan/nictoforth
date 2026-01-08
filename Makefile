@@ -3,19 +3,19 @@ QEMU ?= qemu-system-i386
 I ?= nicto.asm
 O ?= nicto.bin
 
-o/$(O): $(I) o
-	# try: make outline, make count, make run.
+o/$(O): $(I) o  # bootable sector bin. (default)
+	# try: make outline, make run, make targets.
 	$(ASM) -f bin -o $@ $<
-o/unpadded-$(O): $(I) o
+o/nopad-$(O): $(I) o
 	$(ASM) -f bin -D NOPAD -o $@ $<
-o:
+o:              # artifacts directory.
 	mkdir -p o
 
 .PHONY: clean count run
 
-clean:
+clean:          # the rest are all phonies.
 	rm -rf o
-count: o/unpadded-$(O)
+count: o/nopad-$(O)
 	wc -c $<
 run: o/$(O)
 	#
@@ -30,19 +30,22 @@ run: o/$(O)
 	$(QEMU) -drive file=$<,format=raw,if=floppy \
 	  -no-reboot -display none -serial mon:stdio
 
-.PHONY: words outline terse story
+.PHONY: targets words outline terse story
 
-words: # system capabilities: the what.
+targets:        # list commands.
+	@awk '/^[a-z]/' Makefile
+
+words:          # system capabilities: the what.
 	@awk '/--/ && !/^(;|inte)/ {print $$3}' $(I) | xargs
-outline: # with sections and stack effects.
+outline:        # with sections and stack effects.
 	@awk '/--/' $(I)
 
-terse: # implementation details: the how.
+terse:          # implementation details: the how.
 	@echo '; (see $(I) for tradeoffs and tricky bits.)'
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
 	@awk '/^; --/ || !/^;/' $(I) | cat -s
 
-story: clean # design narrative: the why.
+story: clean    # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
 	# art Forth, in make target format. From README setup to
 	# x86 implementation to QEMU serial session, it's
