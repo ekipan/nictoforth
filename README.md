@@ -146,7 +146,7 @@ How do I use it?
 ----------------
 
 ```bash
-nix-shell  # get yasm and qemu.
+nix-shell  # get assembler and qemu.
 make run   # assemble and enter serial session.
 ```
 
