@@ -130,7 +130,7 @@ put garbage in the buffer.
 
 My `shell.nix` gets native-only `qemu_test` to save
 install time and space. If you're not on x86 then try
-`nix-shell nasm qemu` for the whole shebang. If you
+`nix-shell -p nasm qemu` for the whole shebang. If you
 don't have nix, I'm sure you can figure out how
 to get `nasm` and `qemu`. We're adults here.
 
