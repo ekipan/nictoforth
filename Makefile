@@ -1,23 +1,25 @@
-ASM ?= nasm # yasm also works fine.
+# -- VARIABLES.
+
+ASM ?= nasm     # yasm also works fine.
 QEMU ?= qemu-system-i386
 I ?= nicto.asm
 O ?= nicto.bin
+
+# -- TARGET FILES.
 
 o/$(O): $(I) o  # bootable sector bin. (default)
 	# try: make outline, make run, make targets.
 	$(ASM) -f bin -o $@ $<
 o/nopad-$(O): $(I) o
 	$(ASM) -f bin -D NOPAD -o $@ $<
-o:              # artifacts directory.
+o:              # build outputs directory.
 	mkdir -p o
 
-.PHONY: clean count run
+# -- PHONIES.
 
-clean:          # the rest are all phonies.
-	rm -rf o
-count: o/nopad-$(O)
-	wc -c $<
-run: o/$(O)
+.PHONY: run count clean targets words outline terse story
+
+run: o/$(O)     # qemu serial session.
 	#
 	#  ctrl-a, x to quit qemu.
 	#  ctrl-a, c to swap serial<->monitor.
@@ -29,11 +31,10 @@ run: o/$(O)
 	#
 	$(QEMU) -drive file=$<,format=raw,if=floppy \
 	  -no-reboot -display none -serial mon:stdio
-
-.PHONY: targets words outline terse story
-
-targets:        # list commands.
-	@awk '/^[a-z]/' Makefile
+count: o/nopad-$(O) # print assembled size.
+	wc -c $<
+clean:          # remove o directory.
+	rm -rf o
 
 words:          # system capabilities: the what.
 	@awk '/--/ && !/^(;|inte)/ {print $$3}' $(I) | xargs
@@ -56,16 +57,6 @@ story: clean    # design narrative: the why.
 	#
 	#     https://github.com/ekipan/nictoforth
 	#
-	# I haven't shared it widely yet. Butted heads with a
-	# Forth Discord person over design philosophy that led to
-	# better expectations management and then to a huge size
-	# win (credit in git log). He also suggested I store TOS
-	# in BX. I'm still mulling it over.
-	#
-	# I'm hesitant to expand its audience and possibly lose
-	# fleetfootedness, I'm a perfectionist who likes to
-	# rewrite histories, despite the rudeness.
-	#
 	# Strap in. Shit gets messy.
 	#
 	cat README.md $(I)
@@ -74,3 +65,6 @@ story: clean    # design narrative: the why.
 	#   ~fin~
 	#
 	# Ctrl-F "github" for the link back at the top.
+
+targets:        # this list.
+	@awk '/^[a-zA-Z#]/' Makefile
