@@ -61,6 +61,7 @@ story: clean    # design narrative: the why.
 	#
 	# Strap in. Shit gets messy.
 	#
+	make targets
 	cat README.md $(I)
 	make count run
 	#
@@ -69,4 +70,4 @@ story: clean    # design narrative: the why.
 	# Ctrl-F "ekipan" for the link back at the top.
 
 targets:        # this list.
-	@awk '/^[a-zA-Z#]/' Makefile
+	@awk '/^(#|\w)/' Makefile

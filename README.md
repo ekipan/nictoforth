@@ -147,8 +147,9 @@ How do I use it?
 ----------------
 
 ```bash
-nix-shell  # get assembler and qemu.
-make run   # assemble and enter serial session.
+nix-shell    # get assembler and qemu.
+make run     # assemble and enter serial session.
+make targets # list Makefile options.
 ```
 
 The `run` target points you towards
