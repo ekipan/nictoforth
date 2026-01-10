@@ -15,9 +15,8 @@ o/nopad-$(O): $(I) o
 o:              # build outputs directory.
 	mkdir -p o
 
-# -- PHONIES.
-
-.PHONY: run count clean targets words outline terse story
+# -- BUILD PHONIES.
+.PHONY: all run count clean
 
 run: o/$(O)     # qemu serial session.
 	#
@@ -35,6 +34,9 @@ count: o/nopad-$(O) # print assembled size.
 	wc -c $<
 clean:          # remove o directory.
 	rm -rf o
+
+# -- INFO PHONIES.
+.PHONY: words outline terse story targets
 
 words:          # system capabilities: the what.
 	@awk '/--/ && !/^(;|inte)/ {print $$3}' $(I) | xargs
@@ -64,7 +66,7 @@ story: clean    # design narrative: the why.
 	#
 	#   ~fin~
 	#
-	# Ctrl-F "github" for the link back at the top.
+	# Ctrl-F "ekipan" for the link back at the top.
 
 targets:        # this list.
 	@awk '/^[a-zA-Z#]/' Makefile

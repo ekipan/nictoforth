@@ -10,7 +10,8 @@ nictoforth
 ; 510 bytes while being fun to read and hack on?
 ```
 
-If you're impatient: `nix-shell` then `make run` to jump in. Though:
+If you're impatient: `nix-shell` then
+`make run` to jump in. Though:
 
 Heads up: this is more an art piece exploring a
 constrained problem space than something you'd
@@ -21,7 +22,8 @@ wanna write software for.
 
 ### Forth
 
-Is an old and grumpy programming language. I love it to death.
+Is an old and grumpy programming language.
+I love it to death.
 
 It has a reputation for being impenetrable because you
 must mentally track a stack of values, **but the real
@@ -61,12 +63,11 @@ lots.
 You'll have to [read the source][asm].
 Can't spoil all the surprises.
 
-[asm]: ./nicto.asm
-[fs]: ./hello.fs
-
 *Inspired by the lovely [sectorforth][sec],
 [milliforth][mil], and [durexforth][dur].*
 
+[asm]: nicto.asm
+[fs]:  hello.fs
 [sec]: https://github.com/cesarblum/sectorforth
 [mil]: https://github.com/fuzzballcat/milliForth
 [dur]: https://github.com/jkotlinski/durexforth
@@ -84,7 +85,7 @@ available:
 abort quit head, , ] compile, ; exit immediate ;
 ```
 
-- `line` gets input, so to a first approximation:
+- `line` gets input, so to a first approximation is
   `0 4096 accept`,
 - `lex` is nonstandard `parse-name`: it rewinds `>in`
   onto the delimiter,
