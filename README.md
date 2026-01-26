@@ -94,6 +94,16 @@ abort quit head, , ] compile, ; exit immediate ;
 - There is **no builtin number parser!** You'll have to
   calculate numbers until you can write one in Forth.
 
+But even before a number parser:
+
+```
+lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
+      \ input buffer, len is dropped and the '3' digit
+      \ and space are fetched: ( $2033 )
+2+    \ ( $2035 )
+emit  \ prints: 5. See hello.fs for lots more.
+```
+
 For source reading aides try:
 
 ```
@@ -186,7 +196,7 @@ professional labor that I didn't pay for.
 
 I showed it the last paragraph. "...having someone to
 bounce ideas off, even if that someone was a language
-model." Nah, stay in your lane.
+model." Haha, no. Stay in your lane.
 
 At LLM suggestion, though, I migrated from BIOS I/O to
 serial for better DX. It guided me through the specific

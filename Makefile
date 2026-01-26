@@ -1,6 +1,6 @@
 # -- VARIABLES.
 
-ASM ?= nasm     # yasm also works fine.
+ASM ?= nasm #   # yasm also works fine.
 QEMU ?= qemu-system-i386
 I ?= nicto.asm
 O ?= nicto.bin
@@ -29,10 +29,10 @@ run: o/$(O)     # qemu serial session.
 	#  it does delete from the buffer but not your screen.
 	#  no "ok" prompt, but an unknown word gives "?".
 	#
-	$(QEMU) -drive file=$<,format=raw,if=floppy \
-	  -no-reboot -display none -serial mon:stdio
+	$(QEMU) -no-reboot -display none -serial mon:stdio \
+	  -drive if=floppy,format=raw,file=$<
 count: o/nopad-$(O) # print assembled size.
-	wc -c $<
+	wc -c <$<
 clean:          # remove o directory.
 	rm -rf o
 
