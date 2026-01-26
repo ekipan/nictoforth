@@ -13,14 +13,14 @@ Nick's 16-bit x86 bootsector Forth.
 If you're impatient: `nix-shell` then
 `make run` to jump in. Though:
 
-Heads up: this is more an art piece exploring a
+**Heads up:** this is more an art piece exploring a
 constrained problem space than something you'd
 wanna write software for.
 
 ...the hell is an "x86 bootsector Forth"?
 -----------------------------------------
 
-### Forth
+### Forth ⛰️
 
 Is an old and grumpy programming language.
 I love it to death.
@@ -32,7 +32,7 @@ extend the compiler and interpreter in the language
 itself. More collaborator than consumer. I could talk
 your ear off.
 
-**Learn more:** | [Wikipedia][wik] | the beloved
+**📚 Learn more:** | [Wikipedia][wik] | the beloved
 [Starting Forth][sta] | the dense [ANS Forth glossary][ans]
 
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
@@ -43,14 +43,14 @@ Forth was made to be a practical tool to solve problems.
 nictoforth, however, is more of an exploration of how much
 readable language can fit entirely within the:
 
-### Boot sector
+### Boot sector 💾
 
 Of a floppy disk. A BIOS loads the sector into memory
 and jumps to the code when you turn your PC on.
 Honestly I don't know the details but it looked like
 fun. Only 510 bytes! Written in:
 
-### x86
+### x86 ⚡
 
 An instruction set. Intel and AMD processors run
 programs encoded in x86 at their lowest-ish level. Most
@@ -72,8 +72,8 @@ Can't spoil all the surprises.
 [mil]: https://github.com/fuzzballcat/milliForth
 [dur]: https://github.com/jkotlinski/durexforth
 
-What can it do?
----------------
+What can it do? 🔍
+------------------
 
 After [proper bootstrap][fs] the following words are
 available:
@@ -119,8 +119,8 @@ drop:   ; drop ( n -- ) free tail word!
 (... etc etc ...)
 ```
 
-How do I use it?
-----------------
+How do I use it? 🚀
+-------------------
 
 ```bash
 nix-shell    # get assembler and qemu.
@@ -167,14 +167,16 @@ I'm never satisfied with it.
 
 Uh, actually. About that:
 
-LLM disclosure
---------------
+LLM disclosure 🤖
+-----------------
 
 I made extensive use of LLMs as personal copyeditor to
 polish the comment copy in nicto.asm. However I want
 you to understand that 99.9% of the words (and 99% of
 the code) are still my own (or milliforth's or
-sectorforth's).
+sectorforth's). The emojis in this README have AI
+stink but I decided to add them myself because there's
+not much else pretty to look at here.
 
 25% of the shit it came up with was nonsense, another
 70% was kinda bad, but the real value I extracted was
