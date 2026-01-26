@@ -56,13 +56,12 @@ story: clean    # design narrative: the why.
 	# carefully crafted to be read top-to-bottom.
 	#
 	# Here's the repo if you just want the code instead of my
-	# blathering. Try "make terse | less", it's cool.
+	# blathering. Try "make terse | less" or "make targets".
 	#
 	#     https://github.com/ekipan/nictoforth
 	#
 	# Strap in. Shit gets messy.
 	#
-	make targets
 	cat README.md $(I)
 	make count run
 	#

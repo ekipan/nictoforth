@@ -79,7 +79,7 @@ After [proper bootstrap][fs] the following words are
 available:
 
 ```
-[nix-shell:~/forth/nicto]$ make words
+[nix-shell:~/code/nicto]$ make words
 2+ 2u/ nand invert 0= + drop dup swap >r r>
 >in dp sp@ rp@ @ ! key emit line lex find execute
 abort quit head, , ] compile, ; exit immediate ;
@@ -94,10 +94,19 @@ abort quit head, , ] compile, ; exit immediate ;
 - There is **no builtin number parser!** You'll have to
   calculate numbers until you can write one in Forth.
 
-For a reading aide try `make outline`:
+For source reading aides try:
 
 ```
-[nix-shell:~/forth/nicto]$ make outline
+[nix-shell:~/code/nicto]$ make targets
+(... others omitted ...)
+# -- INFO PHONIES.
+words:          # system capabilities: the what.
+outline:        # with sections and stack effects.
+terse:          # implementation details: the how.
+story: clean    # design narrative: the why.
+targets:        # this list.
+
+[nix-shell:~/code/nicto]$ make outline | tee o/ol.txt
 ; -- [0] ARCHITECTURE.
 ; -- [1] ARITHMETIC, STACK.
 plus2:  ; 2+ ( n -- n+2 )
@@ -106,11 +115,7 @@ nand:   ; nand ( n1 n2 -- ~(n1&n2) )
 invert: ; invert ( n -- ~n )
 equal0: ; 0= ( n -- flag )
 plus:   ; + ( n1 n2 -- n1+n2 )
-(...)
-; -- [2] MEMORY.
-cin:    ; >in ( -- addr )
-dptr:   ; dp ( -- addr ) address of `here`.
-sptr:   ; sp@ ( -- addr )
+drop:   ; drop ( n -- ) free tail word!
 (... etc etc ...)
 ```
 
@@ -120,7 +125,6 @@ How do I use it?
 ```bash
 nix-shell    # get assembler and qemu.
 make run     # assemble and enter serial session.
-make targets # list Makefile options.
 ```
 
 The `run` target points you towards
