@@ -1,10 +1,10 @@
 ; (c) 2025, see LICENSE (it's MIT).
-;
-; nictoforth: nick's 16-bit x86 bootsector forth.
-;
+
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
+;
+; nictoforth: nick's 16-bit x86 bootsector forth.
 ;
 ; the name squishes 'nick's sector' into five characters,
 ; a nod to the filename limit that gave us 'forth'.

@@ -1,14 +1,14 @@
 
-nictoforth
-==========
-
-*nick's 16-bit x86 bootsector forth.*
-
 ```nasm
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
 ```
+
+nictoforth
+==========
+
+Nick's 16-bit x86 bootsector Forth.
 
 If you're impatient: `nix-shell` then
 `make run` to jump in. Though:
@@ -17,7 +17,7 @@ Heads up: this is more an art piece exploring a
 constrained problem space than something you'd
 wanna write software for.
 
-...the hell is an "x86 bootsector forth"?
+...the hell is an "x86 bootsector Forth"?
 -----------------------------------------
 
 ### Forth
