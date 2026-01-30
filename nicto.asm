@@ -323,7 +323,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
 ok:     ;DEBUG 'K'
         add bp,4        ; drop empty lex.
         jg error        ; underflow?
-%if 0 ; 10 bytes. *the* iconic forth ux.
+%if 1 ; 10 bytes. *the* iconic forth ux.
         mov al,'o'
         call emit.al
         mov al,'k'

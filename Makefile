@@ -27,7 +27,7 @@ run: o/$(O)     # qemu serial session.
 	#
 	#  make sure your terminal sends backspace 127's.
 	#  it does delete from the buffer but not your screen.
-	#  no "ok" prompt, but an unknown word gives "?".
+	#  an unknown word gives "?".
 	#
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
