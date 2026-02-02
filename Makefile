@@ -18,7 +18,7 @@ o:              # build outputs directory.
 # -- BUILD PHONIES.
 .PHONY: all run count clean
 
-all: o/$(O)
+all: o/$(O) o/nopad-$(O)
 run: o/$(O)     # qemu serial session.
 	#
 	#  ctrl-a, x to quit qemu.
