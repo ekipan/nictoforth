@@ -40,14 +40,14 @@ clean:          # remove o directory.
 .PHONY: words outline terse story targets
 
 words:          # system capabilities: the what.
-	@awk '/--/ && !/^(;|inte)/ {print $$3}' $(I) | xargs
+	@awk '/--/ && !/^;|^interp/ {print $$3}' $(I) | xargs
 outline:        # with sections and stack effects.
 	@awk '/--/' $(I)
 
 terse:          # implementation details: the how.
 	@echo '; (see $(I) for tradeoffs and tricky bits.)'
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
-	@awk '/^; --/ || !/^;/' $(I) | cat -s
+	@awk '/^; --/ || !/^;/' $(I) | cat -s # squeeze blank runs.
 
 story: clean    # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
@@ -70,4 +70,4 @@ story: clean    # design narrative: the why.
 	# Ctrl-F "ekipan" for the link back at the top.
 
 targets:        # this list.
-	@awk '/^(#|\w)/' Makefile
+	@awk '/^# --|^\w/' Makefile

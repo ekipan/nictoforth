@@ -79,7 +79,7 @@ After [proper bootstrap][fs] the following words are
 available:
 
 ```
-[nix-shell:~/code/nicto]$ make words
+[nix-shell]$ make words
 2+ 2u/ nand invert 0= + drop dup swap >r r>
 >in dp sp@ rp@ @ ! key emit line lex find execute
 abort quit head, , ] compile, ; exit immediate ;
@@ -107,7 +107,7 @@ emit  \ prints: 5. See hello.fs for lots more.
 For source reading aides try:
 
 ```
-[nix-shell:~/code/nicto]$ make targets
+[nix-shell]$ make targets
 (... others omitted ...)
 # -- INFO PHONIES.
 words:          # system capabilities: the what.
@@ -116,7 +116,7 @@ terse:          # implementation details: the how.
 story: clean    # design narrative: the why.
 targets:        # this list.
 
-[nix-shell:~/code/nicto]$ make outline | tee o/ol.txt
+[nix-shell]$ make outline | tee o/ol.txt
 ; -- [0] ARCHITECTURE.
 ; -- [1] ARITHMETIC, STACK.
 plus2:  ; 2+ ( n -- n+2 )
