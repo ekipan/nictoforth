@@ -65,9 +65,9 @@ story: clean    # design narrative: the why.
 	cat README.md $(I)
 	make count run
 	#
-	#   ~fin~
+	#     ~fin~
 	#
-	# Ctrl-F "ekipan" for the link back at the top.
+	#     https://github.com/ekipan/nictoforth
 
 targets:        # this list.
 	@awk '/^# --|^\w/' Makefile
