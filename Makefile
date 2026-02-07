@@ -1,25 +1,23 @@
 # -- VARIABLES.
 
-ASM ?= nasm #   # yasm also works fine.
-QEMU ?= qemu-system-i386
-I ?= nicto.asm
-O ?= nicto.bin
+ASM ?= nasm #      # yasm also works fine.
+QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 # -- TARGET FILES.
 
-o/$(O): $(I) o  # bootable sector bin. (default)
+o/nicto.bin: nicto.asm o # bootable image. (default)
 	# try: make outline, make run, make targets.
 	$(ASM) -f bin -o $@ $<
-o/nopad-$(O): $(I) o
+o/nopad.bin: nicto.asm o
 	$(ASM) -f bin -D NOPAD -o $@ $<
-o:              # build outputs directory.
+o:                 # build outputs directory.
 	mkdir -p o
 
 # -- BUILD PHONIES.
 .PHONY: all run count clean
 
-all: o/$(O) o/nopad-$(O)
-run: o/$(O)     # qemu serial session.
+all: o/nicto.bin o/nopad.bin
+run: o/nicto.bin   # qemu serial session.
 	#
 	#  ctrl-a, x to quit qemu.
 	#  ctrl-a, c to swap serial<->monitor.
@@ -31,25 +29,25 @@ run: o/$(O)     # qemu serial session.
 	#
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
-count: o/nopad-$(O) # print assembled size.
+count: o/nopad.bin # print assembled size.
 	wc -c <$<
-clean:          # remove o directory.
+clean:             # remove o directory.
 	rm -rf o
 
 # -- INFO PHONIES.
 .PHONY: words outline terse story targets
 
-words:          # system capabilities: the what.
-	@awk '/--/ && !/^;|^interp/ {print $$3}' $(I) | xargs
-outline:        # with sections and stack effects.
-	@awk '/--/' $(I)
+words:             # system capabilities: the what.
+	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs
+outline:           # with sections and stack effects.
+	@awk '/--/' nicto.asm
 
-terse:          # implementation details: the how.
-	@echo '; (see $(I) for tradeoffs and tricky bits.)'
+terse:             # implementation details: the how.
+	@echo '; (see nicto.asm for tradeoffs and tricky bits.)'
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
-	@awk '/^; --/ || !/^;/' $(I) | cat -s # squeeze blank runs.
+	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
 
-story: clean    # design narrative: the why.
+story: clean       # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
 	# art Forth, in make target format. From README setup to
 	# x86 implementation to QEMU serial session, it's
@@ -62,12 +60,12 @@ story: clean    # design narrative: the why.
 	#
 	# Strap in. Shit gets messy.
 	#
-	cat README.md $(I)
+	cat README.md nicto.asm
 	make count run
 	#
 	#     ~fin~
 	#
 	#     https://github.com/ekipan/nictoforth
 
-targets:        # this list.
+targets:           # this list.
 	@awk '/^# --|^\w/' Makefile
