@@ -194,9 +194,10 @@ the feedback; brainstorming places and directions to
 improve. I have strong mixed feelings. This is
 professional labor that I didn't pay for.
 
-I showed it the last paragraph. "...having someone to
-bounce ideas off, even if that someone was a language
-model." Haha, no. Stay in your lane.
+I showed it an earlier revision of that last paragraph.
+"...having someone to bounce ideas off, even if that
+someone was a language model." Haha, no. Stay in your
+lane.
 
 At LLM suggestion, though, I migrated from BIOS I/O to
 serial for better DX. It guided me through the specific
