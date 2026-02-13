@@ -35,7 +35,7 @@ clean:             # remove o directory.
 	rm -rf o
 
 # -- INFO PHONIES.
-.PHONY: words outline terse story targets
+.PHONY: words outline terse show story targets
 
 words:             # system capabilities: the what.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs
@@ -47,7 +47,7 @@ terse:             # implementation details: the how.
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
 	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
 
-story: clean       # design narrative: the why.
+show:              # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
 	# art Forth, in make target format. From README setup to
 	# x86 implementation to QEMU serial session, it's
@@ -61,7 +61,7 @@ story: clean       # design narrative: the why.
 	# Strap in. Shit gets messy.
 	#
 	cat README.md nicto.asm
-	make count run
+story: clean show count run # and demonstration.
 	#
 	#     ~fin~
 	#
