@@ -17,10 +17,10 @@ If you're impatient: `nix-shell` then
 constrained problem space than something you'd
 wanna write software for.
 
-...the hell is an "x86 bootsector Forth"?
------------------------------------------
+...the hell is an "x86 bootsector Forth"? 😵‍💫
+--------------------------------------------
 
-### Forth ⛰️
+### Forth
 
 Is an old and grumpy programming language.
 I love it to death.
@@ -43,14 +43,14 @@ Forth was made to be a practical tool to solve problems.
 nictoforth, however, is more of an exploration of how much
 readable language can fit entirely within the:
 
-### Boot sector 💾
+### Boot sector
 
-Of a floppy disk. A BIOS loads the sector into memory
+Of a floppy disk 💾. A BIOS loads the sector into memory
 and jumps to the code when you turn your PC on.
 Honestly I don't know the details but it looked like
 fun. Only 510 bytes! Written in:
 
-### x86 ⚡
+### x86
 
 An instruction set. Intel and AMD processors run
 programs encoded in x86 at their lowest-ish level. Most
@@ -129,7 +129,7 @@ drop:   ; drop ( n -- ) free tail word!
 (... etc etc ...)
 ```
 
-How do I use it? 🚀
+How do I use it? 🛠️
 -------------------
 
 ```bash
@@ -148,8 +148,8 @@ install time and space. If you're not on x86 then try
 don't have nix, I'm sure you can figure out how
 to get `nasm` and `qemu`. We're adults here.
 
-What's the status?
-------------------
+What's the status? 📌
+---------------------
 
 ```nasm
 ; my biggest win: almost [8e] every byte of kernel code
