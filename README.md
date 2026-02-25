@@ -216,8 +216,8 @@ That's all. I figured you should know.
 
 ---
 
-Oh geez, that's an awful way to end the README. Go back
-to [What's the status?](#whats-the-status) and we'll
+Bleh. What a lame fart to end the README on. Go back
+to [What's the status?](#whats-the-status-) and we'll
 pretend this never happened, ok?
 
 <!-- *** end of README. *** -->
