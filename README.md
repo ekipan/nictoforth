@@ -13,71 +13,7 @@ that means? [Explanation further below][wha].
 
 Like its two progenitors, this is more of an art Forth
 exploring a constrained problem space than something
-you'd wanna write software for.
-
-...the hell is an "x86 bootsector Forth"? 😵‍💫
---------------------------------------------
-
-### Forth
-
-Is an old and grumpy programming language.
-I love it to death.
-
-It has a reputation for being impenetrable because you
-must mentally track a stack of values, **but the real
-sauce is the dictionary:** you're given the tools to
-extend the compiler and interpreter in the language
-itself. More collaborator than consumer. I could talk
-your ear off.
-
-**📚 Learn more:** | [Wikipedia][wik] | the beloved
-[Starting Forth][sta] | the dense [ANS Forth glossary][ans]
-
-Forth was made to be a practical tool to solve
-problems. I think [miniforth][min] is a good example in
-a similar space, I haven't read much of it though.
-Nictoforth, however, is more of an exploration of how
-much readable language can fit entirely within the:
-
-### Boot sector
-
-Of a floppy disk 💾. A BIOS loads the sector into
-memory and jumps to the code when you turn your PC on.
-Honestly I don't know the details but it looked like
-fun. Only 510 bytes! Written in:
-
-### x86
-
-An instruction set. Intel and AMD processors run
-programs encoded in x86 at their lowest-ish level. Most
-phones run ARM programs. The NES, the Commodore 64, and
-Bender Bending Rodríguez run 6502 programs. There's
-lots.
-
-### "nictoforth"?
-
-You'll have to [read the source][asm].
-Can't spoil all the surprises.
-
-*Inspired by the lovely [sectorforth][sec],
-[milliforth][mil], and [durexforth][dur].*
-
-[wha]: #the-hell-is-an-x86-bootsector-Forth-
-[asm]: nicto.asm
-[fs]:  hello.fs
-[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
-[ans]: https://forth-standard.org/standard/alpha
-[sta]: https://www.forth.com/starting-forth/
-[sec]: https://github.com/cesarblum/sectorforth
-[mil]: https://github.com/fuzzballcat/milliForth
-[dur]: https://github.com/jkotlinski/durexforth
-[min]: https://github.com/meithecatte/miniforth
-[nix]: https://nixos.org/
-
-What can it do? 🔍
-------------------
-
-After the [wacky
+you'd wanna write software for. After the [wacky
 bootstrap][fs] the following words are available:
 
 ```
@@ -122,7 +58,7 @@ but if you have [Nix]:
 ```bash
 nix-shell  # get assembler and qemu.
 make run   # assemble and enter serial session.
-# try copypasting hello.fs
+# try copypasting hello.fs.
 # press ctrl-a, x to quit qemu.
 ```
 
@@ -200,11 +136,64 @@ so I got the idea for `make terse`.
 
 That's all. I figured you should know.
 
----
+...the hell is an "x86 bootsector Forth"? 😵‍💫
+--------------------------------------------
 
-Bleh. What a lame fart to end the README on. Go back
-to [What's the status?](#whats-the-status-) and we'll
-pretend this never happened, ok?
+### Forth
 
+Is an old and grumpy programming language.
+I love it to death.
+
+It has a reputation for being impenetrable because you
+must mentally track a stack of values, **but the real
+sauce is the dictionary:** you're given the tools to
+extend the compiler and interpreter in the language
+itself. More collaborator than consumer. I could talk
+your ear off.
+
+**📚 Learn more:** | [Wikipedia][wik] | the beloved
+[Starting Forth][sta] | the dense [ANS Forth glossary][ans]
+
+Forth was made to be a practical tool to solve
+problems. I think [miniforth][min] is a good example in
+a similar space, I haven't read much of it though.
+Nictoforth, however, is more of an exploration of how
+much readable language can fit entirely within the:
+
+### Boot sector
+
+Of a floppy disk 💾. A BIOS loads the sector into
+memory and jumps to the code when you turn your PC on.
+Honestly I don't know the details but it looked like
+fun. Only 510 bytes! Written in:
+
+### x86
+
+An instruction set. Intel and AMD processors run
+programs encoded in x86 at their lowest-ish level. Most
+phones run ARM programs. The NES, the Commodore 64, and
+Bender Bending Rodríguez run 6502 programs. There's
+lots.
+
+### "nictoforth"?
+
+You'll have to [read the source][asm].
+Can't spoil all the surprises.
+
+*Inspired by the lovely [sectorforth][sec],
+[milliforth][mil], and [durexforth][dur].*
+
+[wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
+[asm]: nicto.asm
+[fs]:  hello.fs
+[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
+[ans]: https://forth-standard.org/standard/alpha
+[sta]: https://www.forth.com/starting-forth/
+[sec]: https://github.com/cesarblum/sectorforth
+[mil]: https://github.com/fuzzballcat/milliForth
+[dur]: https://github.com/jkotlinski/durexforth
+[min]: https://github.com/meithecatte/miniforth
+[nix]: https://nixos.org/
+
+<!-- kate: remove-trailing-spaces all; -->
 <!-- *** end of README. *** -->
-
