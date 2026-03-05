@@ -78,7 +78,7 @@ x o emit x k emit \ annie are you:
 x 3 0 + emit x 3 1 + emit \ 34:
 x 3 2 + emit x 3 2 2u/ + emit \ 54:
 
-\ >in  (variables) \ addr of next unparsed character.
+\ variables:   >in \ addr of next unparsed character.
 : state >in 2+ ;   \ /!\ must be exactly 1! see asm.
 : here dp @ ;      \ next free byte to `,` compile to.
 : latest dp 2+ @ ; \ dict entry of last defined word.

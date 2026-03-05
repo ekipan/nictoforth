@@ -13,7 +13,7 @@ o/nopad.bin: nicto.asm o
 o:                 # build outputs directory.
 	mkdir -p o
 
-# -- BUILD PHONIES.
+# -- DEV PHONIES.
 .PHONY: all run count clean
 
 all: o/nicto.bin o/nopad.bin
@@ -45,6 +45,7 @@ outline:           # with sections and stack effects.
 terse:             # implementation details: the how.
 	@echo '; (see nicto.asm for tradeoffs and tricky bits.)'
 	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
+	@echo '; dict fmt: dw link | db len,'\''name'\'' | dw xt'
 	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
 
 show:              # design narrative: the why.

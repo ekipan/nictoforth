@@ -8,14 +8,12 @@
 nictoforth
 ==========
 
-Nick's 16-bit x86 bootsector Forth.
+Nick's 16-bit x86 bootsector Forth. Don't know what
+that means? [Explanation further below][wha].
 
-If you're impatient: `nix-shell` then
-`make run` to jump in. Though:
-
-**Heads up:** this is more an art piece exploring a
-constrained problem space than something you'd
-wanna write software for.
+Like its two progenitors, this is more of an art Forth
+exploring a constrained problem space than something
+you'd wanna write software for.
 
 ...the hell is an "x86 bootsector Forth"? 😵‍💫
 --------------------------------------------
@@ -35,18 +33,16 @@ your ear off.
 **📚 Learn more:** | [Wikipedia][wik] | the beloved
 [Starting Forth][sta] | the dense [ANS Forth glossary][ans]
 
-[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
-[sta]: https://www.forth.com/starting-forth/
-[ans]: https://forth-standard.org/standard/alpha
-
-Forth was made to be a practical tool to solve problems.
-nictoforth, however, is more of an exploration of how much
-readable language can fit entirely within the:
+Forth was made to be a practical tool to solve
+problems. I think [miniforth][min] is a good example in
+a similar space, I haven't read much of it though.
+Nictoforth, however, is more of an exploration of how
+much readable language can fit entirely within the:
 
 ### Boot sector
 
-Of a floppy disk 💾. A BIOS loads the sector into memory
-and jumps to the code when you turn your PC on.
+Of a floppy disk 💾. A BIOS loads the sector into
+memory and jumps to the code when you turn your PC on.
 Honestly I don't know the details but it looked like
 fun. Only 510 bytes! Written in:
 
@@ -66,17 +62,23 @@ Can't spoil all the surprises.
 *Inspired by the lovely [sectorforth][sec],
 [milliforth][mil], and [durexforth][dur].*
 
+[wha]: #the-hell-is-an-x86-bootsector-Forth-
 [asm]: nicto.asm
 [fs]:  hello.fs
+[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
+[ans]: https://forth-standard.org/standard/alpha
+[sta]: https://www.forth.com/starting-forth/
 [sec]: https://github.com/cesarblum/sectorforth
 [mil]: https://github.com/fuzzballcat/milliForth
 [dur]: https://github.com/jkotlinski/durexforth
+[min]: https://github.com/meithecatte/miniforth
+[nix]: https://nixos.org/
 
 What can it do? 🔍
 ------------------
 
-After [proper bootstrap][fs] the following words are
-available:
+After the [wacky
+bootstrap][fs] the following words are available:
 
 ```
 [nix-shell]$ make words
@@ -85,14 +87,18 @@ available:
 abort quit head, , ] compile, ; exit immediate ;
 ```
 
+(You can also try `make outline` for a source reading
+aide with `( stack -- diagrams )` or `make targets`
+for a list of other info available.)
+
 - `line` gets input, so to a first approximation is
   `0 4096 accept`,
 - `lex` is nonstandard `parse-name`: it rewinds `>in`
   onto the delimiter,
-- `find` is very nonstandard (see below),
+- `find` is very nonstandard (see `make outline`),
 - The second `;` is the bootstrapper, but note:
 - There is **no builtin number parser!** You'll have to
-  calculate numbers until you can write one in Forth.
+  compute numbers until you can write one in Forth.
 
 But even before a number parser:
 
@@ -104,49 +110,29 @@ lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
 emit  \ prints: 5. See hello.fs for lots more.
 ```
 
-For source reading aides try:
-
-```
-[nix-shell]$ make targets
-(... others omitted ...)
-# -- INFO PHONIES.
-words:          # system capabilities: the what.
-outline:        # with sections and stack effects.
-terse:          # implementation details: the how.
-story: clean    # design narrative: the why.
-targets:        # this list.
-
-[nix-shell]$ make outline | tee o/ol.txt
-; -- [0] ARCHITECTURE.
-; -- [1] ARITHMETIC, STACK.
-plus2:  ; 2+ ( n -- n+2 )
-udiv2:  ; 2u/ ( u -- u/2 )
-nand:   ; nand ( n1 n2 -- ~(n1&n2) )
-invert: ; invert ( n -- ~n )
-equal0: ; 0= ( n -- flag )
-plus:   ; + ( n1 n2 -- n1+n2 )
-drop:   ; drop ( n -- ) free tail word!
-(... etc etc ...)
-```
-
 How do I use it? 🛠️
 -------------------
 
+I've tested with `nasm 3.01`, `qemu 10.1.2`, and gnu
+`make 4.4.1`, but recentish versions will probably be
+fine. Then `awk cat wc xargs` etc for info like
+`make outline`. You can get them however you like,
+but if you have [Nix]:
+
 ```bash
-nix-shell    # get assembler and qemu.
-make run     # assemble and enter serial session.
+nix-shell  # get assembler and qemu.
+make run   # assemble and enter serial session.
+# try copypasting hello.fs
+# press ctrl-a, x to quit qemu.
 ```
 
-The `run` target points you towards
-[code to copypaste][fs], and gives details about the
-quirky input. Only backspace and return, other controls
-put garbage in the buffer.
+The `run` target tells details about the quirky input.
+Only backspace and return, other controls put garbage
+in the buffer.
 
 My `shell.nix` gets native-only `qemu_test` to save
 install time and space. If you're not on x86 then try
-`nix-shell -p nasm qemu` for the whole shebang. If you
-don't have nix, I'm sure you can figure out how
-to get `nasm` and `qemu`. We're adults here.
+`nix-shell -p nasm qemu` for the whole shebang.
 
 What's the status? 📌
 ---------------------
@@ -164,7 +150,7 @@ head.
 You could:
 
 - Read the [detailed narrative][asm] of the assembly.
-- Do a `make terse | less` to see just the code please, 
+- Do a `make terse | less` to see just the code please,
   thanks. (My kinda reading!)
 - Explore [the forth code][fs] beyond the race to hello
   world.
@@ -177,27 +163,27 @@ I'm never satisfied with it.
 
 Uh, actually. About that:
 
-LLM disclosure 🤖
------------------
+How'd you make this? 🤖
+-----------------------
 
-I made extensive use of LLMs as personal copyeditor to
-polish the comment copy in nicto.asm. However I want
-you to understand that 99.9% of the words (and 99% of
-the code) are still my own (or milliforth's or
-sectorforth's). The emojis in this README have AI
-stink but I decided to add them myself because there's
+I started with [milliforth's][mil] code and developed
+most of this thing in my head over a couple feverish
+weeks before finally testing or committing any of it.
+I've dug up some earlier drafts but haven't done the
+work of reconnecting the history back to milliforth.
+
+I used LLMs as personal copyeditor to polish the
+comment copy in nicto.asm. However I want you to
+understand that 99.9% of the words (and 99% of the
+code) are still my own (or milliforth's or
+sectorforth's). The emojis have AI stink but there's
 not much else pretty to look at here.
 
-25% of the shit it came up with was nonsense, another
-70% was kinda bad, but the real value I extracted was
-the feedback; brainstorming places and directions to
-improve. I have strong mixed feelings. This is
-professional labor that I didn't pay for.
-
-I showed it an earlier revision of that last paragraph.
-"...having someone to bounce ideas off, even if that
-someone was a language model." Haha, no. Stay in your
-lane.
+The copy it comes up with is shit but the feedback is
+valuable: finding places that need improvments in
+clarity or examples or whatever. I have strong mixed
+feelings. This is professional labor that I didn't pay
+for.
 
 At LLM suggestion, though, I migrated from BIOS I/O to
 serial for better DX. It guided me through the specific
