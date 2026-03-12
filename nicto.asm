@@ -270,9 +270,9 @@ lex:    ; lex ( "name" -- addr len )
 
 ; [4a] well, almost standard. can't skip the zero
 ; terminator so either: recheck (costly), rely on
-; trailing space (fragile), or rewind (nonstandard).
-; `line` always stores a space [3a] but a custom
-; interpreter [6b] might not.
+; trailing space (fragile), or rewind (nonstandard)
+; as [4a]. `line` always stores a space [3a] but a
+; custom interpreter [6b] might not.
 
 ; could also recover standard `parse-name`:
 ;   : parse-name lex 1 >in +! ;
