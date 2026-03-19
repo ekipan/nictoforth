@@ -8,8 +8,8 @@
 nictoforth
 ==========
 
-Nick's 16-bit x86 bootsector Forth. Don't know what
-that means? [Explanation further below][wha].
+Nick's 16-bit x86 bootsector Forth. See explanation
+below if you [don't know what that means][wha].
 
 Like its two progenitors, this is more of an art Forth
 exploring a constrained problem space than something
