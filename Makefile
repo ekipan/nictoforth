@@ -5,9 +5,9 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 # -- TARGET FILES.
 
-o/nicto.bin: nicto.asm o # bootable image. (default)
+o/nicto.bin o/nicto.lst &: nicto.asm o # bootable image. (default)
 	# try: make outline, make run, make targets.
-	$(ASM) -f bin -o $@ $<
+	$(ASM) -f bin -o o/nicto.bin -l o/nicto.lst $<
 o/nopad.bin: nicto.asm o
 	$(ASM) -f bin -D NOPAD -o $@ $<
 o:                 # build outputs directory.
