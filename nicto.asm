@@ -478,6 +478,8 @@ c: ; the story of a typical colon word:
 ; read that a couple more times then take a second to
 ; gawk at the code:
 
+%define XT plus2 ; first word in this file.
+
 .prim:  ; ; ( "name" -- )
         call lex
         call .head      ; compile link and name.
@@ -485,7 +487,7 @@ c: ; the story of a typical colon word:
         inc W[.8a+1]    ; [8b] prepare next offset.
         cbw             ; -128 <= offset <= 127.
         xchg bx,ax      ; bx = offset.
-.8c:    mov ax,plus2    ; [8c] load xt.
+.8c:    mov ax,XT       ; [8c] load xt.
         add W[.8c+1],bx ; [8d] prepare next xt.
         jmp .ax         ; compile xt.
 
@@ -496,11 +498,10 @@ c: ; the story of a typical colon word:
 ; it does this as an exercise. the self-modifying code
 ; saves extra variable bytes. code *is* data, anyways.
 
-%define DBO.PREV plus2
 %macro DBO 1-* ; data byte offsets, each from previous.
     %rep %0
-        db %1-DBO.PREV
-        %define DBO.PREV %1
+        db %1-XT
+        %define XT %1
         %rotate 1
     %endrep
 %endmacro
