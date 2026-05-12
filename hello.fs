@@ -10,8 +10,6 @@ lex 3 drop @ \ some smoke tests. ( $2033 )
 dup 2+ emit \ honoring the jackson:
 dup >in 0= + emit  >in 0= 0= + emit \ 32:
 
-\ (c) 2025, see LICENSE.
-
 \ nictoforth: nick's 16-bit x86 bootsector forth.
 
 \ the initial bootstrapping word `;` gives a name to a

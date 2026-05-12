@@ -346,7 +346,7 @@ error:  mov al,'?'
 ; malformed name causes an abort, correcting underflow.
 ; but bp and CIN have to collide *just so*.
 
-; a bit of fluff: (as I've spent bytes decoupling bits
+; (a bit of fluff: as I've spent bytes decoupling bits
 ; of the interpreter I've watched its design converge
 ; towards durexforth's, whose source I didn't quite get
 ; before. it's kinda magical. go implement a forth, it

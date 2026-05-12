@@ -116,7 +116,7 @@ sectorforth's). The emojis have AI stink but there's
 not much else pretty to look at here.
 
 The copy it comes up with is shit but the feedback is
-valuable: finding places that need improvments in
+valuable: finding places that need improvements in
 clarity or examples or whatever. I have strong mixed
 feelings. This is professional labor that I didn't pay
 for.
