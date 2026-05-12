@@ -2,6 +2,7 @@
 
 ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
+QOPT ?= -no-reboot -display none -drive format=raw,file=
 
 # -- TARGET FILES.
 
@@ -34,8 +35,7 @@ run: o/nicto.bin   # qemu serial session.
 	#  it does delete from the buffer but not your screen.
 	#  an unknown word gives "?".
 	#
-	$(QEMU) -no-reboot -display none -serial mon:stdio \
-	  -drive if=floppy,format=raw,file=$<
+	$(QEMU) $(QOPT)$< -serial mon:stdio
 
 clean:             # remove o directory.
 	rm -rf o
