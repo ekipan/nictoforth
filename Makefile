@@ -43,7 +43,8 @@ clean:             # remove o directory.
 # -- INFO PHONIES.
 
 words:             # system capabilities: the what.
-	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs
+	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs -n 12
+
 outline:           # with sections and stack effects.
 	@awk '/--/' nicto.asm
 
