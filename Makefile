@@ -1,6 +1,6 @@
 # -- VARIABLES.
 
-ASM ?= nasm #      # yasm also works fine.
+ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 # -- TARGET FILES.
@@ -8,15 +8,22 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 o/nicto.bin o/nicto.lst &: nicto.asm o # bootable image. (default)
 	# try: make outline, make run, make targets.
 	$(ASM) -f bin -o o/nicto.bin -l o/nicto.lst $<
+
 o/nopad.bin: nicto.asm o
 	$(ASM) -f bin -D NOPAD -o $@ $<
+
 o:                 # build outputs directory.
 	mkdir -p o
 
-# -- DEV PHONIES.
-.PHONY: all run count clean
+.PHONY: all run count clean words outline terse show story targets
+
+# -- DEVEL PHONIES.
 
 all: o/nicto.bin o/nopad.bin
+
+count: o/nopad.bin # print assembled size.
+	wc -c <$<
+
 run: o/nicto.bin   # qemu serial session.
 	#
 	#  ctrl-a, x to quit qemu.
@@ -29,13 +36,11 @@ run: o/nicto.bin   # qemu serial session.
 	#
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
-count: o/nopad.bin # print assembled size.
-	wc -c <$<
+
 clean:             # remove o directory.
 	rm -rf o
 
 # -- INFO PHONIES.
-.PHONY: words outline terse show story targets
 
 words:             # system capabilities: the what.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs
@@ -62,6 +67,7 @@ show:              # design narrative: the why.
 	# Strap in. Shit gets messy.
 	#
 	cat README.md nicto.asm
+
 story: clean show count run # and demonstration.
 	#
 	#     ~fin~
