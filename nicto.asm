@@ -48,14 +48,14 @@
 ;
 ; registers:
 ;   bp = param stack pointer, sp = return stack pointer.
-;   ax bx cx dx si di = available to words.
+;   ax bx cx dx si di = scratch for code words.
 ;   subroutine threaded so forth ip = x86 ip.
 
 CIN     equ 0x1000    ; next unparsed character.
 STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5c]
 HERE:   dw c.here     ; next free byte to compile to.
-LATEST: dw dictionary ; last dictionary definition.
-MAIN:   dw interpret  ; main loop vector. [6b]
+LATEST: dw dictionary ; start of interpreter search list.
+MAIN:   dw interpret  ; custom interpreter vector. [6b]
 
 ; milliforth groups the variables and keeps their base
 ; address in bx, saving instruction bytes at complexity
