@@ -92,7 +92,7 @@ here x 3 2+ , @ 2+ emit \ 7:
 : nip sp@ 2+ ! ;
 : 2dup over over ;
 : 2drop drop drop ;
-: 3rd sp@ 2+ 2+ ;
+\ : 3rd sp@ 2+ 2+ ;
 \ : swap dup 3rd @ 3rd ! 3rd ! ;
 \ prefer `over ... nip` etc vs this slow `swap`.
 x a x b x c nip swap emit emit \ ac:
