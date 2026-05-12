@@ -1,10 +1,13 @@
 ; (c) 2025, see LICENSE (it's MIT).
 
+; * contents: preamble fluff, then [0] architecture,
+;   [1-4] the bits, [5-6] the heart, [7-8] the tools.
+
+; nictoforth: nick's 16-bit x86 bootsector forth.
+;
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
-;
-; nictoforth: nick's 16-bit x86 bootsector forth.
 ;
 ; the name squishes 'nick's sector' into five characters,
 ; a nod to the filename limit that gave us 'forth'.
@@ -13,8 +16,6 @@
 ;
 ; my biggest win: almost [8g] every byte of kernel code
 ; is reusable from forth. proud of that.
-;
-; the bits [1-4], the heart [5-6], the tools [7-8].
 
 ; -- [0] ARCHITECTURE.
 
