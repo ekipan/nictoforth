@@ -27,7 +27,8 @@ count: o/nopad.bin # print assembled size.
 
 run: o/nicto.bin   # qemu serial session.
 	#
-	#  ctrl-a, x to quit qemu.
+	#  ctrl-a, x to quit qemu. or:
+	#  "; bye bye" to define use the shutdown word.
 	#  ctrl-a, c to swap serial<->monitor.
 	#  see hello.fs for some code to paste.
 	#

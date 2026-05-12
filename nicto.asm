@@ -39,6 +39,9 @@
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
         jmp 0x05c0:abort ; set cs = 0x05c0.
 
+bye:    ; bye ( -- ) acpi reboot.
+        jmp 0xffff:0
+
 ; memory map (cs ds es ss = 0x05c0):
 ;   0000 [tib->0........] text buffer, zero terminated.
 ;   1000 [CIN][STATE]     interpreter variables.
@@ -478,7 +481,7 @@ c: ; the story of a typical colon word:
 ; read that a couple more times then take a second to
 ; gawk at the code:
 
-%define XT plus2 ; first word in this file.
+%define XT bye ; first word in this file.
 
 .prim:  ; ; ( "name" -- )
         call lex
@@ -506,8 +509,8 @@ c: ; the story of a typical colon word:
     %endrep
 %endmacro
 
-.list:  ; db udiv2-plus2, nand-udiv2, invert-nand, ...
-        DBO udiv2, nand, invert, equal0, plus
+.list:  ; db plus2-bye, udiv2-plus2, nand-udiv2, ...
+        DBO plus2, udiv2, nand, invert, equal0, plus
         DBO drop, dup, swap, rpush, rpop
         DBO cin, dptr, sptr, rptr, fetch, store
         DBO key, emit, line, lex ; [8e]

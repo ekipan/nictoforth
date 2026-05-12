@@ -1,4 +1,4 @@
-; 2+ ; 2u/ ; nand ; invert ; 0= ; +
+; bye ; 2+ ; 2u/ ; nand ; invert ; 0= ; +
 ; drop ; dup ; swap ; >r ; r>
 ; >in ; dp ; sp@ ; rp@ ; @ ; !
 ; key ; emit ; \ ; lex
@@ -195,3 +195,5 @@ lex testing type
 \ sectorforth has example source that gets to fizzbuzz
 \ and milliforth to a brainfuck interpreter. but for now,
 \ nictoforth is good enough.
+
+bye
