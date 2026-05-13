@@ -1,6 +1,8 @@
 
 # nictoforth
 
+[top]: #nictoforth
+
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
 
@@ -32,7 +34,7 @@ which gives names to the rest of the builtins.
 Type `; 2+ <return>` to name the first word `2+`,
 other inputs reply with `?` to let you know there
 was an error and the stacks were reset. See the
-[Forth source][fs] for the full wacky bootstrap.
+Forth source for the full [wacky bootstrap][fs].
 
 You can ask the Makefile for more info:
 
@@ -61,7 +63,7 @@ quit head, , ] compile, ; exit immediate ;
 Above I mentioned the lack of a number parser. You can
 write one in Forth, but even before that:
 
-```
+```forth
 lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
       \ input buffer, len is dropped and the '3' digit
       \ and space are fetched: ( $2033 )
@@ -162,6 +164,8 @@ That's all. I figured you should know.
 ## ...the hell is an "x86 bootsector Forth"? 😵‍💫
 <!-------------------------------------------->
 
+[wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
+
 ### Forth
 
 Is an old and grumpy programming language.
@@ -208,11 +212,8 @@ Can't spoil all the surprises.
 
 <!-- References -->
 
-[top]: #nictoforth
-[wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
 [asm]: nicto.asm
 [fs]:  hello.fs
-
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
 [ans]: https://forth-standard.org/standard/alpha
 [sta]: https://www.forth.com/starting-forth/
