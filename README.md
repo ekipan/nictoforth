@@ -165,8 +165,10 @@ extend the compiler and interpreter in the language
 itself. More collaborator than consumer. I could talk
 your ear off.
 
-**📚 Learn more:** | [Wikipedia][wik] | the beloved
-[Starting Forth][sta] | the dense [ANS Forth glossary][ans]
+**📚 Learn more:**
+| [Wikipedia][wik]
+| the beloved [Starting Forth][sta]
+| the dense [ANS Forth glossary][ans]
 
 Forth was made to be a practical tool to solve
 problems. I think [Miniforth][min] and [DuskOS][dus]
