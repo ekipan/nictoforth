@@ -25,15 +25,19 @@ After a [wacky bootstrap][fs] the following words are
 available:
 
 ```
-[nix-shell]$ make words
-2+ 2u/ nand invert 0= + drop dup swap >r r>
->in dp sp@ rp@ @ ! key emit line lex find execute
-abort quit head, , ] compile, ; exit immediate ;
-```
+[nix-shell]$ make targets
+(...)
+# -- INFO PHONIES.
+words:         # system capabilities: the what.
+outline:       # with sections and stack effects.
+terse:         # implementation details: the how.
+(...)
 
-(You can also try `make outline` for a source reading
-aide with `( stack -- diagrams )` or `make targets`
-for a list of other info available.)
+[nix-shell]$ make words
+2+ 2u/ nand invert 0= + drop dup swap >r r> >in
+dp sp@ rp@ @ ! key emit line lex find execute abort
+quit head, , ] compile, ; exit immediate ;
+```
 
 - `line` gets input, so to a first approximation is
   `0 4096 accept`,
