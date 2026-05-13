@@ -13,7 +13,7 @@ o/boot o/list &: nicto.asm o # (default)
 o/nopad: nicto.asm o
 	$(ASM) -f bin -D NOPAD -o $@ $<
 
-o:                 # build outputs directory.
+o: # (directory)
 	mkdir -p o
 
 .PHONY: all run count clean words outline terse show story targets
@@ -22,10 +22,10 @@ o:                 # build outputs directory.
 
 all: o/boot o/nopad
 
-count: o/nopad     # print assembled size.
+count: o/nopad # print assembled size.
 	wc -c <$<
 
-run: o/boot        # qemu serial session.
+run: o/boot    # qemu serial session.
 	#
 	#  ctrl-a, x to quit qemu.
 	#  ctrl-a, c to swap serial<->monitor.
@@ -37,18 +37,18 @@ run: o/boot        # qemu serial session.
 	#
 	$(QEMU) $(QOPT)$< -serial mon:stdio
 
-clean:             # remove o directory.
+clean:         # remove o directory.
 	rm -rf o
 
 # -- INFO PHONIES.
 
-words:             # system capabilities: the what.
+words:         # system capabilities: the what.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs -n 12
 
-outline:           # with sections and stack effects.
+outline:       # with sections and stack effects.
 	@awk '/--/' nicto.asm
 
-terse:             # implementation details: the how.
+terse:         # implementation details: the how.
 	@printf "\
 	; (see nicto.asm for tradeoffs and tricky bits.)\n\
 	; subroutine-threaded. bp=params sp=returns tib=0.\n\
@@ -57,7 +57,7 @@ terse:             # implementation details: the how.
 	; double: call dup | call plus | ret  ; instructions\n"
 	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
 
-show:              # design narrative: the why.
+show:          # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
 	# art Forth, in make target format. From README setup to
 	# x86 implementation to QEMU serial session, it's
@@ -78,5 +78,5 @@ story: clean show count run # and demonstration.
 	#
 	#     https://github.com/ekipan/nictoforth
 
-targets:           # this list.
+targets:       # this list.
 	@awk '/^# --|^\w/' Makefile
