@@ -4,24 +4,24 @@
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
 
+Like [Milliforth][mil] and [Sectorforth][sec], this is
+an **art Forth** exploring a problem space, rather than
+a system you'd wanna write software for. All three
+**lack a builtin numbers parser,** for example.
+
 ## Why make this?
 <!-------------->
 
 Reading DuskOS's [Tumble Forth][tum] blog led me to
-[Milliforth][mil], which crushes [Sectorforth][sec]'s
-code into as few bytes as possible, but I was inspired
-to go a different direction: spending those bytes
-decoupling and expanding to see just how much it could
-resemble a real Forth.
+Milliforth, which crushes Sectorforth's code into as
+few bytes as possible, but I was inspired to go a
+different direction: spending those bytes decoupling
+and expanding to see just how much it could resemble a
+real Forth.
 
 The creative constraint: **never touch the disk again**
 after BIOS first jumps to the kernel. Just 510 bytes
 and a user across a serial line.
-
-**To be clear:** this makes these Forths essentially
-**art Forths** that explore a problem space, rather
-than systems you'd wanna write software for.
-All three **lack a numbers parser.**
 
 ## What can it do?
 <!--------------->
