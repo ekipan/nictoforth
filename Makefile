@@ -49,9 +49,12 @@ outline:           # with sections and stack effects.
 	@awk '/--/' nicto.asm
 
 terse:             # implementation details: the how.
-	@echo '; (see nicto.asm for tradeoffs and tricky bits.)'
-	@echo '; subroutine-threaded. bp=params, sp=returns, tib=0.'
-	@echo '; dict fmt: dw link | db len,'\''name'\'' | dw xt'
+	@printf "\
+	; (see nicto.asm for tradeoffs and tricky bits.)\n\
+	; subroutine-threaded. bp=params sp=returns tib=0.\n\
+	;   : double dup + ; \ this compiles to:\n\
+	; dw prev | db 6,'double' | dw double ; dict data\n\
+	; double: call dup | call plus | ret  ; instructions\n"
 	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
 
 show:              # design narrative: the why.
