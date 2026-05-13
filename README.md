@@ -5,11 +5,12 @@ nictoforth
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
 
-[Milliforth][mil] crushes [Sectorforth][sec]'s code
-into as few bytes as possible, but I was inspired to go
-a different direction: spending those bytes decoupling
-and expanding to see just how much it could resemble a
-real Forth.
+Reading DuskOS's [Tumble Forth][tum] blog led me to
+[Milliforth][mil], which crushes [Sectorforth][sec]'s
+code into as few bytes as possible, but I was inspired
+to go a different direction: spending those bytes
+decoupling and expanding to see just how much it could
+resemble a real Forth.
 
 **I want to be clear though:** all three are
 essentially **art Forths,** exploring a constrained
@@ -168,10 +169,11 @@ your ear off.
 [Starting Forth][sta] | the dense [ANS Forth glossary][ans]
 
 Forth was made to be a practical tool to solve
-problems. I think [miniforth][min] is a good example in
-a similar space, I haven't read much of it though.
-Nictoforth, however, is more of an exploration of how
-much readable language can fit entirely within the:
+problems. I think [Miniforth][min] and [DuskOS][dus]
+are good examples in a similar space, though I haven't
+read much of them. As said at the top, however,
+[Nictoforth is an art Forth][top] exploring how much
+readable language can fit entirely within the:
 
 ### Boot sector
 
@@ -193,18 +195,17 @@ lots.
 You'll have to [read the source][asm].
 Can't spoil all the surprises.
 
-*Inspired by the lovely [sectorforth][sec],
-[milliforth][mil], and [durexforth][dur].*
-
+[top]: #nictoforth
 [wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
 [asm]: nicto.asm
 [fs]:  hello.fs
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
 [ans]: https://forth-standard.org/standard/alpha
 [sta]: https://www.forth.com/starting-forth/
+[dus]: https://duskos.org/
+[tum]: https://tumbleforth.hardcoded.net/
 [sec]: https://github.com/cesarblum/sectorforth
 [mil]: https://github.com/fuzzballcat/milliForth
-[dur]: https://github.com/jkotlinski/durexforth
 [min]: https://github.com/meithecatte/miniforth
 [nix]: https://nixos.org/
 
