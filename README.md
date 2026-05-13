@@ -1,9 +1,11 @@
 
-nictoforth
-==========
+# nictoforth
 
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
+
+## Why make this?
+<!-------------->
 
 Reading DuskOS's [Tumble Forth][tum] blog led me to
 [Milliforth][mil], which crushes [Sectorforth][sec]'s
@@ -21,8 +23,8 @@ and a user across a serial line.
 than systems you'd wanna write software for.
 All three **lack a numbers parser.**
 
-What can it do?
----------------
+## What can it do?
+<!--------------->
 
 To save name bytes there's only one word at boot,
 which gives names to the rest of the builtins.
@@ -67,8 +69,8 @@ lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
 emit  \ prints: 5. See hello.fs for lots more.
 ```
 
-How do I use it?
-----------------
+## How to use it?
+<!-------------->
 
 I've tested with `nasm 3.01`, `qemu 10.1.2`, and gnu
 `make 4.4.1`, but recentish versions will probably be
@@ -91,8 +93,8 @@ My `shell.nix` gets native-only `qemu_test` to save
 install time and space. If you're not on x86 then try
 `nix-shell -p nasm qemu` for the whole shebang.
 
-What's the status? 📌
----------------------
+## What's the status? 📌
+<!--------------------->
 
 ```nasm
 ; my biggest win: almost [8e] every byte of kernel code
@@ -120,8 +122,8 @@ I'm never satisfied with it.
 
 Uh, actually. About that:
 
-How'd you make this? 🤖
------------------------
+## How was it made? 🤖
+<!------------------->
 
 I started with [milliforth's][mil] code and developed
 most of this thing in my head over a couple feverish
@@ -157,8 +159,8 @@ so I got the idea for `make terse`.
 
 That's all. I figured you should know.
 
-...the hell is an "x86 bootsector Forth"? 😵‍💫
---------------------------------------------
+## ...the hell is an "x86 bootsector Forth"? 😵‍💫
+<!-------------------------------------------->
 
 ### Forth
 
@@ -204,10 +206,13 @@ lots.
 You'll have to [read the source][asm].
 Can't spoil all the surprises.
 
+<!-- References -->
+
 [top]: #nictoforth
 [wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
 [asm]: nicto.asm
 [fs]:  hello.fs
+
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
 [ans]: https://forth-standard.org/standard/alpha
 [sta]: https://www.forth.com/starting-forth/
