@@ -1,20 +1,22 @@
 
-```nasm
-; after enjoying sectorforth and milliforth, I wondered:
-; how much useful (and flexible!) forth can I cram into
-; 510 bytes while being fun to read and hack on?
-```
-
 nictoforth
 ==========
 
-Nick's 16-bit x86 bootsector Forth. See explanation
-below if you [don't know what that means][wha].
+Nick's 16-bit x86 bootsector Forth. See the bottom of
+this README if you [don't know what that means][wha].
 
-Like its two progenitors, this is more of an art Forth
-exploring a constrained problem space than something
-you'd wanna write software for. The core, and arbitrary,
-constraint is to **never touch the disk again** after
+[Milliforth][mil] crushes [Sectorforth][sec]'s code
+into as few bytes as possible, but I was inspired to go
+a different direction: spending those bytes decoupling
+and expanding to see just how much it could resemble a
+real Forth.
+
+**I want to be clear though:** all three are
+essentially **art Forths,** exploring a constrained
+problem space rather than something you'd wanna write
+software for. All three Forths lack a numbers parser.
+
+The constraint: **never touch the disk again** after
 BIOS first jumps to the kernel. Just 510 bytes and a
 user across a serial line.
 
@@ -45,10 +47,9 @@ quit head, , ] compile, ; exit immediate ;
   onto the delimiter,
 - `find` is very nonstandard (see `make outline`),
 - The second `;` is the bootstrapper, but note:
-- There is **no builtin number parser!** You'll have to
-  compute numbers until you can write one in Forth.
 
-But even before a number parser:
+Above I mentioned the lack of a number parser. You can
+write one in Forth, but even before that:
 
 ```
 lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
