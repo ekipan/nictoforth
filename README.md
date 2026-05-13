@@ -1,13 +1,13 @@
 
 # nictoforth
 
-[top]: #nictoforth
-
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
 
 ## Why make this?
 <!-------------->
+
+[why]: #why-make-this
 
 Reading DuskOS's [Tumble Forth][tum] blog led me to
 [Milliforth][mil], which crushes [Sectorforth][sec]'s
@@ -187,7 +187,7 @@ Forth was made to be a practical tool to solve
 problems. I think [Miniforth][min] and [DuskOS][dus]
 are good examples in a similar space, though I haven't
 read much of them. As said at the top, however,
-[Nictoforth is an art Forth][top] exploring how much
+[Nictoforth is an art Forth][why] exploring how much
 readable language can fit entirely within the:
 
 ### Boot sector
