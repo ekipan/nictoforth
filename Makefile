@@ -16,7 +16,7 @@ o/nopad: nicto.asm o
 o: # (directory)
 	mkdir -p o
 
-.PHONY: all run count clean words outline terse show story targets
+.PHONY: all run count clean words outline terse story targets
 
 # -- DEVEL PHONIES.
 
@@ -57,7 +57,7 @@ terse:         # implementation details: the how.
 	; double: call dup | call plus | ret  ; instructions\n"
 	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
 
-show:          # design narrative: the why.
+story:         # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
 	# art Forth, in make target format. From README setup to
 	# x86 implementation to QEMU serial session, it's
@@ -71,8 +71,7 @@ show:          # design narrative: the why.
 	# Strap in. Shit gets messy.
 	#
 	cat README.md nicto.asm
-
-story: clean show count run # and demonstration.
+	make clean count run
 	#
 	#     ~fin~
 	#
