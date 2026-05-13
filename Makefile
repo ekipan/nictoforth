@@ -6,11 +6,11 @@ QOPT ?= -no-reboot -display none -drive format=raw,file=
 
 # -- TARGET FILES.
 
-o/nicto.bin o/nicto.lst &: nicto.asm o # bootable image. (default)
+o/boot o/list &: nicto.asm o # (default)
 	# try: make outline, make run, make targets.
-	$(ASM) -f bin -o o/nicto.bin -l o/nicto.lst $<
+	$(ASM) -f bin -o o/boot -l o/list $<
 
-o/nopad.bin: nicto.asm o
+o/nopad: nicto.asm o
 	$(ASM) -f bin -D NOPAD -o $@ $<
 
 o:                 # build outputs directory.
@@ -20,12 +20,12 @@ o:                 # build outputs directory.
 
 # -- DEVEL PHONIES.
 
-all: o/nicto.bin o/nopad.bin
+all: o/boot o/nopad
 
-count: o/nopad.bin # print assembled size.
+count: o/nopad     # print assembled size.
 	wc -c <$<
 
-run: o/nicto.bin   # qemu serial session.
+run: o/boot        # qemu serial session.
 	#
 	#  ctrl-a, x to quit qemu.
 	#  ctrl-a, c to swap serial<->monitor.
