@@ -58,8 +58,8 @@ quit head, , ] compile, ; exit immediate ;
 - `find` is very nonstandard (see `make outline`),
 - The second `;` is the bootstrapper, but note:
 
-Above I mentioned the lack of a number parser. You can
-write one in Forth, but even before that:
+Above I mentioned the lack of a numbers parser.
+You can write one in Forth, but even before that:
 
 ```forth
 lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
