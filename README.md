@@ -4,10 +4,11 @@
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
 
-Like [Milliforth][mil] and [Sectorforth][sec], this is
-an **art Forth** exploring a problem space, rather than
-a system you'd wanna write software for. All three
-**lack a builtin numbers parser,** for example.
+Like its progenitors [Milliforth][mil] and
+[Sectorforth][sec], this is an **art Forth** exploring
+a constrained problem space, rather than a system you'd
+wanna write software for. All three **lack a builtin
+numbers parser,** for example.
 
 ## Why make this?
 <!-------------->
