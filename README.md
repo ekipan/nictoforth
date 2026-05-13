@@ -13,8 +13,16 @@ below if you [don't know what that means][wha].
 
 Like its two progenitors, this is more of an art Forth
 exploring a constrained problem space than something
-you'd wanna write software for. After the [wacky
-bootstrap][fs] the following words are available:
+you'd wanna write software for. The core, and arbitrary,
+constraint is to **never touch the disk again** after
+BIOS first jumps to the kernel. Just 510 bytes and a
+user across a serial line.
+
+What can it do?
+---------------
+
+After a [wacky bootstrap][fs] the following words are
+available:
 
 ```
 [nix-shell]$ make words
@@ -46,8 +54,8 @@ lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
 emit  \ prints: 5. See hello.fs for lots more.
 ```
 
-How do I use it? 🛠️
--------------------
+How do I use it?
+----------------
 
 I've tested with `nasm 3.01`, `qemu 10.1.2`, and gnu
 `make 4.4.1`, but recentish versions will probably be
