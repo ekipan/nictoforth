@@ -12,14 +12,14 @@ to go a different direction: spending those bytes
 decoupling and expanding to see just how much it could
 resemble a real Forth.
 
-**I want to be clear though:** all three Forths are
-essentially **art Forths** that explore a constrained
-problem space, rather than something you'd wanna write
-software for. They all **lack a numbers parser.**
+The creative constraint: **never touch the disk again**
+after BIOS first jumps to the kernel. Just 510 bytes
+and a user across a serial line.
 
-The constraint: **never touch the disk again** after
-BIOS first jumps to the kernel. Just 510 bytes and a
-user across a serial line.
+**To be clear:** this makes these Forths essentially
+**art Forths** that explore a problem space, rather
+than systems you'd wanna write software for.
+All three **lack a numbers parser.**
 
 What can it do?
 ---------------
