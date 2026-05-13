@@ -307,7 +307,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
-        mov ah,al       ; for `dispatch`. [5d]
+        mov ah,al       ; for dispatch. [5d]
         and al,len_mask|hidden_flag
         cmp al,B[bp+0]  ; same length and not hidden?
         jne .prev
@@ -343,8 +343,8 @@ interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         call find
         ; possible underflow self-correction. [5b]
         jz error        ; didn't find a word?
-dispatch: ; [5d] coupled to `find`: ah = len+flags.
         INC2 bp         ; ( xt nt ) drop
+        ; [5d] dispatch coupled to `find`: ah = len+flags.
         ; word type:      immediate | nonimmediate
         ; current state:    exe com | exe com
         and ah,immed_flag ;  80  80 |  0   0
@@ -365,8 +365,8 @@ execute: ; execute ( ... xt -- ... )
 ; dense. (thanks, sectorforth!)
 
 ; [5d] could reuse from forth if the flags were taken
-; from the stack. costs instructions though. maybe it's
-; okay to keep the sharp edge in the drawer.
+; from the nt on the stack. costs instructions though.
+; maybe it's okay to keep the sharp edge in the drawer.
 
 ; -- [6] INITIALIZATION, MAIN LOOP.
 
@@ -434,7 +434,7 @@ c: ; the story of a typical colon word:
         mov B[STATE],1
         ret
 
-; 4. `dispatch` compiles words into the definition:
+; 4. dispatch [5d] compiles words into the definition:
 .call:  ; compile, ( xt -- )
         mov al,0xe8
         call .al
