@@ -24,10 +24,17 @@ user across a serial line.
 What can it do?
 ---------------
 
-After a [wacky bootstrap][fs] the following words are
-available:
+To save name bytes there's only one word at boot,
+which gives names to the rest of the builtins.
 
-```
+Type `; 2+ <return>` to name the first word `2+`,
+other inputs reply with `?` to let you know there
+was an error and the stacks were reset. See the
+[Forth source][fs] for the full wacky bootstrap.
+
+You can ask the Makefile for more info:
+
+```txt
 [nix-shell]$ make targets
 (...)
 # -- INFO PHONIES.
