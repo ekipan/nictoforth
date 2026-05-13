@@ -45,7 +45,7 @@ clean:         # remove o directory.
 words:         # system capabilities: the what.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs -n 12
 
-outline:       # with sections and stack effects.
+outline:       # with stack effects, as a reading aide.
 	@awk '/--/' nicto.asm
 
 terse:         # implementation details: the how.
