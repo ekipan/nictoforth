@@ -7,8 +7,6 @@ this README if you [don't know what that means][wha].
 ## Why make this?
 <!-------------->
 
-[why]: #why-make-this
-
 Reading DuskOS's [Tumble Forth][tum] blog led me to
 [Milliforth][mil], which crushes [Sectorforth][sec]'s
 code into as few bytes as possible, but I was inspired
@@ -164,8 +162,6 @@ That's all. I figured you should know.
 ## ...the hell is an "x86 bootsector Forth"? 😵‍💫
 <!-------------------------------------------->
 
-[wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
-
 ### Forth
 
 Is an old and grumpy programming language.
@@ -187,7 +183,7 @@ Forth was made to be a practical tool to solve
 problems. I think [Miniforth][min] and [DuskOS][dus]
 are good examples in a similar space, though I haven't
 read much of them. As said at the top, however,
-[Nictoforth is an art Forth][why] exploring how much
+[Nictoforth is an art Forth][top] exploring how much
 readable language can fit entirely within the:
 
 ### Boot sector
@@ -212,6 +208,8 @@ Can't spoil all the surprises.
 
 <!-- References -->
 
+[top]: #nictoforth
+[wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
 [asm]: nicto.asm
 [fs]:  hello.fs
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
