@@ -321,6 +321,12 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         test bx,bx      ; nz if found.
         ret
 
+; (a bit of fluff: as I've spent bytes decoupling bits
+; of the interpreter I've watched its design converge
+; towards durexforth's, whose source I didn't quite get
+; before. it's kinda magical. go implement a forth, it
+; opens your eyes!)
+
 ok:     ;DEBUG 'K'
         add bp,4        ; drop empty lex.
         jg error        ; underflow?
@@ -335,23 +341,8 @@ interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         call lex
         jcxz ok         ; end of line?
         call find
-        jnz dispatch    ; found a word?
         ; possible underflow self-correction. [5b]
-error:  mov al,'?'
-        call emit.al
-        jmp abort
-
-; [5b] underflowing the stack wraps bp to low addresses.
-; pushing values there corrupts the in buffer, and a
-; malformed name causes an abort, correcting underflow.
-; but bp and CIN have to collide *just so*.
-
-; (a bit of fluff: as I've spent bytes decoupling bits
-; of the interpreter I've watched its design converge
-; towards durexforth's, whose source I didn't quite get
-; before. it's kinda magical. go implement a forth, it
-; opens your eyes!)
-
+        jz error        ; didn't find a word?
 dispatch: ; [5d] coupled to `find`: ah = len+flags.
         INC2 bp         ; ( xt nt ) drop
         ; word type:      immediate | nonimmediate
@@ -363,6 +354,11 @@ dispatch: ; [5d] coupled to `find`: ah = len+flags.
 execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]     ; execute other cases.
+
+; [5b] underflowing the stack wraps bp to low addresses.
+; pushing values there corrupts the in buffer, and a
+; malformed name causes an abort, correcting underflow.
+; but bp and CIN have to collide *just so*.
 
 ; [5c] /!\ `and or dec` dispatch needs STATE low byte of
 ; exactly 1 to compile! it's a sharp edge, but it's code
@@ -379,6 +375,8 @@ execute: ; execute ( ... xt -- ... )
 ; or: current split design, but need two words to give
 ; addrs to forth. same code cost, this feels better imo.
 
+error:  mov al,'?'
+        call emit.al
 abort:  ; abort ( -- ) reset param stack and:
         xor bp,bp       ; first push wraps to 0xfffe.
 quit:   ; quit ( -- ) everything else, then loop.
