@@ -52,6 +52,8 @@ terse:         # implementation details: the how.
 	@echo '; see nicto.asm for notes [5c] [6b] etc.'
 	@awk '!/^;/; /^; --/; /: doub/,/ret /; /map:$$/,/x86/' \
 	  nicto.asm | cat -s || :
+# !/^;/ code /^; --/ section heads //,// example, map+registers.
+# 'cat -s' squeeze blanks, ':' silence 'make terse | head' error.
 
 story:         # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
