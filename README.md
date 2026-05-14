@@ -30,8 +30,8 @@ and a user across a serial line.
 To save name bytes there's only one word at boot,
 which gives names to the rest of the builtins.
 
-Type `; 2+ <return>` to name the first word `2+`,
-other inputs reply with `?` to let you know there
+Type `; 2+ <return>` to name the first word `2+`.
+Other inputs reply with `?` to let you know there
 was an error and the stacks were reset. See the
 Forth source for the full [wacky bootstrap][fs].
 
@@ -175,8 +175,7 @@ extend the compiler and interpreter in the language
 itself. More collaborator than consumer. I could talk
 your ear off.
 
-**📚 Learn more:**
-| [Wikipedia][wik]
+**📚 Learn more:** | [Wikipedia][wik]
 | the beloved [Starting Forth][sta]
 | the dense [ANS Forth glossary][ans]
 
