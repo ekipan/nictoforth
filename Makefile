@@ -56,6 +56,9 @@ terse:         # implementation details: the how.
 # 'cat -s' squeeze blanks, ':' silence 'make terse | head' error.
 
 story:         # design narrative: the why.
+	git rev-parse @
+	git status --short
+	#
 	# I present nictoforth: a space-and-pedagogy-constrained
 	# art Forth, in make target format. From README setup to
 	# x86 implementation to QEMU serial session, it's
