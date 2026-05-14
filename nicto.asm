@@ -26,20 +26,17 @@
 ;
 ;   dw link | db 6,'double' | dw double ; dict data.
 ;   double: call dup | call plus | ret  ; instructions.
-;
-; I chose an unconventional segment. implications:
-;   1. I can store the tib at 0 to save addr calc code,
-;   2. but lose access to bios variables.
-;   3. but! possible underflow self-correction [5b].
-;   4. more space to grow the dictionary,
-;   5. without needing to move code.
 
         bits 16
         cpu 386
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
-        jmp 0x05c0:abort ; set cs = 0x05c0.
+        jmp 0x05c0:abort ; cs ds es ss = all 0x05c0.
 
-; memory map (cs ds es ss = 0x05c0):
+; both my parentforths park in segment 0x50 and put the
+; tib at 0, saving parse code but losing bios vars.
+; I chose a higher segment for more dictionary space.
+;
+; segment 0x05c0 memory map:
 ;   0000 [tib->0........] text buffer, zero terminated.
 ;   1000 [CIN][STATE]     interpreter variables.
 ;   1004 [....sp<-rstack] return addresses.
