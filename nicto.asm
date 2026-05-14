@@ -496,7 +496,7 @@ c: ; the story of a typical colon word:
 %macro DBO 1-* ; data byte offsets, each from previous.
     %rep %0
         %if %1-XT < -128 || 127 < %1-XT
-            %fatal db offset out of range
+            %error DBO %1 <- out of range
         %endif
         db %1-XT
         %define XT %1
