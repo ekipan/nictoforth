@@ -49,13 +49,9 @@ outline:       # with stack effects, as a reading aide.
 	@awk '/--/' nicto.asm
 
 terse:         # implementation details: the how.
-	@printf "\
-	; (see nicto.asm for tradeoffs and tricky bits.)\n\
-	; subroutine-threaded. bp=params sp=returns tib=0.\n\
-	;   : double dup + ; \ this compiles to:\n\
-	; dw prev | db 6,'double' | dw double ; dict data\n\
-	; double: call dup | call plus | ret  ; instructions\n"
-	@awk '/^; --/ || !/^;/' nicto.asm | cat -s # squeeze blanks.
+	@echo '; see nicto.asm for notes [5c] [6b] etc.'
+	@awk '!/^;/; /^; --/; /: doub/,/ret /; /map:$$/,/x86/' \
+	  nicto.asm | cat -s || :
 
 story:         # design narrative: the why.
 	# I present nictoforth: a space-and-pedagogy-constrained
