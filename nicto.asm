@@ -342,12 +342,12 @@ interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         jz error        ; didn't find a word?
         INC2 bp         ; ( xt nt ) drop
         ; [5d] dispatch coupled to `find`: ah = len+flags.
-        ; word type:      immediate | nonimmediate
-        ; current state:    exe com | exe com
+        ; word type:       80 immed | 0 plain
+        ; current state:   ___0___1_|__0___1__
         and ah,immed_flag ;  80  80 |  0   0
         or ah,B[STATE]  ;    80  81 |  0   1  [5c]
         dec ah          ;    7f  80 | ff  *0*
-        jz c.call       ; compile nonimmediate word.
+        jz c.call       ; compile plain word.
 execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]     ; execute other cases.
