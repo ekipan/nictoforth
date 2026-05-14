@@ -10,19 +10,29 @@ a constrained problem space, rather than a system you'd
 wanna write software for. All three **lack a builtin
 numbers parser,** for example.
 
-## Why make this?
+## How to use it?
 <!-------------->
 
-Reading DuskOS's [Tumble Forth][tum] blog led me to
-Milliforth, which crushes Sectorforth's code into as
-few bytes as possible, but I was inspired to go a
-different direction: spending those bytes decoupling
-and expanding to see just how much it could resemble a
-real Forth.
+I've tested with `nasm 3.01`, `qemu 10.1.2`, and gnu
+`make 4.4.1`, but recentish versions will probably be
+fine. Then `awk cat wc xargs` etc for info like
+`make outline`. You can get them however you like,
+but if you have [Nix]:
 
-The creative constraint: **never touch the disk again**
-after BIOS first jumps to the kernel. Just 510 bytes
-and a user across a serial line.
+```bash
+nix-shell  # get assembler and qemu.
+make run   # assemble and enter serial session.
+# try copypasting hello.fs.
+# press ctrl-a, x to quit qemu.
+```
+
+The `run` target tells details about the quirky input.
+Only backspace and return, other controls put garbage
+in the buffer.
+
+My `shell.nix` gets native-only `qemu_test` to save
+install time and space. If you're not on x86 then try
+`nix-shell -p nasm qemu` for the whole shebang.
 
 ## What can it do?
 <!--------------->
@@ -70,29 +80,19 @@ lex 3 drop @ \ "lex 3" gives an ( addr len ) in the
 emit  \ prints: 5. See hello.fs for lots more.
 ```
 
-## How to use it?
+## Why make this?
 <!-------------->
 
-I've tested with `nasm 3.01`, `qemu 10.1.2`, and gnu
-`make 4.4.1`, but recentish versions will probably be
-fine. Then `awk cat wc xargs` etc for info like
-`make outline`. You can get them however you like,
-but if you have [Nix]:
+Reading DuskOS's [Tumble Forth][tum] blog led me to
+Milliforth, which crushes Sectorforth's code into as
+few bytes as possible, but I was inspired to go a
+different direction: spending those bytes decoupling
+and expanding to see just how much it could resemble a
+real Forth.
 
-```bash
-nix-shell  # get assembler and qemu.
-make run   # assemble and enter serial session.
-# try copypasting hello.fs.
-# press ctrl-a, x to quit qemu.
-```
-
-The `run` target tells details about the quirky input.
-Only backspace and return, other controls put garbage
-in the buffer.
-
-My `shell.nix` gets native-only `qemu_test` to save
-install time and space. If you're not on x86 then try
-`nix-shell -p nasm qemu` for the whole shebang.
+The creative constraint: **never touch the disk again**
+after BIOS first jumps to the kernel. Just 510 bytes
+and a user across a serial line.
 
 ## What's the status? 📌
 <!--------------------->
