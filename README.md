@@ -1,5 +1,5 @@
 
-# nictoforth
+# Nictoforth
 
 Nick's 16-bit x86 bootsector Forth. See the bottom of
 this README if you [don't know what that means][wha].
@@ -126,17 +126,17 @@ Uh, actually. About that:
 ## How was it made? 🤖
 <!------------------->
 
-I started with [milliforth's][mil] code and developed
+I started with [Milliforth's][mil] code and developed
 most of this thing in my head over a couple feverish
 weeks before finally testing or committing any of it.
 I've dug up some earlier drafts but haven't done the
-work of reconnecting the history back to milliforth.
+work of reconnecting the history back to Milliforth.
 
 I used LLMs as personal copyeditor to polish the
 comment copy in nicto.asm. However I want you to
 understand that 99.9% of the words (and 99% of the
-code) are still my own (or milliforth's or
-sectorforth's). The emojis have AI stink but there's
+code) are still my own (or Milliforth's or
+Sectorforth's). The emojis have AI stink but there's
 not much else pretty to look at here.
 
 The copy it comes up with is shit but the feedback is
@@ -202,7 +202,7 @@ phones run ARM programs. The NES, the Commodore 64, and
 Bender Bending Rodríguez run 6502 programs. There's
 lots.
 
-### "nictoforth"?
+### "Nictoforth"?
 
 You'll have to [read the source][asm].
 Can't spoil all the surprises.
