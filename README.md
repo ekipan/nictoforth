@@ -101,7 +101,7 @@ and a user across a serial line.
 <!------------------>
 
 ```nasm
-; my biggest win: almost [8e] every byte of kernel code
+; my biggest win: almost every byte of kernel code
 ; is reusable from forth. proud of that.
 ```
 

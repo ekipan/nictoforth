@@ -73,10 +73,21 @@ story:         # design narrative: the why.
 	#
 	#     https://github.com/ekipan/nictoforth
 	#
-	# Strap in. Shit gets messy.
+	# Contents. Search for:
+	# - "#1" README.md.
+	# - "#2" nicto.asm, and highlights:
+	#   - "[0]" architecture.
+	#   - "[5]" dictionary and interpreter.
+	#   - "[7]" the lovely straighforward compiler.
+	#   - "[8]" the extremely wacky bootstrap.
+	#     Packed with character but damn dense!
+	# - "#3" make run.
 	#
-	cat README.md nicto.asm
-	make clean count run
+	# Strap in. We're going down the rabbit hole.
+	#
+	cat README.md #1
+	cat nicto.asm #2
+	make clean count run #3
 	#
 	#     ~fin~
 	#
