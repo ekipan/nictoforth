@@ -85,9 +85,15 @@ story:         # design narrative: the why.
 	#
 	# Strap in. We're going down the rabbit hole.
 	#
+	@printf '```\n\n'
 	cat README.md #1
+	@printf '\n```nasm\n'
 	cat nicto.asm #2
-	make clean count run #3
+	@printf '```\n\n```bash\n'
+	make clean count #3
+	@printf '```\n\n```forth\n'
+	make run
+	@printf '```\n\n```bash\n'
 	#
 	#     ~fin~
 	#

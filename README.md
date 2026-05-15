@@ -1,6 +1,6 @@
 
-# Nictoforth
 [top]: #nictoforth
+# Nictoforth
 
 A 510-byte x86 bootsector Forth that wants to be:
 
@@ -159,9 +159,8 @@ so I got the idea for `make terse`.
 
 That's all. I figured you should know.
 
-## ...the hell is an "x86 bootsector Forth"? 😵‍💫
 [wtf]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
-<!-------------------------------------------->
+## ...the hell is an "x86 bootsector Forth"? 😵‍💫
 
 ### Forth
 
