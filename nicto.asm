@@ -512,14 +512,13 @@ c: ; the story of a typical colon word:
         DBO find, execute, abort, quit
         DBO .head, .comma, .on, .call
         DBO .immed, .ret, .semi ; [8f]
+        ; see full boostrap example in hello.fs.
 
 ; [8e] enough for a quick smoke test:
 ;
-;   ; 2+ ; 2u/ ; nand ; invert ; 0= ; +
-;   ( ... etc until: ... ) ; lex
+;   ; 2+ ; 2u/ ; nand ; invert ( ... ) ; line ; lex
 ;   lex 3 drop @ 2+ emit \ test, should print 5.
-;   ( ... see hello.fs for full bootstrap ... )
-;   ; immediate ; exit immediate ; ; immediate
+;   ( ... ) ; immediate ; exit immediate ; ; immediate
 ;
 ; [8f] c.ret becomes forth `exit`, but immediate. then
 ; c.semi becomes `;`, shadowing c.prim. c.prim and
