@@ -1,8 +1,9 @@
 
 # Nictoforth
+[top]: #nictoforth
 
 Nick's 16-bit x86 bootsector Forth. See the bottom of
-this README if you [don't know what that means][wha].
+this README if you [don't know what that means][wtf].
 
 Like its progenitors [Milliforth][mil] and
 [Sectorforth][sec], this is an **art Forth** exploring
@@ -94,8 +95,8 @@ The creative constraint: **never touch the disk again**
 after BIOS first jumps to the kernel. Just 510 bytes
 and a user across a serial line.
 
-## What's the status? 📌
-<!--------------------->
+## What's the status?
+<!------------------>
 
 ```nasm
 ; my biggest win: almost [8e] every byte of kernel code
@@ -161,6 +162,7 @@ so I got the idea for `make terse`.
 That's all. I figured you should know.
 
 ## ...the hell is an "x86 bootsector Forth"? 😵‍💫
+[wtf]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
 <!-------------------------------------------->
 
 ### Forth
@@ -208,8 +210,6 @@ Can't spoil all the surprises.
 
 <!-- References -->
 
-[top]: #nictoforth
-[wha]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
 [asm]: nicto.asm
 [fs]:  hello.fs
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
