@@ -213,7 +213,7 @@ Can't spoil all the surprises.
 
 [asm]: nicto.asm
 [fs]:  hello.fs
-[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/41a13fcf3d834fb703ed5695615cd35852f696a6
+[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/798ecbeeed430b453c3dd5288330a1f44ea5fa72
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
 [ans]: https://forth-standard.org/standard/alpha
 [sta]: https://www.forth.com/starting-forth/
