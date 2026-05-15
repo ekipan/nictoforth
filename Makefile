@@ -60,44 +60,11 @@ terse:         # implementation details: the how.
 # !/^;/ code /^; --/ section heads //,// example, map+registers.
 # 'cat -s' squeeze blanks, ':' silence 'make terse | head' error.
 
-story:         # design narrative: the why.
-	git rev-parse @; git status --short
-	#
-	# I present nictoforth: a space-and-pedagogy-constrained
-	# art Forth, in make target format. From README setup to
-	# x86 implementation to QEMU serial session, it's
-	# carefully crafted to be read top-to-bottom.
-	#
-	# Here's the repo if you just want the code instead of my
-	# blathering. Try "make terse | less" or "make targets".
-	#
-	#     https://github.com/ekipan/nictoforth
-	#
-	# Contents. Search for:
-	# - "#1" README.md.
-	# - "#2" nicto.asm, and highlights:
-	#   - "[0]" architecture.
-	#   - "[5]" dictionary and interpreter.
-	#   - "[7]" the lovely straightforward compiler.
-	#   - "[8]" the extremely wacky bootstrap.
-	#     Packed with character but damn dense!
-	# - "#3" make run.
-	#
-	# Strap in. We're going down the rabbit hole.
-	#
-	@printf '```\n\n'
-	cat README.md #1
-	@printf '\n```nasm\n'
-	cat nicto.asm #2
-	@printf '```\n\n```bash\n'
-	make clean count #3
-	@printf '```\n\n```forth\n'
-	make run
-	@printf '```\n\n```bash\n'
-	#
-	#     ~fin~
-	#
-	#     https://github.com/ekipan/nictoforth
+status:         # query git, leading into demo:
+	git rev-parse @
+	git status --short
+
+demo: status clean count run
 
 targets:       # this list.
 	@awk '/^# --|^\w/' Makefile
