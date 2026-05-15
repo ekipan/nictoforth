@@ -2,7 +2,6 @@
 
 ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
-QOPT ?= -no-reboot -display none -drive format=raw,file=
 
 # -- TARGET FILES.
 
@@ -23,24 +22,22 @@ o: # (directory)
 all: o/boot o/nopad
 
 count: o/nopad # print assembled size.
-	wc -c <$<
+	wc -c <$< # assembled size, out of 510 max:
 
 run: o/boot    # qemu serial session.
 	#
 	#  nictoforth, across an emulated serial line.
-	#  see hello.fs for some code to paste.
 	#
-	#  using qemu:
-	#    ctrl-a, x to quit.
-	#    ctrl-a, c to swap serial<->monitor.
-	#
-	#  using nictoforth:
-	#    only bksp and return, other controls put garbage.
-	#    errors give "?" and reset the stacks.
-	#    make sure your terminal sends backspace 127's.
+	#  - see hello.fs for some code to paste.
+	#  - errors give "?" and reset the stacks.
+	#  - only backspace and return, other controls put garbage.
+	#  - make sure your terminal sends backspace 127's.
 	#    it does delete from the buffer but not your screen.
+	#  - ctrl-a, c to swap serial<->monitor.
+	#  - ctrl-a, x to quit qemu. [!]
 	#
-	$(QEMU) $(QOPT)$< -serial mon:stdio
+	$(QEMU) -no-reboot -display none -serial mon:stdio \
+	  -drive if=floppy,format=raw,file=$<
 
 clean:         # remove o directory.
 	rm -rf o
