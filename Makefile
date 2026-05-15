@@ -57,7 +57,7 @@ terse:         # implementation details: the how.
 # !/^;/ code /^; --/ section heads //,// example, map+registers.
 # 'cat -s' squeeze blanks, ':' silence 'make terse | head' error.
 
-status:         # query git, leading into demo:
+status:        # query git, leading into demo:
 	git rev-parse @
 	git status --short
 
