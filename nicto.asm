@@ -184,8 +184,7 @@ store:  ; ! ( n addr -- )
 key:    ; key ( -- c )
         push pushax     ; defer pstack push after:
 .al:    mov ah,2        ; serial recieve.
-        xor dx,dx       ; com1.
-        int 0x14
+        call com1
         test ah,1
         jz .al
         mov ah,0
@@ -195,7 +194,7 @@ emit:   ; emit ( c -- )
         mov al,B[bp]
         INC2 bp
 .al:    mov ah,1        ; serial transmit.
-        xor dx,dx       ; com1.
+com1:   xor dx,dx
         int 0x14
         ret
 
