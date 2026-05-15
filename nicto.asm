@@ -36,7 +36,7 @@
 ; tib at 0, saving parse code but losing bios vars.
 ; I chose a higher segment for more dictionary space.
 ;
-; segment 0x05c0 memory map: [0a]
+; [0a] segment 0x05c0 memory map:
 ;   0000 [tib->0........] text buffer, zero terminated.
 ;   1000 [CIN][STATE]     interpreter variables.
 ;   1004 [....sp<-rstack] return addresses.
