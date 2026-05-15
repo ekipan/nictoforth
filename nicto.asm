@@ -182,14 +182,13 @@ store:  ; ! ( n addr -- )
 ; -- [3] INPUT/OUTPUT.
 
 key:    ; key ( -- c )
-        call .al
-        mov ah,0
-        jmp pushax
+        push pushax     ; defer pstack push after:
 .al:    mov ah,2        ; serial recieve.
         xor dx,dx       ; com1.
         int 0x14
         test ah,1
         jz .al
+        mov ah,0
         ret
 
 emit:   ; emit ( c -- )
