@@ -36,7 +36,7 @@
 ; tib at 0, saving parse code but losing bios vars.
 ; I chose a higher segment for more dictionary space.
 ;
-; segment 0x05c0 memory map:
+; segment 0x05c0 memory map: [0a]
 ;   0000 [tib->0........] text buffer, zero terminated.
 ;   1000 [CIN][STATE]     interpreter variables.
 ;   1004 [....sp<-rstack] return addresses.
@@ -353,7 +353,7 @@ execute: ; execute ( ... xt -- ... )
         jmp W[bp-2]     ; execute other cases.
 
 ; [5b] underflowing the stack wraps bp to low addresses.
-; pushing values there corrupts the in buffer, and a
+; pushing values there [0a] corrupts the in buffer, and a
 ; malformed name causes an abort, correcting underflow.
 ; but bp and CIN have to collide *just so*.
 
