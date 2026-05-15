@@ -198,7 +198,6 @@ emit:   ; emit ( c -- )
 .al:    mov ah,1        ; serial transmit.
         xor dx,dx       ; com1.
         int 0x14
-        ; could spend bytes converting cr -> cr lf.
         ret
 
 %macro DEBUG 1 ; 7 bytes per use.
