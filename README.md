@@ -2,8 +2,14 @@
 # Nictoforth
 [top]: #nictoforth
 
-Nick's 16-bit x86 bootsector Forth. See the bottom of
-this README if you [don't know what that means][wtf].
+A 510-byte x86 bootsector Forth that wants to be:
+
+```asm
+; (...) fun to read and hack on.
+```
+
+["Bootsector"? "Forth"?][wtf] <- follow that to the
+bottom of this README.
 
 Like its progenitors [Milliforth][mil] and
 [Sectorforth][sec], this is an **art Forth** exploring
