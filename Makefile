@@ -15,7 +15,7 @@ o/nopad: nicto.asm o
 o: # (directory)
 	mkdir -p o
 
-.PHONY: all run count clean words outline terse story targets
+.PHONY: all run count clean words outline terse status demo targets
 
 # -- DEVEL PHONIES.
 
