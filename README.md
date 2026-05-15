@@ -33,6 +33,9 @@ make run   # assemble and enter serial session.
 # press ctrl-a, x to quit qemu.
 ```
 
+Here's a [demo session log][dem] if you want to see it
+working.
+
 My `shell.nix` gets native-only `qemu_test` to save
 install time and space. If you're not on x86 then try
 `nix-shell -p nasm qemu` for the whole shebang.
@@ -209,6 +212,7 @@ Can't spoil all the surprises.
 
 [asm]: nicto.asm
 [fs]:  hello.fs
+[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/41a13fcf3d834fb703ed5695615cd35852f696a6
 [wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
 [ans]: https://forth-standard.org/standard/alpha
 [sta]: https://www.forth.com/starting-forth/
