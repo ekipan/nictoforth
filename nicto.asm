@@ -201,11 +201,11 @@ emit:   ; emit ( c -- )
         ; could spend bytes converting cr -> cr lf.
         ret
 
-%macro DEBUG 1
-        push ax         ; to use this you'll
-        mov al,%1       ; need bytes. good
-        call emit.al    ; places to plunder:
-        pop ax          ; [1] [2] [7] [8].
+%macro DEBUG 1 ; 7 bytes per use.
+        push ax         ; good places to
+        mov al,%1       ; plunder bytes:
+        call emit.al    ; [1] [2] [7] [8].
+        pop ax
 %endmacro
 
 line:   ; line ( -- ) reset `>in`, fill buffer.
