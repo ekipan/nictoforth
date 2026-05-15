@@ -27,13 +27,18 @@ count: o/nopad # print assembled size.
 
 run: o/boot    # qemu serial session.
 	#
-	#  ctrl-a, x to quit qemu.
-	#  ctrl-a, c to swap serial<->monitor.
+	#  nictoforth, across an emulated serial line.
 	#  see hello.fs for some code to paste.
 	#
-	#  make sure your terminal sends backspace 127's.
-	#  it does delete from the buffer but not your screen.
-	#  an unknown word gives "?".
+	#  using qemu:
+	#    ctrl-a, x to quit.
+	#    ctrl-a, c to swap serial<->monitor.
+	#
+	#  using nictoforth:
+	#    only bksp and return, other controls put garbage.
+	#    errors give "?" and reset the stacks.
+	#    make sure your terminal sends backspace 127's.
+	#    it does delete from the buffer but not your screen.
 	#
 	$(QEMU) $(QOPT)$< -serial mon:stdio
 

@@ -27,10 +27,6 @@ make run   # assemble and enter serial session.
 # press ctrl-a, x to quit qemu.
 ```
 
-The `run` target tells details about the quirky input.
-Only backspace and return, other controls put garbage
-in the buffer.
-
 My `shell.nix` gets native-only `qemu_test` to save
 install time and space. If you're not on x86 then try
 `nix-shell -p nasm qemu` for the whole shebang.
