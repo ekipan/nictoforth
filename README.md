@@ -128,23 +128,19 @@ Uh, actually. About that:
 <!------------------->
 
 I started with [Milliforth's][mil] code and developed
-most of this thing in my head over a couple feverish
-weeks before finally testing or committing any of it.
-I've dug up some earlier drafts but haven't done the
-work of reconnecting the history back to Milliforth.
+most of this thing in my head over **a couple feverish
+weeks** before finally testing or committing any of it.
+I've dug up earlier drafts but haven't done the work to
+reconnect history back to Milliforth.
 
-I used LLMs as personal copyeditor to polish the
-comment copy in nicto.asm. However I want you to
-understand that 99.9% of the words (and 99% of the
-code) are still my own (or Milliforth's or
-Sectorforth's). The emojis have AI stink but there's
-not much else pretty to look at here.
-
-The copy it comes up with is shit but the feedback is
-valuable: finding places that need improvements in
-clarity or examples or whatever. I have strong mixed
-feelings. This is professional labor that I didn't pay
-for.
+As an experiment, **I consulted an LLM** to polish
+the comment copy in nicto.asm. However I want you to
+understand that **99.9%** of the words are still **my
+own.** I continue to be unimpressed by the shit copy it
+spits out but **the feedback is valuable:** finding
+places that need examples, extra clarity, whatever. I
+have strong mixed feelings. This is professional labor
+that I didn't pay for.
 
 At LLM suggestion, though, I migrated from BIOS I/O to
 serial for better DX. It guided me through the specific
