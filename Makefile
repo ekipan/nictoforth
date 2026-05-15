@@ -78,7 +78,7 @@ story:         # design narrative: the why.
 	# - "#2" nicto.asm, and highlights:
 	#   - "[0]" architecture.
 	#   - "[5]" dictionary and interpreter.
-	#   - "[7]" the lovely straighforward compiler.
+	#   - "[7]" the lovely straightforward compiler.
 	#   - "[8]" the extremely wacky bootstrap.
 	#     Packed with character but damn dense!
 	# - "#3" make run.
