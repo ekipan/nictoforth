@@ -289,7 +289,7 @@ dictionary: ; starts with only one word. the format:
         dw 0      ; link: 0 marks end of dictionary.
         db 1,';'  ; name: len+flags byte then characters.
         dw c.prim ; xt: execution token, a code address.
-        ; a name token (nt) is a dictionary address.
+        ; nt: a name token is a link field address.
 
 ; the xt field is mainly for byte savings [8].
 ; it looks like indirect threading but don't be fooled:
