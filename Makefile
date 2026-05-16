@@ -7,10 +7,10 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 o/boot: nicto.asm o/dir # (default)
 	# try: make outline, make run, make targets.
-	$(ASM) -l o/list -f bin -o $@ $<
+	$(ASM) -f bin -l $@l -o $@ $<
 
 o/nopad: nicto.asm o/dir
-	$(ASM) -l o/list -f bin -o $@ -D NOPAD $<
+	$(ASM) -f bin -l $@l -o $@ -D NOPAD $<
 
 o/dir:
 	mkdir -p o; touch $@
