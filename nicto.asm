@@ -185,8 +185,8 @@ key:    ; key ( -- c )
         push pushax     ; defer pstack push after:
 .al:    mov ah,2        ; serial recieve.
         call com1
-        test ah,1
-        jz .al
+        shl ah,1        ; c = error?
+        jc .al
         mov ah,0
         ret
 
