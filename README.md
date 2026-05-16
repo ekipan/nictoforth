@@ -120,9 +120,9 @@ You could:
   just the code please, thanks. (My kinda reading!)
 - Explore [the forth code][fs] beyond the race to hello
   world.
-- Try to find more bytes while staying "fun to read and hack
-  on." Which is extremely subjective but hey, throw something
-  at me.
+- Try to find more bytes while staying "fun to read
+  and hack on." Which is extremely subjective but hey,
+  throw something at me.
 
 Moving forward I'll probably continue to polish prose,
 I'm never satisfied with it.
