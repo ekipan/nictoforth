@@ -28,7 +28,7 @@
 ;   double: call dup | call plus | ret  ; instructions.
 
         bits 16
-        cpu 386
+        cpu 186 ; need `push imm16`
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
         jmp 0x05c0:abort ; cs ds es ss = all 0x05c0.
 
