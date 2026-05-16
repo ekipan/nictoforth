@@ -5,15 +5,15 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 # -- TARGET FILES.
 
-o/boot o/list &: nicto.asm o # (default)
+o/boot: nicto.asm o/dir # (default)
 	# try: make outline, make run, make targets.
-	$(ASM) -f bin -o o/boot -l o/list $<
+	$(ASM) -l o/list -f bin -o $@ $<
 
-o/nopad: nicto.asm o
-	$(ASM) -f bin -D NOPAD -o $@ $<
+o/nopad: nicto.asm o/dir
+	$(ASM) -l o/list -f bin -o $@ -D NOPAD $<
 
-o: # (directory)
-	mkdir -p o
+o/dir:
+	mkdir -p o; touch $@
 
 .PHONY: all run count clean words outline terse status demo targets
 
