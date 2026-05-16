@@ -129,15 +129,15 @@ swap:   ; swap ( x y -- y x )
 ; I'm tired of editing.)
 
 rpush:  ; >r ( n -- r:n )
-        pop bx
+        pop dx
         push W[bp]
-        push bx
+        push dx
         jmp drop
 
 rpop:   ; r> ( r:n -- n )
-        pop bx
+        pop dx
         pop ax
-        push bx
+        push dx
         jmp pushax
 
 ; (I bet you're curious about the lack of dictionary
@@ -478,9 +478,9 @@ c: ; the story of a typical colon word:
 .8a:    mov al,B[.list] ; [8a] load offset.
         inc W[.8a+1]    ; [8b] prepare next offset.
         cbw             ; -128 <= offset <= 127.
-        xchg bx,ax      ; bx = offset.
+        xchg dx,ax      ; dx = offset.
 .8c:    mov ax,XT       ; [8c] load xt.
-        add W[.8c+1],bx ; [8d] prepare next xt.
+        add W[.8c+1],dx ; [8d] prepare next xt.
         jmp .ax         ; compile xt.
 
 ; ignore most of it the first time through: first call
