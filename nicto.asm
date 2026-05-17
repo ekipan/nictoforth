@@ -211,7 +211,7 @@ com1:   xor dx,dx
 line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
         call emit.al    ; move to next line.
-        xor di,di       ; buffer at addr 0.
+        xor di,di       ; buffer at addr 0 [0a].
         mov W[CIN],di   ; parse [4] from there later.
         jmp .wait
 .store: stosb           ; store and loop.
@@ -375,14 +375,14 @@ execute: ; execute ( ... xt -- ... )
 error:  mov al,'?'
         call emit.al
 abort:  ; abort ( -- ) reset param stack and:
-        xor bp,bp       ; first push wraps to 0xfffe.
+        xor bp,bp       ; first push wraps [0a] to 0xfffe.
 quit:   ; quit ( -- ) everything else, then loop.
         cld             ; standard stuff:
         times 3 push cs
         pop ds
         pop es
         pop ss          ; [6a]
-        mov sp,$$       ; return stack under the kernel.
+        mov sp,$$       ; rstack under the kernel [0a].
         ; serial init omitted.
         ; seabios seems to take care of it idk.
         mov B[STATE],0  ; start in execute mode [5d].
@@ -544,7 +544,7 @@ c: ; the story of a typical colon word:
 ; fields that point to their next address. waste later
 ; to save now.
 
-.here: ; be dragons! and future dictionary entries.
+.here: ; be dragons! and future dictionary entries [0a].
 
 %ifndef NOPAD ; for `make count` byte size.
         times 510-($-$$) db 0 ; (what would YOU build
