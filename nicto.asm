@@ -30,7 +30,7 @@
         bits 16
         cpu 186 ; need `push imm16`
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
-        jmp 0x05c0:abort ; cs ds es ss = all 0x05c0.
+        jmp 0x05c0:abort ; cs ds es ss = 0x05c0. [6]
 
 ; both my parentforths park in segment 0x50 and put the
 ; tib at 0, saving parse code but losing bios vars.
@@ -48,10 +48,10 @@
 ;   ax bx cx dx si di = scratch for code words.
 ;   subroutine threaded so forth ip = x86 ip.
 
-CIN     equ 0x1000    ; next unparsed character.
+CIN     equ 0x1000    ; next unparsed character. [4]
 STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5c]
-HERE:   dw c.here     ; next free byte to compile to.
-LATEST: dw dictionary ; start of interpreter search list.
+HERE:   dw c.here     ; next free byte to compile to. [7]
+LATEST: dw dictionary ; head of `find` linked list. [5]
 MAIN:   dw interpret  ; custom interpreter vector. [6b]
 
 ; milliforth groups the variables and keeps their base
@@ -209,7 +209,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
         call emit.al    ; move to next line.
         xor di,di       ; buffer at addr 0.
-        mov W[CIN],di
+        mov W[CIN],di   ; parse from there later. [4]
         jmp .wait
 .store: stosb           ; store and loop.
 .echo:  call emit.al
@@ -301,7 +301,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
-        mov ah,al       ; for dispatch. [5d]
+        mov ah,al       ; needed for dispatch. [5d]
         and al,len_mask|hidden_flag
         cmp al,B[bp+0]  ; same length and not hidden?
         jne .prev
@@ -382,11 +382,11 @@ quit:   ; quit ( -- ) everything else, then loop.
         mov sp,$$       ; return stack under the kernel.
         ; serial init omitted.
         ; seabios seems to take care of it idk.
-        mov B[STATE],0
+        mov B[STATE],0  ; start in execute mode [5d].
         call line
         push abort      ; in case user types `r>` etc.
 .loop:  push .loop
-        jmp [MAIN]      ; jump through vector. [6b]
+        jmp [MAIN]      ; swappable interpreter. [6b]
 
 ; [6a] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
@@ -425,7 +425,7 @@ c: ; the story of a typical colon word:
 
 ; 3. switch the compiler on:
 .on:    ; ] ( -- )
-        mov B[STATE],1
+        mov B[STATE],1  ; for [5d].
         ret
 
 ; 4. dispatch [5d] compiles words into the definition:
@@ -490,13 +490,13 @@ c: ; the story of a typical colon word:
 ; it does this as an exercise. the self-modifying code
 ; saves extra variable bytes. code *is* data, anyways.
 
-%macro DBO 1-* ; data byte offsets, each from previous.
+%macro DBO 1-* ; data byte offsets, to compress xt list.
     %rep %0
         %if %1-XT < -128 || 127 < %1-XT
             %error DBO %1 <- out of range
         %endif
-        db %1-XT
-        %define XT %1
+        db %1-XT        ; [8a] loads, [8d] adds into [8c].
+        %define XT %1   ; remember for next byte.
         %rotate 1
     %endrep
 %endmacro
