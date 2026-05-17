@@ -312,7 +312,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov cx,W[bp+0]
         repe cmpsb      ; name characters match?
         jne .prev
-        mov dx,W[si]    ; dx = xt. [5a]
+        mov dx,W[si]    ; [5a] dx = xt.
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
         test bx,bx      ; nz if found. [0b]
@@ -338,7 +338,7 @@ interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         call lex
         jcxz ok         ; end of line? [0b]
         call find
-        ; possible underflow self-correction. [5b]
+        ; [5b] possible underflow self-correction.
         jz error        ; didn't find a word? [0b]
         INC2 bp         ; ( xt nt ) drop
         ; [5c] dispatch coupled to `find`: ah = len+flags.
