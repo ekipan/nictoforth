@@ -52,7 +52,7 @@ outline:       # with stack effects, as a reading aide.
 
 terse:         # implementation details: the how.
 	@echo '; see nicto.asm for notes [5c] [6b] etc.'
-	@awk '!/^;/; /^; --/; /: doub/,/ret /; /map:$$/,/x86/' \
+	@awk '!/^;/; /^; --/; /: doub/,/ret /; /map:$$/,/0b/' \
 	  nicto.asm | cat -s || :
 # !/^;/ code /^; --/ section heads //,// example, map+registers.
 # 'cat -s' squeeze blanks, ':' silence 'make terse | head' error.
