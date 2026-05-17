@@ -46,9 +46,10 @@
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
-;   [0b] for compactness, some routines set flags.
 ;   ax bx cx dx si di = scratch for code words.
-;   one exception: ah couples find -> dispatch. [5c]
+;
+; one exception: ah couples find -> dispatch. [5c]
+; [0b] lex and find set flags for compactness.
 
 CIN     equ 0x1000    ; next unparsed character. [4]
 STATE   equ 0x1002    ; 1 = compile, else execute. [5d]
