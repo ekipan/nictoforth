@@ -30,7 +30,7 @@
         bits 16
         cpu 186 ; need `push imm16`
         org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
-        jmp 0x05c0:abort ; cs ds es ss = 0x05c0. [6]
+        jmp 0x05c0:abort ; cs ds es ss = 0x05c0 [6].
 
 ; both my parentforths park in segment 0x50 and put the
 ; tib at 0, saving parse code but losing bios vars.
@@ -48,14 +48,14 @@
 ;   bp = param stack pointer, sp = return stack pointer.
 ;   ax bx cx dx si di = scratch for code words.
 ;
-; one exception: ah couples find -> dispatch. [5c]
+; one exception: ah couples find -> dispatch [5c].
 ; [0b] lex and find set flags for compactness.
 
-CIN     equ 0x1000    ; next unparsed character. [4]
-STATE   equ 0x1002    ; 1 = compile, else execute. [5d]
-HERE:   dw c.here     ; next free byte to compile to. [7]
-LATEST: dw dictionary ; head of `find` linked list. [5]
-MAIN:   dw interpret  ; custom interpreter vector. [6b]
+CIN     equ 0x1000    ; next unparsed [4] character.
+STATE   equ 0x1002    ; 1 = compile, else execute [5d].
+HERE:   dw c.here     ; next free byte to compile [7] to.
+LATEST: dw dictionary ; head of find [5] linked list.
+MAIN:   dw interpret  ; custom interpreter vector [6b].
 
 ; milliforth groups the variables and keeps their base
 ; address in bx, saving instruction bytes at complexity
@@ -212,7 +212,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
         call emit.al    ; move to next line.
         xor di,di       ; buffer at addr 0.
-        mov W[CIN],di   ; parse from there later. [4]
+        mov W[CIN],di   ; parse [4] from there later.
         jmp .wait
 .store: stosb           ; store and loop.
 .echo:  call emit.al
@@ -258,7 +258,7 @@ lex:    ; lex ( "name" -- addr len )
         inc cx          ; cx = len.
         scasb ; cmp 32,B[di]
         jb .scan        ; scan characters.
-        dec di          ; di = end addr. [4a]
+        dec di          ; [4a] di = end addr.
 .eob:   mov W[CIN],di
         sub di,cx       ; di = start addr.
         sub bp,4
@@ -304,7 +304,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
-        mov ah,al       ; needed for dispatch. [5c]
+        mov ah,al       ; needed for dispatch [5c].
         and al,len_mask|hidden_flag
         cmp al,B[bp+0]  ; same length and not hidden?
         jne .prev
@@ -334,7 +334,7 @@ ok:     ;DEBUG 'K'
         call emit.al
 %endif
         call line
-interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
+interpret: ; ( ... "name" -- ... ) default MAIN [6b].
         call lex
         jcxz ok         ; end of line? [0b]
         call find
@@ -389,7 +389,7 @@ quit:   ; quit ( -- ) everything else, then loop.
         call line
         push abort      ; in case user types `r>` etc.
 .loop:  push .loop
-        jmp [MAIN]      ; swappable interpreter. [6b]
+        jmp [MAIN]      ; swappable [6b] interpreter.
 
 ; control flow (see example [8a] with data flow):
 ;   boot[0] -> abort -> line[3] -> .loop
