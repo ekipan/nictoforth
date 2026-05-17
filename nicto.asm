@@ -474,10 +474,10 @@ c: ; the story of a typical colon word:
 ; name the builtins one at a time, constructing their
 ; xts from a list of offsets.
 ;
-; [8z] read that one more time then take a second to gawk
-; at the code, referring to control (and data) flow:
+; [8z] read that once more then take a second to gawk
+; at the code. cross-ref control (and data) flow:
 ;
-;   ... -> line ("; 2+") -> ... -> lex (";")
+;   ... -> line [input "; 2+"] -> ... -> lex (";")
 ;   -> find (c.prim) -> execute -> c.prim -> lex ("2+")
 ;   -> c.head, c.ax [compile `2+`] -> quit.loop[6]
 
@@ -486,21 +486,25 @@ c: ; the story of a typical colon word:
 .prim:  ; ; ( "name" -- )
         call lex
         call .head
-.8a:    mov al,B[.list] ; [8a] load offset byte.
-        inc W[.8a+1]    ; [8b] point to next offset.
-        cbw             ; -128 <= offset <= 127.
-        xchg dx,ax      ; dx = decompressed xt offset.
+.8a:    mov al,B[.list] ; [8a] load xt offset byte.
+        cbw             ; decompress.
+        xchg dx,ax      ; -128 <= dx <= 127.
+        inc W[.8a+1]    ; [8b] point to next byte.
 .8c:    mov ax,XT       ; [8c] load xt.
         add W[.8c+1],dx ; [8d] mutate into next xt.
         jmp .ax
 
 ; the first time through:
-;   1. compile link and name: lex -> c.head
-;   2. decompress offset (udiv2-plus2) into dx [8a][8b].
+;   1. compile link and name: lex ("2+") -> c.head
+;   2. [8a] compute dx = udiv2-plus2.
 ;   3. complete entry with xt: load plus2 [8c] -> c.ax.
-;   4. mutate [8c] into udiv2 for next time.
-; the self-modifying code [8a-8d] saves extra variable
-; bytes. code *is* data, anyways.
+;   4. [8d] mutate [8c] into udiv2 for next time.
+;
+; [8a] `cbw` negative offsets support `c.semi -> c.ret`
+; fallthru (saving 2 bytes jmp) plus final c.semi for
+; shadowing [8f]. 1 byte `xchg` < 2 byte `mov`.
+; [8b][8d] self-modifying code saves variable bytes.
+; code *is* data, anyways.
 
 %macro DBO 1-* ; data byte offsets, to compress xt list.
     %rep %0
@@ -548,4 +552,3 @@ c: ; the story of a typical colon word:
 
 ; kate: hl Intel x86 (NASM); word-wrap-column 55
 ; *** end of assembly program file. ***
-
