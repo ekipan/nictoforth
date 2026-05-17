@@ -326,7 +326,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
 
 ok:     ;DEBUG 'K'
         add bp,4        ; drop empty lex.
-        jg error        ; underflow?
+        jg error        ; [5b] underflow?
 %if 1 ; 10 bytes. *the* iconic forth ux.
         mov al,'o'
         call emit.al
@@ -352,10 +352,11 @@ execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]     ; execute other cases.
 
-; [5b] underflowing the stack wraps bp to low addresses.
-; pushing values there [0a] corrupts the in buffer, and a
-; malformed name causes an abort, correcting underflow.
-; but bp and CIN have to collide *just so*.
+; [5b] underflowing the stack wraps bp to low addresses,
+; see map [0a]. `jg` corrects it (bp > 0), but pushing
+; values there corrupts the in buffer, so it may also
+; self-correct in the middle of a line if bp and CIN
+; happen to collide!
 
 ; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack. costs instructions though.
