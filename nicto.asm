@@ -203,7 +203,7 @@ com1:   xor dx,dx
 %macro DEBUG 1 ; 7 bytes per use.
         push ax         ; good places to
         mov al,%1       ; plunder bytes:
-        call emit.al    ; [1] [2] [7] [8].
+        call emit.al    ; [1-2] [7-8].
         pop ax
 %endmacro
 
@@ -477,7 +477,7 @@ c: ; the story of a typical colon word:
 ; name the builtins one at a time, constructing their
 ; xts from a list of offsets.
 ;
-; read that a couple more times then take a second to
+; read that one more time then take a second to
 ; gawk at the code:
 
 %define XT plus2 ; first word in this file.
