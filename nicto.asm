@@ -44,9 +44,11 @@
 ;    top [....bp<-pstack] parameter data.
 ;
 ; registers:
+;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
+;   [0b] for compactness, some routines set flags.
 ;   ax bx cx dx si di = scratch for code words.
-;   subroutine threaded so forth ip = x86 ip.
+;   one exception: ah couples find -> dispatch. [5c]
 
 CIN     equ 0x1000    ; next unparsed character. [4]
 STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5d]
@@ -261,7 +263,7 @@ lex:    ; lex ( "name" -- addr len )
         sub bp,4
         mov W[bp+2],di
         mov W[bp+0],cx
-        ret             ; cxz if eob.
+        ret             ; cxz if eob. [0b]
 
 ; [4a] well, almost standard. `line` always stores a
 ; space [3a] before the zero terminator but a custom
@@ -312,7 +314,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov dx,W[si]    ; dx = xt. [5a]
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
-        test bx,bx      ; nz if found.
+        test bx,bx      ; nz if found. [0b]
         ret
 
 ; (a bit of fluff: as I've spent bytes decoupling bits
@@ -333,10 +335,10 @@ ok:     ;DEBUG 'K'
         call line
 interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         call lex
-        jcxz ok         ; end of line?
+        jcxz ok         ; end of line? [0b]
         call find
         ; possible underflow self-correction. [5b]
-        jz error        ; didn't find a word?
+        jz error        ; didn't find a word? [0b]
         INC2 bp         ; ( xt nt ) drop
         ; [5c] dispatch coupled to `find`: ah = len+flags.
         ; word type:       80 immed | 0 plain
