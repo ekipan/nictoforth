@@ -63,7 +63,7 @@ MAIN:   dw interpret  ; custom interpreter vector. [6b]
 ; bytes aren't cheap.
 ;
 ; FUTURE: nice-to-haves if I can find bytes for them:
-; words: rp! sp! xor move.
+; numbers parser. c, c! c@ move xor rp! sp!
 ; case insens. c.ret tco, infeasible tbh.
 ;
 ; time to dive in. good luck and happy reading!

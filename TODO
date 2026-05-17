@@ -1,4 +1,0 @@
-- rename d/s/rptr.
-- rename c.immed, equal0, all the abbrs.
-- decide where to spend bytes.
-- document negative offset/.ret subtleties.
