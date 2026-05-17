@@ -202,11 +202,11 @@ com1:   xor dx,dx
         ret
 
 %macro DEBUG 1 ; 7 bytes per use.
-        push ax         ; good places to
-        mov al,%1       ; plunder bytes:
-        call emit.al    ; [1-2] [7-8].
+        push ax
+        mov al,%1
+        call emit.al
         pop ax
-%endmacro
+%endmacro ; good places to plunder bytes: [1-2] [7-8].
 
 line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
