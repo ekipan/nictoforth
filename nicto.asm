@@ -263,11 +263,11 @@ lex:    ; lex ( "name" -- addr len )
         mov W[bp+0],cx
         ret             ; cxz if eob.
 
-; [4a] well, almost standard. can't skip the zero
-; terminator so either: recheck (costly), rely on
-; trailing space (fragile), or rewind (nonstandard)
-; as [4a]. `line` always stores a space [3a] but a
-; custom interpreter [6b] might not.
+; [4a] well, almost standard. `line` always stores a
+; space [3a] before the zero terminator but a custom
+; interpreter [6b] might not, so either: assume it does
+; anyway (fragile), recheck (costly), or rewind
+; (nonstandard) as above.
 
 ; could also recover standard `parse-name`:
 ;   : parse-name lex 1 >in +! ;
