@@ -14,7 +14,7 @@
 ; I started with milliforth's code but after a good
 ; hacksawing it's probably more sectorforthy.
 ;
-; my biggest win: almost [8g] every byte of kernel code
+; my biggest win: almost [8h] every byte of kernel code
 ; is reusable from forth. proud of that.
 
 ; -- [0] ARCHITECTURE.
@@ -391,7 +391,7 @@ quit:   ; quit ( -- ) everything else, then loop.
 .loop:  push .loop
         jmp [MAIN]      ; swappable interpreter. [6b]
 
-; control flow (see example [8z] with data flow):
+; control flow (see example [8a] with data flow):
 ;   boot[0] -> abort -> line[3] -> .loop
 ;   -> [MAIN]interpret -> lex[4] (-> ok -> line -> lex)
 ;   -> find[5] -> error | c.call[7] | execute -> .loop
@@ -475,7 +475,7 @@ c: ; the story of a typical colon word:
 ; name the builtins one at a time, constructing their
 ; xts from a list of offsets.
 ;
-; [8z] read that once more then take a second to gawk
+; [8a] read that once more then take a second to gawk
 ; at the code. cross-ref control (and data) flow:
 ;
 ;   ... -> line [input "; 2+"] -> ... -> lex (";")
@@ -487,24 +487,24 @@ c: ; the story of a typical colon word:
 .prim:  ; ; ( "name" -- )
         call lex
         call .head
-.8a:    mov al,B[.list] ; [8a] load xt offset byte.
+.8b:    mov al,B[.list] ; [8b] load xt offset byte.
         cbw             ; decompress.
         xchg dx,ax      ; -128 <= dx <= 127.
-        inc W[.8a+1]    ; [8b] point to next byte.
-.8c:    mov ax,XT       ; [8c] load xt.
-        add W[.8c+1],dx ; [8d] mutate into next xt.
+        inc W[.8b+1]    ; [8c] point to next byte.
+.8d:    mov ax,XT       ; [8d] load xt.
+        add W[.8d+1],dx ; [8e] mutate into next xt.
         jmp .ax
 
 ; the first time through:
 ;   1. compile link and name: lex ("2+") -> c.head
-;   2. [8a] compute dx = udiv2-plus2.
-;   3. complete entry with xt: load plus2 [8c] -> c.ax.
-;   4. [8d] mutate [8c] into udiv2 for next time.
+;   2. [8b] compute dx = udiv2-plus2.
+;   3. complete entry with xt: load plus2 [8d] -> c.ax.
+;   4. [8e] mutate [8d] into udiv2 for next time.
 ;
-; [8a] `cbw` negative offsets support `c.semi -> c.ret`
+; [8b] `cbw` negative offsets support `c.semi -> c.ret`
 ; fallthru (saving 2 bytes jmp) plus final c.semi for
-; shadowing [8f]. 1 byte `xchg` < 2 byte `mov`.
-; [8b][8d] self-modifying code saves variable bytes.
+; shadowing [8g]. 1 byte `xchg` < 2 byte `mov`.
+; [8c][8e] self-modifying code saves variable bytes.
 ; code *is* data, anyways.
 
 %macro DBO 1-* ; data byte offsets, to compress xt list.
@@ -512,7 +512,7 @@ c: ; the story of a typical colon word:
         %if %1-XT < -128 || 127 < %1-XT
             %error DBO %1 <- out of range
         %endif
-        db %1-XT        ; [8a] loads, [8d] adds into [8c].
+        db %1-XT        ; [8b] loads, [8e] adds into [8d].
         %define XT %1   ; remember for next byte.
         %rotate 1
     %endrep
@@ -522,23 +522,23 @@ c: ; the story of a typical colon word:
         DBO udiv2, nand, invert, equal0, plus
         DBO drop, dup, swap, rpush, rpop
         DBO cin, dptr, sptr, rptr, fetch, store
-        DBO key, emit, line, lex ; [8e]
+        DBO key, emit, line, lex ; [8f]
         DBO find, execute, abort, quit
         DBO .head, .comma, .on, .call
-        DBO .immed, .ret, .semi ; [8f]
+        DBO .immed, .ret, .semi ; [8g]
         ; see full boostrap example in hello.fs.
 
-; [8e] enough for a quick smoke test:
+; [8f] enough for a quick smoke test:
 ;
 ;   ; 2+ ; 2u/ ; nand ; invert ( ... ) ; line ; lex
 ;   lex 3 drop @ 2+ emit \ test, should print 5.
 ;   ( ... ) ; immediate ; exit immediate ; ; immediate
 ;
-; [8f] c.ret becomes forth `exit`, but immediate. then
+; [8g] c.ret becomes forth `exit`, but immediate. then
 ; c.semi becomes `;`, shadowing c.prim. c.prim and
 ; c.list become dead code.
 ;
-; [8g] besides c.prim, c.list, and dispatch [5c], every
+; [8h] besides c.prim, c.list, and dispatch [5c], every
 ; byte of kernel code is available. `interpret` you can
 ; fetch from MAIN. most words from then on will have xt
 ; fields that point to their next address. waste later
