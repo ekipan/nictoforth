@@ -388,6 +388,14 @@ quit:   ; quit ( -- ) everything else, then loop.
 .loop:  push .loop
         jmp [MAIN]      ; swappable interpreter. [6b]
 
+; control flow:  boot[0] -> abort -> line[3] -> .loop
+;   -> [MAIN]interpret -> lex[4] (-> ok -> line -> lex)
+;   -> find[5] -> error | c.call[7] | execute -> .loop
+;
+; example:  ... -> line "; 2+" -> ... -> lex ";"
+;   -> find (c.prim) -> execute -> c.prim[8]
+;   -> lex "2+" -> c.head, c.ax (compile `2+`) -> .loop
+
 ; [6a] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
 
