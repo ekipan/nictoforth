@@ -391,9 +391,9 @@ quit:   ; quit ( -- ) everything else, then loop.
 ; [6a] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
 
-; [6b] vectored MAIN enables runtime interpreter
-; swapping: define a new interpeter in forth, reusing all
-; the pieces `lex find execute` etc, maybe add number
+; [6b] MAIN vector enables runtime interpreter swapping:
+; define a new interpeter in forth, reuse all the pieces
+; `line lex find abort c.call execute`, maybe add number
 ; parsing or whatever, then store it into MAIN and it
 ; becomes the new main loop:  ' my-interpret MAIN !
 
