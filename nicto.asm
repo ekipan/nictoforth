@@ -390,13 +390,10 @@ quit:   ; quit ( -- ) everything else, then loop.
 .loop:  push .loop
         jmp [MAIN]      ; swappable interpreter. [6b]
 
-; control flow:  boot[0] -> abort -> line[3] -> .loop
+; control flow (see example [8z] with data flow):
+;   boot[0] -> abort -> line[3] -> .loop
 ;   -> [MAIN]interpret -> lex[4] (-> ok -> line -> lex)
 ;   -> find[5] -> error | c.call[7] | execute -> .loop
-;
-; example:  ... -> line "; 2+" -> ... -> lex ";"
-;   -> find (c.prim) -> execute -> c.prim[8]
-;   -> lex "2+" -> c.head, c.ax (compile `2+`) -> .loop
 
 ; [6a] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
@@ -477,28 +474,33 @@ c: ; the story of a typical colon word:
 ; name the builtins one at a time, constructing their
 ; xts from a list of offsets.
 ;
-; read that one more time then take a second to
-; gawk at the code:
+; [8z] read that one more time then take a second to gawk
+; at the code, referring to control (and data) flow:
+;
+;   ... -> line ("; 2+") -> ... -> lex (";")
+;   -> find (c.prim) -> execute -> c.prim -> lex ("2+")
+;   -> c.head, c.ax [compile `2+`] -> quit.loop[6]
 
 %define XT plus2 ; first word in this file.
 
 .prim:  ; ; ( "name" -- )
         call lex
-        call .head      ; compile link and name.
-.8a:    mov al,B[.list] ; [8a] load offset.
-        inc W[.8a+1]    ; [8b] prepare next offset.
+        call .head
+.8a:    mov al,B[.list] ; [8a] load offset byte.
+        inc W[.8a+1]    ; [8b] point to next offset.
         cbw             ; -128 <= offset <= 127.
-        xchg dx,ax      ; dx = offset.
+        xchg dx,ax      ; dx = decompressed xt offset.
 .8c:    mov ax,XT       ; [8c] load xt.
-        add W[.8c+1],dx ; [8d] prepare next xt.
-        jmp .ax         ; compile xt.
+        add W[.8c+1],dx ; [8d] mutate into next xt.
+        jmp .ax
 
-; ignore most of it the first time through: first call
-; lex and c.head, load plus2 [8c], then jump to c.ax,
-; making a complete entry. the rest changes the load at
-; [8c] into udiv2 from c.list below. I'll leave *how*
-; it does this as an exercise. the self-modifying code
-; saves extra variable bytes. code *is* data, anyways.
+; the first time through:
+;   1. compile link and name: lex -> c.head
+;   2. decompress offset (udiv2-plus2) into dx [8a][8b].
+;   3. complete entry with xt: load plus2 [8c] -> c.ax.
+;   4. mutate [8c] into udiv2 for next time.
+; the self-modifying code [8a-8d] saves extra variable
+; bytes. code *is* data, anyways.
 
 %macro DBO 1-* ; data byte offsets, to compress xt list.
     %rep %0
