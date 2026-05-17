@@ -49,7 +49,7 @@
 ;   subroutine threaded so forth ip = x86 ip.
 
 CIN     equ 0x1000    ; next unparsed character. [4]
-STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5c]
+STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5d]
 HERE:   dw c.here     ; next free byte to compile to. [7]
 LATEST: dw dictionary ; head of `find` linked list. [5]
 MAIN:   dw interpret  ; custom interpreter vector. [6b]
@@ -301,7 +301,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
-        mov ah,al       ; needed for dispatch. [5d]
+        mov ah,al       ; needed for dispatch. [5c]
         and al,len_mask|hidden_flag
         cmp al,B[bp+0]  ; same length and not hidden?
         jne .prev
@@ -338,11 +338,11 @@ interpret: ; ( ... "name" -- ... ) default MAIN. [6b]
         ; possible underflow self-correction. [5b]
         jz error        ; didn't find a word?
         INC2 bp         ; ( xt nt ) drop
-        ; [5d] dispatch coupled to `find`: ah = len+flags.
+        ; [5c] dispatch coupled to `find`: ah = len+flags.
         ; word type:       80 immed | 0 plain
         ; current state:   ___0___1_|__0___1__
         and ah,immed_flag ;  80  80 |  0   0
-        or ah,B[STATE]  ;    80  81 |  0   1  [5c]
+        or ah,B[STATE]  ;    80  81 |  0   1  [5d]
         dec ah          ;    7f  80 | ff  *0*
         jz c.call       ; compile plain word.
 execute: ; execute ( ... xt -- ... )
@@ -354,11 +354,11 @@ execute: ; execute ( ... xt -- ... )
 ; malformed name causes an abort, correcting underflow.
 ; but bp and CIN have to collide *just so*.
 
-; [5c] /!\ `and or dec` dispatch needs STATE low byte of
+; [5d] /!\ `and or dec` dispatch needs STATE low byte of
 ; exactly 1 to compile! it's a sharp edge, but it's code
 ; dense. (thanks, sectorforth!)
 
-; [5d] could reuse from forth if the flags were taken
+; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack. costs instructions though.
 ; maybe it's okay to keep the sharp edge in the drawer.
 
@@ -425,10 +425,10 @@ c: ; the story of a typical colon word:
 
 ; 3. switch the compiler on:
 .on:    ; ] ( -- )
-        mov B[STATE],1  ; for [5d].
+        mov B[STATE],1  ; for dispatch [5c].
         ret
 
-; 4. dispatch [5d] compiles words into the definition:
+; 4. dispatch [5c] compiles words into the definition:
 .call:  ; compile, ( xt -- )
         mov al,0xe8
         call .al
@@ -521,7 +521,7 @@ c: ; the story of a typical colon word:
 ; c.semi becomes `;`, shadowing c.prim. c.prim and
 ; c.list become dead code.
 ;
-; [8g] besides c.prim, c.list, and dispatch [5d], every
+; [8g] besides c.prim, c.list, and dispatch [5c], every
 ; byte of kernel code is available. `interpret` you can
 ; fetch from MAIN. most words from then on will have xt
 ; fields that point to their next address. waste later
