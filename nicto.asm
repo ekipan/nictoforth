@@ -539,7 +539,7 @@ c: ; the story of a typical colon word:
 
 .here: ; be dragons! and future dictionary entries.
 
-%ifndef NOPAD
+%ifndef NOPAD ; for `make count` byte size.
         times 510-($-$$) db 0 ; (what would YOU build
         dw 0xaa55             ; with 510 bytes?)
 %endif
