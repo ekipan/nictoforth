@@ -51,7 +51,7 @@
 ;   one exception: ah couples find -> dispatch. [5c]
 
 CIN     equ 0x1000    ; next unparsed character. [4]
-STATE   equ 0x1002    ; /!\ MUST EQUAL 1! [5d]
+STATE   equ 0x1002    ; 1 = compile, else execute. [5d]
 HERE:   dw c.here     ; next free byte to compile to. [7]
 LATEST: dw dictionary ; head of `find` linked list. [5]
 MAIN:   dw interpret  ; custom interpreter vector. [6b]
