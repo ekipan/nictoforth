@@ -207,7 +207,7 @@ com1:   xor dx,dx
         mov al,%1
         call emit.al
         pop ax
-%endmacro ; good places to plunder bytes: [1-2] [7-8].
+%endmacro ; plunder bytes from: %ifs, [1-2,7-8].
 
 line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
