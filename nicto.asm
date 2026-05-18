@@ -97,8 +97,8 @@ invert: ; invert ( n -- ~n )
         ret
 
 ; [1a] an earlier version fell through into invert,
-; implementing `nand` which was both very silly and
-; homage to my parentforths. I'll miss it.
+; implementing `nand` which was both delightfully silly
+; and homage to my parentforths. I'll miss it.
 
 equal0: ; 0= ( n -- flag )
         xor ax,ax
