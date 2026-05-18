@@ -66,7 +66,7 @@ terse:         # implementation details: the how.
 (...)
 
 [nix-shell]$ make words
-2+ 2u/ nand invert 0= + drop dup swap >r r> >in
+2+ 2u/ and invert 0= + drop dup swap >r r> >in
 dp sp@ rp@ @ ! key emit line lex find execute abort
 quit head, , ] compile, ; exit immediate ;
 ```

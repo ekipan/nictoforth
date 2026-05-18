@@ -1,4 +1,4 @@
-; 2+ ; 2u/ ; nand ; invert ; 0= ; +
+; 2+ ; 2u/ ; and ; invert ; 0= ; +
 ; drop ; dup ; swap ; >r ; r>
 ; >in ; dp ; sp@ ; rp@ ; @ ; !
 ; key ; emit ; \ ; lex
@@ -102,14 +102,14 @@ x a x b x c nip swap emit emit \ ac:
 : [ 0 state ! ; immediate
 
 \ some arithmetic.
-: and nand invert ;
-: or invert swap invert nand ;
+: or invert swap invert and invert ;
 : - -1 + invert + ;
 : = - 0= ;
 : 2* dup + ;
 : 16* 2* 2* 2* 2* ;
 : 16u/ 2u/ 2u/ 2u/ 2u/ ;
 x 3 x 6 and emit \ 2:
+x 3 x 6 or emit \ 7:
 x a 1 16* + emit \ q:
 x a x b = x 5 + emit \ 5:
 

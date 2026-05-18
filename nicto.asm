@@ -87,17 +87,18 @@ udiv2:  ; 2u/ ( u -- u/2 )
         shr W[bp],1
         ret
 
-nand:   ; nand ( n1 n2 -- ~(n1&n2) )
+and:    ; and ( n1 n2 -- n1&n2 )
         mov ax,W[bp]
         and W[bp+2],ax
-        INC2 bp         ; [1a]
+        jmp drop        ; [1a]
+
 invert: ; invert ( n -- ~n )
         not W[bp]
         ret
 
-; [1a] `jmp drop` here would decouple `nand` into `and`.
-; good silly energy tho. and homage to my parentforths.
-; honestly I'm really torn. might decouple.
+; [1a] an earlier version fell through into invert,
+; implementing `nand` which was both very silly and
+; homage to my parentforths. I'll miss it.
 
 equal0: ; 0= ( n -- flag )
         xor ax,ax
@@ -518,8 +519,8 @@ c: ; the story of a typical colon word:
     %endrep
 %endmacro
 
-.list:  ; db udiv2-plus2, nand-udiv2, invert-nand, ...
-        DBO udiv2, nand, invert, equal0, plus
+.list:  ; db udiv2-plus2, and-udiv2, invert-and, ...
+        DBO udiv2, and, invert, equal0, plus
         DBO drop, dup, swap, rpush, rpop
         DBO cin, dptr, sptr, rptr, fetch, store
         DBO key, emit, line, lex ; [8f]
@@ -530,7 +531,7 @@ c: ; the story of a typical colon word:
 
 ; [8f] enough for a quick smoke test:
 ;
-;   ; 2+ ; 2u/ ; nand ; invert ( ... ) ; line ; lex
+;   ; 2+ ; 2u/ ; and ; invert ( ... ) ; line ; lex
 ;   lex 3 drop @ 2+ emit \ test, should print 5.
 ;   ( ... ) ; immediate ; exit immediate ; ; immediate
 ;
