@@ -63,8 +63,8 @@ MAIN:   dw interpret  ; custom interpreter vector [6b].
 ; built a hairy bootstrap [8] that buys me more bytes.
 ; bytes aren't cheap.
 ;
-; FUTURE: nice-to-haves if I can find bytes for them:
-; numbers parser. c, c! c@ move xor rp! sp!
+; FUTURE: to try, or nice-to-haves, budget willing:
+; bx tos. numbers parser. c, c! c@ move bye xor rp! sp!
 ; case insens. c.ret tco, infeasible tbh.
 ;
 ; time to dive in. good luck and happy reading!
