@@ -219,11 +219,11 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 .echo:  call emit.al
 .wait:  call key.al
 %if 1 ; 0 or 12 or 22 bytes. pick your ux.
-        cmp al,127
-        jne .check      ; not delete? (should check 8
-        dec di          ;  too. I tire of this routine.)
-        jns .bsp        ; didn't go negative?
-        inc di          ; whoops, passed start-of-line.
+        cmp al,127      ; [3a]
+        jne .check      ; not delete?
+        dec di
+        jns .bsp        ; di >= 0, still in buffer?
+        inc di
 .bsp:
     %if 0 ; 10 bytes. users expect this.
         mov al,8
@@ -237,8 +237,12 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 .check: cmp al,13
         jne .store      ; not a carriage return?
         mov ax,32       ; ah = zero terminator.
-        stosw           ; [3a]
+        stosw           ; [3b]
         jmp emit.al     ; friendly space.
+
+; [3a] should check 8 too. I'm tired of this routine.
+; `test di,di | jz .wait | dec di` would be simpler and
+; avoid the extra 8 emit but costs another byte.
 
 ; -- [4] PARSING.
 
@@ -268,7 +272,7 @@ lex:    ; lex ( "name" -- addr len )
         ret             ; cxz if eob. [0b]
 
 ; [4a] well, almost standard. `line` always stores a
-; space [3a] before the zero terminator but a custom
+; space [3b] before the zero terminator but a custom
 ; interpreter [6b] might not, so either: assume it does
 ; anyway (fragile), recheck (costly), or rewind
 ; (nonstandard) as above.
