@@ -272,9 +272,8 @@ lex:    ; lex ( "name" -- addr len )
 ; anyway (fragile), recheck (costly), or rewind
 ; (nonstandard) as above.
 
-; could also recover standard `parse-name`:
-;   : parse-name lex 1 >in +! ;
-; after defining `+!` and `1`, or possibly:
+; could also recover standard `parse-name` after
+; defining `+!` and `1`:   : parse-name lex 1 >in +! ;
 
 ; a numbers parser, even single digits, costs tens of
 ; bytes of code. I'd rather spend them on `swap`.
