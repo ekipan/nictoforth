@@ -360,7 +360,6 @@ execute: ; execute ( ... xt -- ... )
 
 ; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack. costs instructions though.
-; maybe it's okay to keep the sharp edge in the drawer.
 
 ; [5d] /!\ `and or dec` dispatch needs STATE low byte of
 ; exactly 1 to compile! it's a sharp edge, but it's code
