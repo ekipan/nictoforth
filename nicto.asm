@@ -376,7 +376,7 @@ execute: ; execute ( ... xt -- ... )
 error:  mov al,'?'
         call emit.al
 abort:  ; abort ( -- ) reset param stack and:
-        xor bp,bp       ; first push wraps [0a] to 0xfffe.
+        xor bp,bp       ; first push wraps to 0xfffe [0a].
 quit:   ; quit ( -- ) everything else, then loop.
         cld             ; standard stuff:
         times 3 push cs
