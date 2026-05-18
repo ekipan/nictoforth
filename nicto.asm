@@ -102,7 +102,7 @@ invert: ; invert ( n -- ~n )
 equal0: ; 0= ( n -- flag )
         xor ax,ax
         cmp W[bp],ax
-        jnz putax
+        jnz putax       ; not zero? put zero.
         dec ax
         jmp putax
 
@@ -186,10 +186,10 @@ store:  ; ! ( n addr -- )
 
 key:    ; key ( -- c )
         push pushax     ; defer pstack push after:
-.al:    mov ah,2        ; serial recieve.
+.al:    mov ah,2        ; serial receive.
         call com1
-        shl ah,1        ; c = error?
-        jc .al
+        shl ah,1
+        jc .al          ; receive error?
         mov ah,0
         ret
 
@@ -218,9 +218,9 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 .echo:  call emit.al
 .wait:  call key.al
 %if 1 ; 0 or 12 or 22 bytes. pick your ux.
-        cmp al,127      ; delete? (should check 8 too.
-        jne .nobsp      ; I'm tired of this routine.)
-        dec di
+        cmp al,127
+        jne .check      ; not delete? (should check 8
+        dec di          ;  too. I tire of this routine.)
         jns .bsp        ; didn't go negative?
         inc di          ; whoops, passed start-of-line.
 .bsp:
@@ -233,8 +233,8 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,8
         jmp .echo       ; move cursor back.
 %endif
-.nobsp: cmp al,13       ; carriage return?
-        jne .store
+.check: cmp al,13
+        jne .store      ; not a carriage return?
         mov ax,32       ; ah = zero terminator.
         stosw           ; [3a]
         jmp emit.al     ; friendly space.
@@ -251,13 +251,13 @@ lex:    ; lex ( "name" -- addr len )
         mov al,32       ; ascii space.
 .skip:  ;DEBUG '.'
         cmp B[di],0
-        je .eob         ; end-of-buffer.
+        je .eob         ; end-of-buffer zero?
         scasb ; cmp 32,B[di]
-        jae .skip       ; skip space/ctls.
+        jae .skip       ; space or control?
 .scan:  ;DEBUG '!'
         inc cx          ; cx = len.
         scasb ; cmp 32,B[di]
-        jb .scan        ; scan characters.
+        jb .scan        ; name character?
         dec di          ; [4a] di = end addr.
 .eob:   mov W[CIN],di
         sub di,cx       ; di = start addr.
@@ -300,18 +300,18 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov bx,LATEST
 .prev:  mov bx,W[bx]    ; bx = nt (or 0).
         test bx,bx
-        jz .eod         ; end-of-dictionary.
+        jz .eod         ; end-of-dictionary?
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
         mov ah,al       ; needed for dispatch [5c].
         and al,len_mask|hidden_flag
-        cmp al,B[bp+0]  ; same length and not hidden?
-        jne .prev
+        cmp al,B[bp+0]
+        jne .prev       ; wrong length or hidden?
         mov di,W[bp+2]
         mov cx,W[bp+0]
-        repe cmpsb      ; name characters match?
-        jne .prev
+        repe cmpsb
+        jne .prev       ; name characters differ?
         mov dx,W[si]    ; [5a] dx = xt.
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
