@@ -125,6 +125,8 @@ You could:
 - Try to find more bytes while staying "fun to read
   and hack on." Which is extremely subjective but hey,
   throw something at me.
+- Try to improve readability and cross-reference. Tell
+  me if something confuses you.
 
 Moving forward I'll probably continue to polish prose,
 I'm never satisfied with it.
