@@ -37,11 +37,11 @@
 ; I chose a higher segment for more dictionary space.
 ;
 ; [0a] segment 0x05c0 memory map:
-;   0000 [tib->0........] text buffer, zero terminated.
-;   1000 [CIN][STATE]     interpreter variables.
-;   1004 [....sp<-rstack] return addresses.
-;   2000 [dict->here....] kernel and dictionary.
-;    top [....bp<-pstack] parameter data.
+;   0000-0fff  [text->0.......]  input buffer.
+;   1000-1003  [CIN][STATE]      variables.
+;   1004-1fff  [.....sp<-addrs]  return stack.
+;   2000-....  [code->HERE....]  kernel, dictionary.
+;   ....-ffff  [......bp<-data]  parameter stack.
 ;
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
