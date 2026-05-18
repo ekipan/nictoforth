@@ -147,12 +147,11 @@ places that need examples, extra clarity, whatever. I
 have strong mixed feelings. This is professional labor
 that I didn't pay for.
 
-At LLM suggestion, though, I migrated from BIOS I/O to
-serial for better DX. It guided me through the specific
-routines. I guess I could have looked it up. I didn't.
-
-It cost me bytes. And struggles. Fought with the
-backspace. That was an adventure. Had to sell `swap`,
+At LLM suggestion, though, I **migrated from BIOS I/O
+to serial** for better DX. It guided me through the
+specific routines. I guess I could have looked it up.
+I didn't. It cost me bytes, struggles, backspace
+headaches. That was an adventure. Had to sell `swap`,
 after spending lots of effort on its bittersweet return
 story. I don't wanna talk about it.
 
