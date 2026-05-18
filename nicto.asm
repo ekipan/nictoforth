@@ -505,10 +505,10 @@ c: ; the story of a typical colon word:
 ;   3. complete entry with xt: load plus2 [8d] -> c.ax.
 ;   4. [8e] mutate [8d] into udiv2 for next time.
 ;
-; [8b] `cbw` negative offsets support `c.semi -> c.ret`
-; fallthru (saving 2 bytes jmp) plus final c.semi for
-; shadowing [8g]. 1 byte `xchg` < 2 byte `mov`.
-; [8c][8e] self-modifying code saves variable bytes.
+; `cbw` [8b] negative offsets supports final c.semi [8g]
+; for shadowing and `c.semi -> c.ret` fallthru, which
+; saves 2 bytes jmp. 1 byte `xchg` < 2 byte `mov`.
+; self-modifying code [8c][8e] saves variable bytes.
 ; code *is* data, anyways.
 
 %macro DBO 1-* ; data byte offsets, to compress xt list.
