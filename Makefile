@@ -44,11 +44,11 @@ run: o/boot    # qemu serial session. [!]
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
 
-status:        # query git, leading into demo:
+status:        # query git for demo, which requires manual paste,
 	git rev-parse @
 	git status --short
 
-demo: status clean count run
+demo: status clean count run # so it's intended for myself.
 
 # -- INFO PHONIES.
 # pipe these into less or bat, put them in a file, whatev.
