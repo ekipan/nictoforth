@@ -54,7 +54,7 @@ demo: status clean count run
 # pipe these into less or bat, put them in a file, whatev.
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
-.PHONY: words outline xrefs notes doc terse targets notes
+.PHONY: words outline terse notes doc xrefs targets
 
 words:    # compact list of the implemented words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
@@ -62,8 +62,10 @@ words:    # compact list of the implemented words.
 outline:  # with stack effects, as a reading aide. [!]
 	@awk '/--/' $(SRC) ||:
 
-xrefs:    # inventory cross-ref anchors, for maintenance.
-	@awk '/; \[/' $(SRC) ||:
+terse:    # just the code, no asides. [!]
+	@echo '; see $(SRC) for notes [5c] [6b] etc.'
+	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
+	  $(SRC) | cat -s ||:
 
 notes:    # anchored note contents, a dense spec.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
@@ -71,10 +73,8 @@ notes:    # anchored note contents, a dense spec.
 doc:      # or the entirety of the asides.
 	@awk '/^;/; /^$$/' $(SRC) | cat -s ||:
 
-terse:    # just the code, no asides. [!]
-	@echo '; see $(SRC) for notes [5c] [6b] etc.'
-	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
-	  $(SRC) | cat -s ||:
+xrefs:    # inventory cross-ref anchors, for maintenance.
+	@awk '/; \[/' $(SRC) ||:
 
 targets:  # this list.
 	@awk '/^# --|^\w/' Makefile ||:

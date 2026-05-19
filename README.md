@@ -63,10 +63,9 @@ You can ask the Makefile for more info:
 # -- INFO PHONIES.
 words:    # compact list of the implemented words.
 outline:  # with stack effects, as a reading aide. [!]
-xrefs:    # inventory cross-ref anchors, for maintenance.
+terse:    # just the code, no asides. [!]
 notes:    # anchored note contents, a dense spec.
 doc:      # or the entirety of the asides.
-terse:    # just the code, no asides. [!]
 (...)
 
 [nix-shell]$ make words
