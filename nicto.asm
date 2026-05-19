@@ -1,9 +1,10 @@
 ; (c) 2025-2026, see LICENSE (it's MIT).
 
-; [1-2] prims [3] i/o [4-6] interpret [7-8] compile.
-
 ; nictoforth: nick's 16-bit x86 bootsector forth.
-;
+
+; preamble [0] design [1] basics [2] memory [3] i/o
+; [4] parse [5] interp [6] init [7] compile [8] boot
+
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
