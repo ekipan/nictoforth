@@ -363,8 +363,8 @@ execute: ; execute ( ... xt -- ... )
 ; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack. costs instructions though.
 ; sectorforth has a *wildly* dense dispatch routine I
-; adore, but sadly this simple one costs the same.
-; a mild gotcha: STATE high byte is ignored.
+; adore. sadly this simple one costs the same and has
+; a milder gotcha: STATE high byte is ignored.
 
 ; -- [6] INITIALIZATION, MAIN LOOP.
 
