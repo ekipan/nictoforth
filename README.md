@@ -61,9 +61,12 @@ You can ask the Makefile for more info:
 [nix-shell]$ make targets
 (...)
 # -- INFO PHONIES.
-words:         # system capabilities: the what.
-outline:       # with stack effects, as a reading aide.
-terse:         # implementation details: the how.
+words:    # compact list of the implemented words.
+outline:  # with stack effects, as a reading aide.
+xrefs:    # inventory cross-ref anchors, for maintenance.
+notes:    # anchored note contents, a dense spec.
+doc:      # or the entirety of the asides.
+terse:    # just the code, no asides.
 (...)
 
 [nix-shell]$ make words

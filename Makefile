@@ -15,9 +15,12 @@ o/nopad: nicto.asm o/dir
 o/dir:
 	mkdir -p o; touch $@
 
-.PHONY: all run count clean words outline terse status demo targets
-
 # -- DEVEL PHONIES.
+
+.PHONY: clean all count run status demo
+
+clean:
+	rm -rf o
 
 all: o/boot o/nopad
 
@@ -39,29 +42,37 @@ run: o/boot    # qemu serial session.
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
 
-clean:         # remove o directory.
-	rm -rf o
-
-# -- INFO PHONIES.
-
-words:         # system capabilities: the what.
-	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs -n 12
-
-outline:       # with stack effects, as a reading aide.
-	@awk '/--/' nicto.asm
-
-terse:         # implementation details: the how.
-	@echo '; see nicto.asm for notes [5c] [6b] etc.'
-	@awk '!/^;/; /--$$/; /: doub/,/ret /; /map:$$/,/0b/' \
-	  nicto.asm | cat -s || :
-# !/^;/ code /--$$/ section heads //,// example, map, registers.
-# 'cat -s' squeeze blanks, ':' silence 'make terse | head' error.
-
 status:        # query git, leading into demo:
 	git rev-parse @
 	git status --short
 
 demo: status clean count run
 
-targets:       # this list.
-	@awk '/^# --|^\w/' Makefile
+# -- INFO PHONIES.
+# pipe these into less or bat, put them in a file, whatev.
+# '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
+
+.PHONY: words outline xrefs notes doc terse targets notes
+
+words:    # compact list of the implemented words.
+	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs -n 12 ||:
+
+outline:  # with stack effects, as a reading aide.
+	@awk '/--/' nicto.asm ||:
+
+xrefs:    # inventory cross-ref anchors, for maintenance.
+	@awk '/; \[/' nicto.asm ||:
+
+notes:    # anchored note contents, a dense spec.
+	@awk '/^; \[/,/^$$/' nicto.asm ||:
+
+doc:      # or the entirety of the asides.
+	@awk '/^;/; /^$$/' nicto.asm | cat -s ||:
+
+terse:    # just the code, no asides.
+	@echo '; see nicto.asm for notes [5c] [6b] etc.'
+	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
+	  nicto.asm | cat -s ||:
+
+targets:  # this list.
+	@awk '/^# --|^\w/' Makefile ||:
