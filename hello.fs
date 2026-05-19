@@ -77,7 +77,7 @@ x 3 0 + emit x 3 1 + emit \ 34:
 x 3 2 + emit x 3 2 2u/ + emit \ 54:
 
 \ variables:   >in \ addr of next unparsed character.
-: state >in 2+ ;   \ /!\ must be exactly 1! see asm.
+: state >in 2+ ;   \ low byte nonzero = compile.
 : here dp @ ;      \ next free byte to `,` compile to.
 : latest dp 2+ @ ; \ dict entry of last defined word.
 \ main at dp+4     \ vector: replace the interpreter.

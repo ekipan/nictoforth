@@ -52,7 +52,7 @@
 ; [0b] lex and find set flags for compactness.
 
 CIN     equ 0x1000    ; next unparsed [4] character.
-STATE   equ 0x1002    ; 1 = compile, else execute [5d].
+STATE   equ 0x1002    ; low byte nonzero = compile [5c].
 HERE:   dw c.here     ; next free byte to compile [7] to.
 LATEST: dw dictionary ; head of find [5] linked list.
 MAIN:   dw interpret  ; custom interpreter vector [6b].
@@ -344,14 +344,12 @@ interpret: ; ( ... "name" -- ... ) default MAIN [6b].
         call find
         ; [5b] possible underflow self-correction.
         jz error        ; didn't find a word? [0b]
+        ; [5c] dispatch coupled to find: ah = len+flags.
         INC2 bp         ; ( xt nt ) drop
-        ; [5c] dispatch coupled to `find`: ah = len+flags.
-        ; word type:       80 immed | 0 plain
-        ; current state:   ___0___1_|__0___1__
-        and ah,immed_flag ;  80  80 |  0   0
-        or ah,B[STATE]  ;    80  81 |  0   1  [5d]
-        dec ah          ;    7f  80 | ff  *0*
-        jz c.call       ; compile plain word.
+        shl ah,1        ; rely on immed_flag = 0x80.
+        jc execute      ; immediate word?
+        cmp B[STATE],0
+        jne c.call      ; compile mode?
 execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]     ; execute other cases.
@@ -364,10 +362,9 @@ execute: ; execute ( ... xt -- ... )
 
 ; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack. costs instructions though.
-
-; [5d] /!\ `and or dec` dispatch needs STATE low byte of
-; exactly 1 to compile! it's a sharp edge, but it's code
-; dense. (thanks, sectorforth!)
+; sectorforth has a *wildly* dense dispatch routine I
+; adore, but sadly this simple one costs the same.
+; a mild gotcha: STATE high byte is ignored.
 
 ; -- [6] INITIALIZATION, MAIN LOOP.
 
@@ -389,7 +386,7 @@ quit:   ; quit ( -- ) everything else, then loop.
         mov sp,$$       ; rstack under the kernel [0a].
         ; serial init omitted.
         ; seabios seems to take care of it idk.
-        mov B[STATE],0  ; start in execute mode [5d].
+        mov B[STATE],0  ; start in execute mode [5c].
         call line
         push abort      ; in case user types `r>` etc.
 .loop:  push .loop
