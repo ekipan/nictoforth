@@ -61,11 +61,12 @@ You can ask the Makefile for more info:
 [nix-shell]$ make targets
 (...)
 # -- INFO PHONIES.
-words:    # compact list of the implemented words.
-outline:  # with stack effects, as a reading aide. [!]
+outline:  # word list with stack effects. [!]
 terse:    # just the code, no asides. [!]
+words:    # compact list of the implemented forth words.
+names:    # labels, variables, macros.
 notes:    # anchored note contents, a dense spec.
-doc:      # or the entirety of the asides.
+doc:      # all names and asides. cut most code.
 (...)
 
 [nix-shell]$ make words

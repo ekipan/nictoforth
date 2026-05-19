@@ -1,5 +1,7 @@
 
-# -- VARIABLES. important targets: [!]
+# run "make targets" for an overview! it's at the bottom.
+
+# -- VARIABLES.
 
 SRC ?= nicto.asm
 ASM ?= nasm # yasm also works fine.
@@ -54,12 +56,9 @@ demo: status clean count run # so it's intended for myself.
 # pipe these into less or bat, put them in a file, whatev.
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
-.PHONY: words outline terse notes doc xrefs targets
+.PHONY: doc notes outline targets terse words xrefs
 
-words:    # compact list of the implemented words.
-	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
-
-outline:  # with stack effects, as a reading aide. [!]
+outline:  # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
 terse:    # just the code, no asides. [!]
@@ -67,14 +66,20 @@ terse:    # just the code, no asides. [!]
 	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
 	  $(SRC) | cat -s ||:
 
+words:    # compact list of the implemented forth words.
+	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
+
+names:    # labels, variables, macros.
+	@awk '/--$$|^[\.a-zA-Z]|^%(def|mac)/' $(SRC) ||:
+
 notes:    # anchored note contents, a dense spec.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
 
-doc:      # or the entirety of the asides.
-	@awk '/^;/; /^$$/' $(SRC) | cat -s ||:
+doc:      # all names and asides. cut most code.
+	@awk '/^[;\.a-zA-Z]|^%(def|mac)|^$$/' $(SRC) | cat -s ||:
 
 xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
 
-targets:  # this list.
+targets:  # this list. important targets: [!]
 	@awk '/^# --|^\w/' Makefile ||:
