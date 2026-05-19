@@ -1,4 +1,5 @@
-# -- VARIABLES.
+
+# -- VARIABLES. important targets: [!]
 
 SRC ?= nicto.asm
 ASM ?= nasm # yasm also works fine.
@@ -7,7 +8,7 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 # -- TARGET FILES.
 
 o/boot: $(SRC) o/dir # (default)
-	# try: make outline, make run, make targets.
+	# try: make run, make outline, make targets.
 	$(ASM) -f bin -l $@l -o $@ $<
 
 o/nopad: $(SRC) o/dir
@@ -28,7 +29,7 @@ all: o/boot o/nopad
 count: o/nopad # print assembled size.
 	wc -c <$< # assembled size, out of 510 max:
 
-run: o/boot    # qemu serial session.
+run: o/boot    # qemu serial session. [!]
 	#
 	#  nictoforth, across an emulated serial line.
 	#
@@ -58,7 +59,7 @@ demo: status clean count run
 words:    # compact list of the implemented words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
-outline:  # with stack effects, as a reading aide.
+outline:  # with stack effects, as a reading aide. [!]
 	@awk '/--/' $(SRC) ||:
 
 xrefs:    # inventory cross-ref anchors, for maintenance.
@@ -70,7 +71,7 @@ notes:    # anchored note contents, a dense spec.
 doc:      # or the entirety of the asides.
 	@awk '/^;/; /^$$/' $(SRC) | cat -s ||:
 
-terse:    # just the code, no asides.
+terse:    # just the code, no asides. [!]
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
 	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
 	  $(SRC) | cat -s ||:
