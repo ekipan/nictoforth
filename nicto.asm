@@ -106,7 +106,7 @@ invert: ; invert ( n -- ~n )
 equal0: ; 0= ( n -- flag )
         xor ax,ax
         cmp W[bp],ax
-        jnz putax       ; not zero? put zero.
+        jnz putax       ; not zero? put zero [2a].
         dec ax
         jmp putax
 
@@ -152,13 +152,13 @@ rpop:   ; r> ( r:n -- n )
 
 ; [2] MEMORY -----------------------------------------
 
-; shared tails pushax/putax live here so surrounding
-; code saves bytes with short jumps.
+; [2a] shared tails pushax/putax live here so
+; surrounding code saves bytes with short jumps.
 
 cin:    ; >in ( -- addr )
         mov ax,CIN
-pushax: DEC2 bp
-putax:  mov W[bp],ax
+pushax: DEC2 bp         ; [2a]
+putax:  mov W[bp],ax    ; [2a]
         ret
 
 dptr:   ; dp ( -- addr ) address of `here`.
