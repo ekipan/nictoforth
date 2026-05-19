@@ -1,4 +1,4 @@
-; (c) 2025, see LICENSE (it's MIT).
+; (c) 2025-2026, see LICENSE (it's MIT).
 
 ; [1-2] prims [3] i/o [4-6] interpret [7-8] compile.
 
@@ -206,7 +206,7 @@ com1:   xor dx,dx
         mov al,%1
         call emit.al
         pop ax
-%endmacro ; plunder bytes from: %ifs, [1-2,7-8].
+%endmacro ; places to plunder bytes: %ifs, [1-2,7-8].
 
 line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
@@ -252,10 +252,10 @@ lex:    ; lex ( "name" -- addr len )
         ;DEBUG 'L'
         mov di,W[CIN]
         xor cx,cx
-        mov al,32       ; ascii space.
+        mov al,32       ; space.
 .skip:  ;DEBUG '.'
-        cmp B[di],0
-        je .eob         ; end-of-buffer zero?
+        cmp B[di],0     ; zero terminator.
+        je .eob         ; end-of-buffer?
         scasb ; cmp 32,B[di]
         jae .skip       ; space or control?
 .scan:  ;DEBUG '!'
@@ -501,7 +501,7 @@ c: ; the story of a typical colon word:
 ;   3. complete entry with xt: load plus2 [8d] -> c.ax.
 ;   4. [8e] mutate [8d] into udiv2 for next time.
 ;
-; `cbw` [8b] negative offsets supports final c.semi [8g]
+; `cbw` [8b] negative offsets support final c.semi [8g]
 ; for shadowing and `c.semi -> c.ret` fallthru, which
 ; saves 2 bytes jmp. 1 byte `xchg` < 2 byte `mov`.
 ; self-modifying code [8c][8e] saves variable bytes.
@@ -546,7 +546,7 @@ c: ; the story of a typical colon word:
 
 .here: ; be dragons! and future dictionary entries [0a].
 
-%ifndef NOPAD ; for `make count` byte size.
+%ifndef NOPAD ; for `make count` size check.
         times 510-($-$$) db 0 ; (what would YOU build
         dw 0xaa55             ; with 510 bytes?)
 %endif
