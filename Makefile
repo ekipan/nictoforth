@@ -1,15 +1,16 @@
 # -- VARIABLES.
 
+SRC ?= nicto.asm
 ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 # -- TARGET FILES.
 
-o/boot: nicto.asm o/dir # (default)
+o/boot: $(SRC) o/dir # (default)
 	# try: make outline, make run, make targets.
 	$(ASM) -f bin -l $@l -o $@ $<
 
-o/nopad: nicto.asm o/dir
+o/nopad: $(SRC) o/dir
 	$(ASM) -f bin -l $@l -o $@ -D NOPAD $<
 
 o/dir:
@@ -55,24 +56,24 @@ demo: status clean count run
 .PHONY: words outline xrefs notes doc terse targets notes
 
 words:    # compact list of the implemented words.
-	@awk '/--/ && !/^;|^interp/ {print $$3}' nicto.asm | xargs -n 12 ||:
+	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
 outline:  # with stack effects, as a reading aide.
-	@awk '/--/' nicto.asm ||:
+	@awk '/--/' $(SRC) ||:
 
 xrefs:    # inventory cross-ref anchors, for maintenance.
-	@awk '/; \[/' nicto.asm ||:
+	@awk '/; \[/' $(SRC) ||:
 
 notes:    # anchored note contents, a dense spec.
-	@awk '/^; \[/,/^$$/' nicto.asm ||:
+	@awk '/^; \[/,/^$$/' $(SRC) ||:
 
 doc:      # or the entirety of the asides.
-	@awk '/^;/; /^$$/' nicto.asm | cat -s ||:
+	@awk '/^;/; /^$$/' $(SRC) | cat -s ||:
 
 terse:    # just the code, no asides.
-	@echo '; see nicto.asm for notes [5c] [6b] etc.'
+	@echo '; see $(SRC) for notes [5c] [6b] etc.'
 	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
-	  nicto.asm | cat -s ||:
+	  $(SRC) | cat -s ||:
 
 targets:  # this list.
 	@awk '/^# --|^\w/' Makefile ||:
