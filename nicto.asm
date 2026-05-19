@@ -17,7 +17,7 @@
 ; my biggest win: almost [8h] every byte of kernel code
 ; is reusable from forth. proud of that.
 
-; -- [0] ARCHITECTURE.
+; [0] ARCHITECTURE -----------------------------------
 
 ; subroutine threaded because I like how it reads and
 ; writes (shoutouts to durexforth!). this forth code:
@@ -77,7 +77,7 @@ MAIN:   dw interpret  ; custom interpreter vector [6b].
 ; (B/W are mainly taste, but they do allow you to search
 ; byte/word in these comments and get less noise.)
 
-; -- [1] ARITHMETIC, STACK.
+; [1] ARITHMETIC, STACK ------------------------------
 
 plus2:  ; 2+ ( n -- n+2 )
         add W[bp],2
@@ -147,7 +147,7 @@ rpop:   ; r> ( r:n -- n )
 ; (I bet you're curious about the lack of dictionary
 ; headers. better keep your boots [8] on.)
 
-; -- [2] MEMORY.
+; [2] MEMORY -----------------------------------------
 
 ; shared tails pushax/putax live here so surrounding
 ; code saves bytes with short jumps.
@@ -183,7 +183,7 @@ store:  ; ! ( n addr -- )
         mov W[bx],ax
         ret
 
-; -- [3] INPUT/OUTPUT.
+; [3] INPUT/OUTPUT -----------------------------------
 
 key:    ; key ( -- c )
         push pushax     ; defer pstack push after:
@@ -244,7 +244,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 ; `test di,di | jz .wait | dec di` would be simpler and
 ; avoid the extra 8 emit but costs another byte.
 
-; -- [4] PARSING.
+; [4] PARSING ----------------------------------------
 
 ; `lex` is just my quirky name for standard `parse-name`.
 ; it's short and more precise imo. lemme have this.
@@ -283,7 +283,7 @@ lex:    ; lex ( "name" -- addr len )
 ; a numbers parser, even single digits, costs tens of
 ; bytes of code. I'd rather spend them on `swap`.
 
-; -- [5] TEXT INTERPRETER.
+; [5] TEXT INTERPRETER -------------------------------
 
 immed_flag  equ 0x80 ; execute even in compile mode.
 hidden_flag equ 0x20 ; ignore when `find`ing words.
@@ -366,7 +366,7 @@ execute: ; execute ( ... xt -- ... )
 ; adore. sadly this simple one costs the same and has
 ; a milder gotcha: STATE high byte is ignored.
 
-; -- [6] INITIALIZATION, MAIN LOOP.
+; [6] INITIALIZATION, MAIN LOOP ----------------------
 
 ; variables: (a) CIN STATE (b) HERE LATEST MAIN. either:
 ; all five at 0x1000, but need (b) inits before abort.
@@ -406,7 +406,7 @@ quit:   ; quit ( -- ) everything else, then loop.
 ; parsing or whatever, then store it into MAIN and it
 ; becomes the new main loop:  ' my-interpret MAIN !
 
-; -- [7] COMPILER.
+; [7] COMPILER ---------------------------------------
 
 ; format[5]:  dw link | db len,'name' | dw xt
 ; shared tails c.ax/al/done sync di and W[HERE].
@@ -465,7 +465,7 @@ c: ; the story of a typical colon word:
         or B[bx+2],immed_flag
         ret
 
-; -- [8] BOOTSTRAP.
+; [8] BOOTSTRAP --------------------------------------
 
 ; okay lean the fuck in, this is unbelievably complex.
 ; the core idea is straightforward enough:

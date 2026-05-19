@@ -17,8 +17,9 @@ a constrained problem space, rather than a system you'd
 wanna write software for. All three **lack a builtin
 numbers parser,** for example.
 
-In the [source][asm], search for cross-refs [5c] [6b]
-etc to jump around.
+[The source][asm] is full of cross-reference. Search
+for [5c] [6b] etc to jump around. Include a semicolon
+"; [5c]" to go straight to an anchor, skipping refs.
 
 ## How to use it?
 <!-------------->
