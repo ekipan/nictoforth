@@ -102,9 +102,10 @@ different direction: spending those bytes decoupling
 and expanding to see just how much it could resemble a
 real Forth.
 
-The creative constraint: **never touch the disk again**
-after BIOS first jumps to the kernel. Just 510 bytes
-and a user across a serial line.
+```nasm
+; the constraint: never touch the disk again after bios
+; jumps in. just 510 bytes and a user over serial.
+```
 
 ## What's the status?
 <!------------------>

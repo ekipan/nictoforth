@@ -9,6 +9,9 @@
 ; how much useful (and flexible!) forth can I cram into
 ; 510 bytes while being fun to read and hack on?
 ;
+; the constraint: never touch the disk again after bios
+; jumps in. just 510 bytes and a user over serial.
+;
 ; the name squishes 'nick's sector' into five characters,
 ; a nod to the filename limit that gave us 'forth'.
 ; I started with milliforth's code but after a good
