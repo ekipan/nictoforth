@@ -123,17 +123,17 @@ dup:    ; dup ( n -- n n )
         jmp pushax
 %endif
 
-%if 1 ; 8 plus 1 bytes.
+%if 1 ; 8 plus 1 bytes [1b].
 swap:   ; swap ( x y -- y x )
         mov ax,W[bp]
         xchg W[bp+2],ax
         jmp putax
 %endif
 
-; you can define all stack words in terms of `sp@ 2+ @ !`,
-; so `swap` comes and goes a lot for bytes. (yeah this
-; hurts. or bittersweet win. whichever currently applies,
-; I'm tired of editing.)
+; [1b] you can define all stack words in terms of
+; `sp@ 2+ @ !`, so `swap` comes and goes a lot for bytes.
+; (yeah this hurts. or bittersweet win. whichever
+; currently applies, I'm tired of editing.)
 
 rpush:  ; >r ( n -- r:n )
         pop dx
