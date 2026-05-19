@@ -145,7 +145,7 @@ rpop:   ; r> ( r:n -- n )
         jmp pushax
 
 ; (I bet you're curious about the lack of dictionary
-; headers. better keep your boots on.)
+; headers. better keep your boots [8] on.)
 
 ; -- [2] MEMORY.
 
