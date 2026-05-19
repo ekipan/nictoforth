@@ -1,7 +1,6 @@
 ; (c) 2025, see LICENSE (it's MIT).
 
-; * contents: preamble fluff, then [0] architecture,
-;   [1-4] the bits, [5-6] the heart, [7-8] the tools.
+; [1-2] prims [3] i/o [4-6] interpret [7-8] compile.
 
 ; nictoforth: nick's 16-bit x86 bootsector forth.
 ;
