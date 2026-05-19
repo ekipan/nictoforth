@@ -2,8 +2,8 @@
 
 ; nictoforth: nick's 16-bit x86 bootsector forth.
 
-; preamble [0] design [1] basics [2] memory [3] i/o
-;  [4] parse [5] interp [6] init [7] compile [8] boot
+;   preamble [0] design [1] basics [2] memory [3] i/o
+;   [4] parse [5] interp [6] init [7] compile [8] boot
 
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
