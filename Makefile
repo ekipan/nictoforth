@@ -10,7 +10,7 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 # -- TARGET FILES.
 
 o/boot: $(SRC) o/dir # (default)
-	# try: make run, make outline, make targets.
+	# try: make run, make glossary, make targets.
 	$(ASM) -f bin -l $@l -o $@ $<
 
 o/nopad: $(SRC) o/dir
@@ -56,9 +56,9 @@ demo: status clean count run # so it's intended for myself.
 # pipe these into less or bat, put them in a file, whatev.
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
-.PHONY: doc notes outline targets terse words xrefs
+.PHONY: doc flow glossary names notes targets terse words xrefs
 
-outline:  # word list with stack effects. [!]
+glossary: # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
 terse:    # just the code, no asides. [!]

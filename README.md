@@ -28,7 +28,7 @@ for [5c] [6b] etc to jump around. Include a semicolon
 I've tested with `nasm 3.01`, `qemu 10.1.2`, and gnu
 `make 4.4.1`, but recentish versions will probably be
 fine. Then `awk cat wc xargs` etc for info like
-`make outline`. You can get them however you like,
+`make glossary`. You can get them however you like,
 but if you have [Nix]:
 
 ```bash
@@ -62,7 +62,7 @@ You can ask the Makefile for more info:
 [nix-shell]$ make targets
 (...)
 # -- INFO PHONIES.
-outline:  # word list with stack effects. [!]
+glossary: # word list with stack effects. [!]
 terse:    # just the code, no asides. [!]
 words:    # compact list of the implemented forth words.
 names:    # labels, variables, macros.
@@ -80,7 +80,7 @@ quit head, , ] compile, ; exit immediate ;
   `0 4096 accept`,
 - `lex` is nonstandard `parse-name`: it rewinds `>in`
   onto the delimiter,
-- `find` is very nonstandard (see `make outline`),
+- `find` is very nonstandard (see `make glossary`),
 - The second `;` is the bootstrapper, but note:
 - It lacks a numbers parser. You can compute numbers
   and write a parser in Forth, but even before that:
