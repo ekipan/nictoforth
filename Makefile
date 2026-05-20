@@ -127,8 +127,8 @@ skel:     # control flow: labels, jumps, calls, rets.
 notes:    # anchored note contents, tricky highlights.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
 
-doc:      # all names and asides. cut most code.
-	@awk '/^;|^\.|^\w|^%(def|mac)|^$$/' $(SRC) | cat -s ||:
+doc:      # the main comment text, no code.
+	@awk '/^;|^$$/' $(SRC) | cat -s ||:
 
 xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
