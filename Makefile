@@ -84,6 +84,8 @@ demo: status clean count run # so it's intended for myself.
 
 first:    # how to read, including name and format conventions. [!]
 	@awk '/^###/,/^$$/' Makefile ||:
+words:    # compact list of the implemented forth words.
+	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
 glossary: # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
@@ -98,9 +100,6 @@ design:   # example, memory map, registers, control flow, dict format. [!]
 terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
 	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
-
-words:    # compact list of the implemented forth words.
-	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
 names:    # labels, variables, macros.
 	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
