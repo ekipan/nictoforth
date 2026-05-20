@@ -40,13 +40,14 @@ count: o/nopad      # print assembled size.
 usage:              # help banner.
 	#
 	#   nictoforth, across an emulated serial line.
+	#   ux is hostile, it's more intended for source study.
 	#
+	#   - try "make help" back in your shell.
 	#   - see  hello.fs  for some code to paste. [!]
 	#   - errors give "?" and reset the stacks.
 	#   - only backspace and return, other controls put garbage.
 	#   - make sure your terminal sends backspace 127's.
 	#     it does delete from the buffer but not your screen.
-	#   - see "make help".
 	#
 
 r: o/boot           # run w/o usage.
