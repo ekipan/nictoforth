@@ -61,14 +61,15 @@ You can ask the Makefile for more info:
 ```txt
 [nix-shell]$ make help
 (...)
-# -- INFO PHONIES.
+## info phonies awk'd from the source. pipe the output to
+## less or bat, redirect into a file, whatever you like:
 words:    # compact list of the implemented forth words.
 glossary: # word list with stack effects. [!]
 design:   # example, memory map, registers, control flow, dict format. [!]
 reading:  # source format conventions.
 terse:    # just the code, no asides.
 names:    # labels, variables, macros.
-graph:    # control flow: labels, jumps, calls, rets.
+skel:     # control flow: labels, jumps, calls, rets.
 (...)
 
 [nix-shell]$ make words
