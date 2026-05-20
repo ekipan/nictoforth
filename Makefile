@@ -10,13 +10,15 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 ### TARGET FILES to be made.
 
 o/boot: $(SRC) o/dir # (default)
-	# try: make run, make glossary, make first, make targets.
 	$(ASM) -f bin -l $@l -o $@ $<
 
 o/nopad: $(SRC) o/dir
 	$(ASM) -f bin -l $@l -o $@ -D NOPAD $<
 
-o/dir:
+o/dir: # (blank stub)
+	#
+	#   [!] New here? Do "make help" next. *Tons* of info!
+	#
 	mkdir -p o; touch $@
 
 ### DEVEL PHONIES to do things.
