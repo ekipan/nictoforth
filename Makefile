@@ -51,13 +51,15 @@ serial: o/boot    # run w/o usage, not recommended.
 
 run: usage serial # qemu serial session. [!]
 
+phonies: # ^ to update this Makefile.
+	@awk '/^[a-z][^/]/{print$$1}' Makefile | \
+	  tr -d : | sort | xargs -n 10 echo '.PHONY:'
+
 status:        # query git for demo, which requires manual paste,
 	git rev-parse @
 	git status --short
 
 demo: status clean count run # so it's intended for myself.
-
-.PHONY: all clean count demo run status
 
 ### INFO PHONIES that use "awk" to parse the sources.
 
@@ -126,4 +128,5 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 targets:  # this list. [!] marks important targets.
 	@awk '/^###/{print"";print}; /^\w/' Makefile ||:
 
-.PHONY: design doc first flow glossary names notes targets terse words xrefs
+.PHONY: all clean count demo design doc glossary graph help names
+.PHONY: notes phonies reading run serial status terse usage words xrefs
