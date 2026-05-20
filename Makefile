@@ -31,20 +31,25 @@ all: o/boot o/nopad
 count: o/nopad # print assembled size.
 	wc -c <$< # assembled size, out of 510 max:
 
-run: o/boot    # qemu serial session. [!]
+usage:            # basic help banner.
 	#
 	#  nictoforth, across an emulated serial line.
 	#
-	#  - see hello.fs for some code to paste.
+	#  - see  hello.fs  for some code to paste. [!]
 	#  - errors give "?" and reset the stacks.
 	#  - only backspace and return, other controls put garbage.
 	#  - make sure your terminal sends backspace 127's.
 	#    it does delete from the buffer but not your screen.
+	#
 	#  - ctrl-a, c to swap serial<->monitor.
+
+serial: o/boot    # run w/o usage, not recommended.
 	#  - ctrl-a, x to quit qemu. [!]
 	#
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
+
+run: usage serial # qemu serial session. [!]
 
 status:        # query git for demo, which requires manual paste,
 	git rev-parse @
