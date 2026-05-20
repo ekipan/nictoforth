@@ -10,7 +10,7 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 # -- TARGET FILES.
 
 o/boot: $(SRC) o/dir # (default)
-	# try: make run, make glossary, make targets.
+	# try: make run, make glossary, make first, make targets.
 	$(ASM) -f bin -l $@l -o $@ $<
 
 o/nopad: $(SRC) o/dir
@@ -53,10 +53,39 @@ status:        # query git for demo, which requires manual paste,
 demo: status clean count run # so it's intended for myself.
 
 # -- INFO PHONIES.
-# pipe these into less or bat, put them in a file, whatev.
+
+.PHONY: doc first flow glossary names notes targets terse words xrefs
+
+### how to use the Makefile:
+# run "make targets" to list all available info. pipe info
+# phonies into less or bat, put them in a file, whatev.
+
+### source formatting conventions:
+#
+# ; [0] SECTION HEADER ------------------
+#
+# %define MACRO_NAME 123
+# EquateName  equ 345
+# DataName:   dw 234
+#
+# code_name: ; forth-word ( stack -- effect ) remark.
+# .local_code_name:
+#         instruction   ; [0a] anchored instruction.
+#         ret           ; cross-reference [0b].
+# .LocalDataName:
+#         dw 456
+#
+# ; [0b] anchored note, immediately after semicolon.
+# ; might include cross-references [0a].
+#
+# ; unanchored note.
+#
+# ; (background or playful aside.)
+
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
-.PHONY: doc flow glossary names notes targets terse words xrefs
+first:    # how to read, including name and format conventions. [!]
+	@awk '/^###/,/^$$/' Makefile ||:
 
 glossary: # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
