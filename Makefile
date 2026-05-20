@@ -70,10 +70,6 @@ demo: status clean count run # ^ needs manual paste.
 # I've tried to automate this but attempts at piping
 # things into qemu have been met with frustration.
 
-##
-## info phonies awk'd from the source. pipe the output to
-## less or bat, redirect into a file, whatever you like:
-
 # ; format conventions you can expect in the
 # ; asm source (and which are used to parse it):
 #
@@ -96,6 +92,10 @@ demo: status clean count run # ^ needs manual paste.
 # ; unanchored note.
 #
 # ; (background or playful aside.)
+
+##
+## info phonies awk'd from the source. pipe the output to
+## less or bat, redirect into a file, whatever you like:
 
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
