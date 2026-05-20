@@ -63,7 +63,8 @@ glossary: # word list with stack effects. [!]
 
 terse:    # just the code, no asides. [!]
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
-	@awk '!/^;/; /--$$/; /: doub/,/ret /; /^; \[0a/,/0b/' \
+	@awk '/--$$/; !/^;/; /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
+	  /^; control flow/,/^$$/; /^; format\[5\]/,/^$$/' \
 	  $(SRC) | cat -s ||:
 
 words:    # compact list of the implemented forth words.
