@@ -148,11 +148,11 @@ weeks** before finally testing or committing any of it.
 I've dug up earlier drafts but haven't done the work to
 reconnect history back to Milliforth.
 
+---
+
 <details><summary>
 Bigass LLM rant, should probably be its own document.
 </summary>
-
----
 
 As an experiment, **I consulted LLMs** to polish the
 docs copy. First time touching the things, I was
@@ -208,9 +208,9 @@ I can't expect Joe Developer to figure out if my use is
 paragraphs apologizing for the dirtiness benefits
 nobody. _Fuck,_ man.
 
----
-
 </details>
+
+---
 
 Oh, when I posted to the Forth discord, a very helpful
 person immediately bought me [an easy 24 bytes][24b]!
