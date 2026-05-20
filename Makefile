@@ -21,8 +21,6 @@ o/dir:
 
 # -- DEVEL PHONIES.
 
-.PHONY: clean all count run status demo
-
 clean:
 	rm -rf o
 
@@ -52,9 +50,9 @@ status:        # query git for demo, which requires manual paste,
 
 demo: status clean count run # so it's intended for myself.
 
-# -- INFO PHONIES.
+.PHONY: all clean count demo run status
 
-.PHONY: doc first flow glossary names notes targets terse words xrefs
+# -- INFO PHONIES.
 
 ### how to use the Makefile:
 # run "make targets" to list all available info. pipe info
@@ -116,3 +114,5 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 
 targets:  # this list. important targets: [!]
 	@awk '/^# --|^\w/' Makefile ||:
+
+.PHONY: doc first flow glossary names notes targets terse words xrefs
