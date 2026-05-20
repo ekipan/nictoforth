@@ -70,13 +70,13 @@ words:    # compact list of the implemented forth words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
 names:    # labels, variables, macros.
-	@awk '/--$$|^[\.a-zA-Z]|^%(def|mac)/' $(SRC) ||:
+	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
 notes:    # anchored note contents, a dense spec.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
 
 doc:      # all names and asides. cut most code.
-	@awk '/^[;\.a-zA-Z]|^%(def|mac)|^$$/' $(SRC) | cat -s ||:
+	@awk '/^;|^\.|^\w|^%(def|mac)|^$$/' $(SRC) | cat -s ||:
 
 xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
