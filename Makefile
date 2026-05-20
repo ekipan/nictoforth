@@ -122,11 +122,11 @@ terse:    # just the code, no asides.
 names:    # labels, variables, macros.
 	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
-notes:    # anchored note contents, a dense spec.
-	@awk '/^; \[/,/^$$/' $(SRC) ||:
-
-flow:     # control flow graph: labels, jumps, calls, rets.
+skel:     # control flow: labels, jumps, calls, rets.
 	@awk '/--$$|^\.?[a-z]|^ +(j|call|ret)/' $(SRC) ||:
+
+notes:    # anchored note contents, tricky highlights.
+	@awk '/^; \[/,/^$$/' $(SRC) ||:
 
 doc:      # all names and asides. cut most code.
 	@awk '/^;|^\.|^\w|^%(def|mac)|^$$/' $(SRC) | cat -s ||:
