@@ -88,11 +88,16 @@ first:    # how to read, including name and format conventions. [!]
 glossary: # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
-terse:    # just the code, no asides. [!]
+# intentionally indent to hide from "make targets".
+ DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
+ /^; control flow/,/^$$/; /^; format\[5\]/,/^$$/
+
+design:   # example, memory map, registers, control flow, dict format. [!]
+	@awk '$(DESIGN)' $(SRC) ||:
+
+terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
-	@awk '/--$$/; !/^;/; /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
-	  /^; control flow/,/^$$/; /^; format\[5\]/,/^$$/' \
-	  $(SRC) | cat -s ||:
+	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
 
 words:    # compact list of the implemented forth words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
@@ -115,4 +120,4 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 targets:  # this list. important targets: [!]
 	@awk '/^# --|^\w/' Makefile ||:
 
-.PHONY: doc first flow glossary names notes targets terse words xrefs
+.PHONY: design doc first flow glossary names notes targets terse words xrefs
