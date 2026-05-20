@@ -41,9 +41,9 @@
 ;
 ; [0a] segment 0x05c0 memory map:
 ;   0000-0fff  [text->0.......]  input buffer.
-;   1000-1003  [CIN][STATE]      variables.
+;   1000-1003  [ToIn][State]     variables.
 ;   1004-1fff  [.....sp<-addrs]  return stack.
-;   2000-....  [code->HERE....]  kernel, dictionary.
+;   2000-....  [code->Here....]  kernel, dictionary.
 ;   ....-ffff  [......bp<-data]  parameter stack.
 ;
 ; registers:
@@ -54,11 +54,11 @@
 ; one exception: ah couples find -> dispatch [5c].
 ; [0b] lex and find set flags for compactness.
 
-CIN     equ 0x1000    ; next unparsed [4] character.
-STATE   equ 0x1002    ; low byte nonzero = compile [5c].
-HERE:   dw c.here     ; next free byte to compile [7] to.
-LATEST: dw dictionary ; head of find [5] linked list.
-MAIN:   dw interpret  ; custom interpreter vector [6b].
+ToIn    equ 0x1000    ; next unparsed [4] character.
+State   equ 0x1002    ; low byte nonzero = compile [5c].
+Here:   dw c.Here     ; next free byte to compile [7] to.
+Latest: dw Dictionary ; head of find [5] linked list.
+Main:   dw interpret  ; custom interpreter vector [6b].
 
 ; milliforth groups the variables and keeps their base
 ; address in bx, saving instruction bytes at complexity
@@ -117,7 +117,7 @@ drop:   ; drop ( n -- ) free tail word!
         INC2 bp
         ret
 
-%if 1 ; 5 bytes, plus 1 in c.list [8].
+%if 1 ; 5 bytes, plus 1 in c.List [8].
 dup:    ; dup ( n -- n n )
         mov ax,W[bp]
         jmp pushax
@@ -156,13 +156,13 @@ rpop:   ; r> ( r:n -- n )
 ; surrounding code saves bytes with short jumps.
 
 cin:    ; >in ( -- addr )
-        mov ax,CIN
+        mov ax,ToIn
 pushax: DEC2 bp         ; [2a]
 putax:  mov W[bp],ax    ; [2a]
         ret
 
 dptr:   ; dp ( -- addr ) address of `here`.
-        mov ax,HERE
+        mov ax,Here
         jmp pushax
 
 sptr:   ; sp@ ( -- addr )
@@ -216,7 +216,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
         call emit.al    ; move to next line.
         xor di,di       ; buffer at addr 0 [0a].
-        mov W[CIN],di   ; parse [4] from there later.
+        mov W[ToIn],di  ; parse [4] from there later.
         jmp .wait
 .store: stosb           ; store and loop.
 .echo:  call emit.al
@@ -254,7 +254,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 
 lex:    ; lex ( "name" -- addr len )
         ;DEBUG 'L'
-        mov di,W[CIN]
+        mov di,W[ToIn]
         xor cx,cx
         mov al,32       ; space.
 .skip:  ;DEBUG '.'
@@ -267,7 +267,7 @@ lex:    ; lex ( "name" -- addr len )
         scasb ; cmp 32,B[di]
         jb .scan        ; name character?
         dec di          ; [4a] di = end addr.
-.eob:   mov W[CIN],di
+.eob:   mov W[ToIn],di
         sub di,cx       ; di = start addr.
         sub bp,4
         mov W[bp+2],di
@@ -288,11 +288,11 @@ lex:    ; lex ( "name" -- addr len )
 
 ; [5] TEXT INTERPRETER -------------------------------
 
-immed_flag  equ 0x80 ; execute even in compile mode.
-hidden_flag equ 0x20 ; ignore when `find`ing words.
-len_mask    equ 0x1f ; max 31 characters.
+ImmedFlag  equ 0x80 ; execute even in compile mode.
+HiddenFlag equ 0x20 ; ignore when `find`ing words.
+LenMask    equ 0x1f ; max 31 characters.
 
-dictionary: ; starts with only one word. the format:
+Dictionary: ; starts with only one word. the format:
         dw 0      ; link: 0 marks end of dictionary.
         db 1,';'  ; name: len+flags byte then characters.
         dw c.prim ; xt: execution token, a code address.
@@ -304,7 +304,7 @@ dictionary: ; starts with only one word. the format:
 
 find:   ; find ( addr len -- xt nt | addr 0 )
         ;DEBUG 'F'
-        mov bx,LATEST
+        mov bx,Latest
 .prev:  mov bx,W[bx]    ; bx = nt (or 0).
         test bx,bx
         jz .eod         ; end-of-dictionary?
@@ -312,7 +312,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
         mov ah,al       ; needed for dispatch [5c].
-        and al,len_mask|hidden_flag
+        and al,LenMask|HiddenFlag
         cmp al,B[bp+0]
         jne .prev       ; wrong length or hidden?
         mov di,W[bp+2]
@@ -341,7 +341,7 @@ ok:     ;DEBUG 'K'
         call emit.al
 %endif
         call line
-interpret: ; ( ... "name" -- ... ) default MAIN [6b].
+interpret: ; ( ... "name" -- ... ) default Main [6b].
         call lex
         jcxz ok         ; end of line? [0b]
         call find
@@ -349,9 +349,9 @@ interpret: ; ( ... "name" -- ... ) default MAIN [6b].
         jz error        ; didn't find a word? [0b]
         ; [5c] dispatch coupled to find: ah = len+flags.
         INC2 bp         ; ( xt nt ) drop
-        shl ah,1        ; rely on immed_flag = 0x80.
+        shl ah,1        ; rely on ImmedFlag = 0x80.
         jc execute      ; immediate word?
-        cmp B[STATE],0
+        cmp B[State],0
         jne c.call      ; compile mode?
 execute: ; execute ( ... xt -- ... )
         INC2 bp
@@ -360,21 +360,21 @@ execute: ; execute ( ... xt -- ... )
 ; [5b] underflowing the stack wraps bp to low addresses,
 ; see map [0a]. `jg` corrects it (bp > 0), but pushing
 ; values there corrupts the in buffer, so it may also
-; self-correct in the middle of a line if bp and CIN
+; self-correct in the middle of a line if bp and ToIn
 ; happen to collide!
 
 ; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack, but it costs 3 bytes.
 ; sectorforth has a *wildly* dense dispatch routine I
 ; adore. sadly this simple one costs the same and has
-; a milder gotcha: STATE high byte is ignored.
+; a milder gotcha: State high byte is ignored.
 
 ; [6] INITIALIZATION, MAIN LOOP ----------------------
 
-; variables: (a) CIN STATE (b) HERE LATEST MAIN. either:
-; all five at 0x1000, but need (b) inits before abort.
-; or: current split design, but need two words to give
-; addrs to forth. same code cost, this feels better imo.
+; variables: (a) ToIn State (b) Here Latest Main.
+; either: all at 0x1000, but need (b) inits before abort.
+; or: current split, but need two words to give addrs
+; to forth. same code cost, I like this better.
 
 error:  mov al,'?'
         call emit.al
@@ -389,37 +389,37 @@ quit:   ; quit ( -- ) everything else, then loop.
         mov sp,$$       ; rstack under the kernel [0a].
         ; serial init omitted.
         ; seabios seems to take care of it idk.
-        mov B[STATE],0  ; start in execute mode [5c].
+        mov B[State],0  ; start in execute mode [5c].
         call line
         push abort      ; in case user types `r>` etc.
 .loop:  push .loop
-        jmp [MAIN]      ; swappable [6b] interpreter.
+        jmp [Main]      ; swappable [6b] interpreter.
 
 ; control flow (see example [8a] with data flow):
 ;   boot[0] -> abort -> line[3] -> .loop
-;   -> [MAIN]interpret -> lex[4] (-> ok -> line -> lex)
+;   -> [Main]interpret -> lex[4] (-> ok -> line -> lex)
 ;   -> find[5] -> error | c.call[7] | execute -> .loop
 
 ; [6a] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
 
-; [6b] vectored MAIN costs 4 bytes, enabling interpreter
+; [6b] vectored Main costs 4 bytes, enabling interpreter
 ; hotswap: define a new interpreter in forth, reuse
 ; `line lex find abort c.call execute`, maybe add number
-; parsing or whatever, then store it into MAIN and it
-; becomes the new main loop:  ' my-interpret MAIN !
+; parsing or whatever, then store it into Main and it
+; becomes the new main loop:  ' my-interpret Main !
 
 ; [7] COMPILER ---------------------------------------
 
 ; format[5]:  dw link | db len,'name' | dw xt
-; shared tails c.ax/al/done sync di and W[HERE].
+; shared tails c.ax/al/done sync di and W[Here].
 
 c: ; the story of a typical colon word:
 
 ; 1. first compile the link and name fields:
 .head:  ; head, ( addr len -- )
-        mov ax,W[HERE]
-        xchg ax,W[LATEST] ; update latest.
+        mov ax,W[Here]
+        xchg ax,W[Latest] ; update latest.
         call .ax        ; link to old latest.
         mov si,W[bp+2]  ; si = addr.
         mov cx,W[bp]    ; cx = len.
@@ -437,7 +437,7 @@ c: ; the story of a typical colon word:
 
 ; 3. switch the compiler on:
 .on:    ; ] ( -- )
-        mov B[STATE],1  ; for dispatch [5c].
+        mov B[State],1  ; for dispatch [5c].
         ret
 
 ; 4. dispatch [5c] compiles words into the definition:
@@ -448,24 +448,24 @@ c: ; the story of a typical colon word:
         INC2 bp
         DEC2 ax
         sub ax,di       ; relative address.
-.ax:    mov di,W[HERE]
+.ax:    mov di,W[Here]
         stosw
         jmp .done
 
 ; 5. then switch off and tie it up:
 .semi:  ; ; ( -- ) immediate
-        mov B[STATE],0
+        mov B[State],0
 .ret:   ; exit ( -- ) immediate
         mov al,0xc3
-.al:    mov di,W[HERE]
+.al:    mov di,W[Here]
         stosb
-.done:  mov W[HERE],di
+.done:  mov W[Here],di
         ret
 
 ; 6. and optionally immediafy.
 .immed: ; immediate ( -- )
-        mov bx,W[LATEST]
-        or B[bx+2],immed_flag
+        mov bx,W[Latest]
+        or B[bx+2],ImmedFlag
         ret
 
 ; [8] BOOTSTRAP --------------------------------------
@@ -491,7 +491,7 @@ c: ; the story of a typical colon word:
 .prim:  ; ; ( "name" -- )
         call lex
         call .head
-.8b:    mov al,B[.list] ; [8b] load xt offset byte.
+.8b:    mov al,B[.List] ; [8b] load xt offset byte.
         cbw             ; decompress.
         xchg dx,ax      ; -128 <= dx <= 127.
         inc W[.8b+1]    ; [8c] point to next byte.
@@ -522,7 +522,7 @@ c: ; the story of a typical colon word:
     %endrep
 %endmacro
 
-.list:  ; db udiv2-plus2, and-udiv2, invert-and, ...
+.List:  ; db udiv2-plus2, and-udiv2, invert-and, ...
         DBO udiv2, and, invert, equal0, plus
         DBO drop, dup, swap, rpush, rpop
         DBO cin, dptr, sptr, rptr, fetch, store
@@ -540,15 +540,15 @@ c: ; the story of a typical colon word:
 ;
 ; [8g] c.ret becomes forth `exit`, but immediate. then
 ; c.semi becomes `;`, shadowing c.prim. c.prim and
-; c.list become dead code.
+; c.List become dead code.
 ;
-; [8h] besides c.prim, c.list, and dispatch [5c], every
+; [8h] besides c.prim, c.List, and dispatch [5c], every
 ; byte of kernel code is available. `interpret` you can
-; fetch from MAIN. most words from then on will have xt
+; fetch from Main. most words from then on will have xt
 ; fields that point to their next address. waste later
 ; to save now.
 
-.here: ; be dragons! and future dictionary entries [0a].
+.Here: ; be dragons! and future dictionary entries [0a].
 
 %ifndef NOPAD ; for `make count` size check.
         times 510-($-$$) db 0 ; (what would YOU build
