@@ -1,13 +1,18 @@
 
-# run "make targets" for an overview! it's at the bottom.
-
-### VARIABLES you can override.
+## nictoforth is an x86 bootsector forth that:
+##   - wants to be fun to read and hack on.
+##   - doesn't touch the disk after bios jumps in.
+##     just 510 bytes and you, across a serial line.
+##   - is unconcerned with being a practical forth.
+##
+## Makefile variables you can override:
 
 SRC ?= nicto.asm
 ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
 
-### TARGET FILES to be made.
+##
+## target files you can make:
 
 o/boot: $(SRC) o/dir # (default)
 	$(ASM) -f bin -l $@l -o $@ $<
@@ -21,14 +26,15 @@ o/dir: # (blank stub)
 	#
 	mkdir -p o; touch $@
 
-### DEVEL PHONIES to do things.
+##
+## development phonies:
 
 clean:
 	rm -rf o
 
 all: o/boot o/nopad
 
-count: o/nopad # print assembled size.
+count: o/nopad    # print assembled size.
 	wc -c <$< # assembled size, out of 510 max:
 
 usage:            # basic help banner.
@@ -45,6 +51,7 @@ usage:            # basic help banner.
 
 serial: o/boot    # run w/o usage, not recommended.
 	#  - ctrl-a, x to quit qemu. [!]
+	#  - see "make help".
 	#
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
@@ -55,32 +62,33 @@ phonies: # ^ to update this Makefile.
 	@awk '/^[a-z][^/]/{print$$1}' Makefile | \
 	  tr -d : | sort | xargs -n 10 echo '.PHONY:'
 
-status:        # query git for demo, which requires manual paste,
+status: # ^ for demo, to update the README.
 	git rev-parse @
 	git status --short
 
-demo: status clean count run # so it's intended for myself.
+demo: status clean count run # ^ needs manual paste.
+# I've tried to automate this but attempts at piping
+# things into qemu have been met with frustration.
 
-### INFO PHONIES that use "awk" to parse the sources.
+##
+## info phonies awk'd from the source. pipe the output to
+## less or bat, redirect into a file, whatever you like:
 
-### how to use the Makefile:
-# run "make targets" to list all available info. pipe info
-# phonies into less or bat, put them in a file, whatev.
-
-### source formatting conventions:
+# ; format conventions you can expect in the
+# ; asm source (and which are used to parse it):
 #
 # ; [0] SECTION HEADER ------------------
 #
-# %define MACRO_NAME 123
-# EquateName  equ 345
-# DataName:   dw 234
+# %define MACRO_NAME 1234
+# EquateName  equ 1234
+# DataName:   dw 1234
 #
 # code_name: ; forth-word ( stack -- effect ) remark.
 # .local_code_name:
 #         instruction   ; [0a] anchored instruction.
 #         ret           ; cross-reference [0b].
 # .LocalDataName:
-#         dw 456
+#         dw 1234
 #
 # ; [0b] anchored note, immediately after semicolon.
 # ; might include cross-references [0a].
@@ -91,20 +99,21 @@ demo: status clean count run # so it's intended for myself.
 
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
-first:    # how to read, including name and format conventions. [!]
-	@awk '/^###/,/^$$/' Makefile ||:
 words:    # compact list of the implemented forth words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
 glossary: # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
-# intentionally indent to hide from "make targets".
- DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
+DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
  /^; control flow/,/^$$/; /^; format\[5\]/,/^$$/
+# "make help" parses ^ to hide this and some targets.
 
 design:   # example, memory map, registers, control flow, dict format. [!]
 	@awk '$(DESIGN)' $(SRC) ||:
+
+reading:  # source format conventions.
+	@awk '/^# ;/,/^$$/' Makefile ||:
 
 terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
@@ -125,8 +134,8 @@ doc:      # all names and asides. cut most code.
 xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
 
-targets:  # this list. [!] marks important targets.
-	@awk '/^###/{print"";print}; /^\w/' Makefile ||:
+help:     # this list. [!] marks important targets.
+	@awk '/^## |^\w/ && !/\^/; /^##$$/{print""}' Makefile ||:
 
 .PHONY: all clean count demo design doc glossary graph help names
 .PHONY: notes phonies reading run serial status terse usage words xrefs
