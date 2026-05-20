@@ -34,29 +34,29 @@ clean:
 
 all: o/boot o/nopad
 
-count: o/nopad    # print assembled size.
+count: o/nopad      # print assembled size.
 	wc -c <$< # assembled size, out of 510 max:
 
-usage:            # basic help banner.
+usage:              # help banner.
 	#
-	#  nictoforth, across an emulated serial line.
+	#   nictoforth, across an emulated serial line.
 	#
-	#  - see  hello.fs  for some code to paste. [!]
-	#  - errors give "?" and reset the stacks.
-	#  - only backspace and return, other controls put garbage.
-	#  - make sure your terminal sends backspace 127's.
-	#    it does delete from the buffer but not your screen.
+	#   - see  hello.fs  for some code to paste. [!]
+	#   - errors give "?" and reset the stacks.
+	#   - only backspace and return, other controls put garbage.
+	#   - make sure your terminal sends backspace 127's.
+	#     it does delete from the buffer but not your screen.
+	#   - see "make help".
 	#
-	#  - ctrl-a, c to swap serial<->monitor.
 
-serial: o/boot    # run w/o usage, not recommended.
-	#  - ctrl-a, x to quit qemu. [!]
-	#  - see "make help".
-	#
+r: o/boot           # run w/o usage.
+	#   ctrl-a, x to quit qemu. [!]
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
 
-run: usage serial # qemu serial session. [!]
+run: o/boot usage r # qemu serial session. [!]
+
+# my maintainer phonies, caret ^ hides from "make help":
 
 phonies: # ^ to update this Makefile.
 	@awk '/^[a-z][^/]/{print$$1}' Makefile | \
@@ -106,8 +106,7 @@ glossary: # word list with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
 DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
- /^; control flow/,/^$$/; /^; format\[5\]/,/^$$/
-# "make help" parses ^ to hide this and some targets.
+/^; control flow/,/^$$/; /^; format\[5\]/,/^$$/
 
 design:   # example, memory map, registers, control flow, dict format. [!]
 	@awk '$(DESIGN)' $(SRC) ||:
