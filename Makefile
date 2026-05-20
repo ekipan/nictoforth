@@ -1,13 +1,13 @@
 
 # run "make targets" for an overview! it's at the bottom.
 
-# -- VARIABLES.
+### VARIABLES you can override.
 
 SRC ?= nicto.asm
 ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
 
-# -- TARGET FILES.
+### TARGET FILES to be made.
 
 o/boot: $(SRC) o/dir # (default)
 	# try: make run, make glossary, make first, make targets.
@@ -19,7 +19,7 @@ o/nopad: $(SRC) o/dir
 o/dir:
 	mkdir -p o; touch $@
 
-# -- DEVEL PHONIES.
+### DEVEL PHONIES to do things.
 
 clean:
 	rm -rf o
@@ -52,7 +52,7 @@ demo: status clean count run # so it's intended for myself.
 
 .PHONY: all clean count demo run status
 
-# -- INFO PHONIES.
+### INFO PHONIES that use "awk" to parse the sources.
 
 ### how to use the Makefile:
 # run "make targets" to list all available info. pipe info
@@ -117,7 +117,7 @@ doc:      # all names and asides. cut most code.
 xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
 
-targets:  # this list. important targets: [!]
-	@awk '/^# --|^\w/' Makefile ||:
+targets:  # this list. [!] marks important targets.
+	@awk '/^###/{print"";print}; /^\w/' Makefile ||:
 
 .PHONY: design doc first flow glossary names notes targets terse words xrefs
