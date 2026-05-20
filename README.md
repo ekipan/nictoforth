@@ -1,3 +1,4 @@
+<!-- markdownlint-disable blanks-around-headings no-inline-html -->
 
 # Nictoforth
 [top]: #nictoforth
@@ -147,28 +148,75 @@ weeks** before finally testing or committing any of it.
 I've dug up earlier drafts but haven't done the work to
 reconnect history back to Milliforth.
 
-As an experiment, **I consulted an LLM** to polish
-the comment copy in nicto.asm. However I want you to
-understand that **99.9%** of the words are still **my
-own.** I continue to be unimpressed by the shit copy it
-spits out but **the feedback is valuable:** finding
-places that need examples, extra clarity, whatever. I
-have strong mixed feelings. This is professional labor
-that I didn't pay for.
+<details><summary>
+Bigass LLM rant, should probably be its own document.
+</summary>
 
-At LLM suggestion, though, I **migrated from BIOS I/O
-to serial** for better DX. It guided me through the
-specific routines. I guess I could have looked it up.
-I didn't. It cost me bytes, struggles, backspace
-headaches. That was an adventure. Had to sell `swap`,
-after spending lots of effort on its bittersweet return
-story. I don't wanna talk about it.
+---
 
-When I felt overcommenting dread it showed me my code
-without them, which was super helpful psychologically
-so I got the idea for `make terse`.
+As an experiment, **I consulted LLMs** to polish the
+docs copy. First time touching the things, I was
+curious.
 
-That's all. I figured you should know.
+I didn't keep an audit trail, I'm not willing to let
+the bot touch my hobby repo, but I'll still take
+ownership of all the words and especially the code.
+You've read this far, maybe you know my voice.
+
+### Benefits I've reaped
+
+- If it hallucinates an explanation then maybe I can
+  make the text clearer. Add examples, concretize.
+- When I felt overcommenting dread it showed me my code
+  without them. Refreshed, I got the idea for
+  `make terse`.
+- I wanted paste, so it suggested I migrate to serial.
+  The fat routines it gave me were painful to shove in.
+  Now that I've read the docs and squeezed them I'm
+  comfortable calling them my own (~10 instructions).
+- Occasional brainstorming for saved bytes, though
+  hallucinations make this mostly a wash. The
+  frustration has made me read the docs more though!
+  Maybe one day I will understand x86 instruction
+  encoding syntax.
+- It led me to references like [Cloutier's][clo]!
+
+### The harm
+
+The usual stuff:
+
+- Alarmingly addictive. Warm words get the endorphins
+  flowing, but sometimes the sycophancy makes me sick.
+- The hallucinations seem designed to be part of the
+  pull-the-lever addiction loop.
+- The slop tsunami will never go away. Every word I see
+  now I have to wonder if a person wrote it or not.
+  "You're right that X!" "Not just X but Y!" If you
+  didn't care to write it then I don't care to read it,
+  and now I have to convince you that I _did care_ to
+  write my docs, even if I used this _thing_ to help me.
+
+And the stuff that I have the luxury of feeling
+disconnected to:
+
+- I'm using professional labor I didn't pay for.
+  Laborers are getting devalued.
+- Burning energy in an energy crisis.
+
+I can't expect Joe Developer to figure out if my use is
+"responsible," and I don't blame him. Spending these
+paragraphs apologizing for the dirtiness benefits
+nobody. _Fuck,_ man.
+
+---
+
+</details>
+
+Oh, when I posted to the Forth discord, a very helpful
+person immediately bought me [an easy 24 bytes][24b]!
+He also suggested I put TOS in bx, which will probably
+buy me more, but the complexity spreads throughout.
+Maybe one day I'll experiment.
 
 ## ...the hell is an "x86 bootsector Forth"? 😵‍💫
 [wtf]: #the-hell-is-an-x86-bootsector-forth-%E2%80%8D
@@ -231,6 +279,8 @@ Can't spoil all the surprises.
 [mil]: https://github.com/fuzzballcat/milliForth
 [min]: https://github.com/meithecatte/miniforth
 [nix]: https://nixos.org/
+[clo]: https://www.felixcloutier.com/x86/
+[24b]: https://github.com/ekipan/nictoforth/commit/a837d57050404c17f21fc27df223048c91511b0e
 
 <!-- kate: remove-trailing-spaces all; -->
 <!-- *** end of README. *** -->
