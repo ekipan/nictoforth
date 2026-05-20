@@ -67,7 +67,7 @@ terse:    # just the code, no asides. [!]
 words:    # compact list of the implemented forth words.
 names:    # labels, variables, macros.
 notes:    # anchored note contents, a dense spec.
-doc:      # all names and asides. cut most code.
+flow:     # control flow graph: labels, jumps, calls, rets.
 (...)
 
 [nix-shell]$ make words

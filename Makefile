@@ -75,6 +75,9 @@ names:    # labels, variables, macros.
 notes:    # anchored note contents, a dense spec.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
 
+flow:     # control flow graph: labels, jumps, calls, rets.
+	@awk '/--$$|^\.?[a-z]|^ +(j|call|ret)/' $(SRC) ||:
+
 doc:      # all names and asides. cut most code.
 	@awk '/^;|^\.|^\w|^%(def|mac)|^$$/' $(SRC) | cat -s ||:
 
