@@ -269,18 +269,19 @@ Can't spoil all the surprises.
 
 [asm]: nicto.asm
 [fs]:  hello.fs
-[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/798ecbeeed430b453c3dd5288330a1f44ea5fa72
-[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
+
+[24b]: https://github.com/ekipan/nictoforth/commit/a837d57050404c17f21fc27df223048c91511b0e
 [ans]: https://forth-standard.org/standard/alpha
-[sta]: https://www.forth.com/starting-forth/
+[clo]: https://www.felixcloutier.com/x86/
+[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/798ecbeeed430b453c3dd5288330a1f44ea5fa72
 [dus]: https://duskos.org/
-[tum]: https://tumbleforth.hardcoded.net/
-[sec]: https://github.com/cesarblum/sectorforth
 [mil]: https://github.com/fuzzballcat/milliForth
 [min]: https://github.com/meithecatte/miniforth
 [nix]: https://nixos.org/
-[clo]: https://www.felixcloutier.com/x86/
-[24b]: https://github.com/ekipan/nictoforth/commit/a837d57050404c17f21fc27df223048c91511b0e
+[sec]: https://github.com/cesarblum/sectorforth
+[sta]: https://www.forth.com/starting-forth/
+[tum]: https://tumbleforth.hardcoded.net/
+[wik]: https://en.wikipedia.org/wiki/Forth_(programming_language)
 
 <!-- kate: remove-trailing-spaces all; -->
 <!-- *** end of README. *** -->
