@@ -5,7 +5,6 @@
 ; find ; execute ; abort ; quit
 ; head, ; , ; ] ; compile,
 ; immediate ; exit immediate ; ; immediate
-
 lex 3 drop @ \ some smoke tests. ( $2033 )
 dup 2+ emit \ honoring the jackson:
 dup >in 0= + emit  >in 0= 0= + emit \ 32:
