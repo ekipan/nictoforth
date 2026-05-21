@@ -3,7 +3,7 @@
 ##   - wants to be fun to read and hack on.
 ##   - doesn't touch the disk after bios jumps in.
 ##     just 510 bytes and you, across a serial line.
-##   - is unconcerned with being a practical forth.
+##   - is unconcerned with being practical.
 ##
 ## Makefile variables you can override:
 
@@ -95,22 +95,23 @@ demo: status clean count run # ^ needs manual paste.
 # ; (background or playful aside.)
 
 ##
-## info phonies awk'd from the source. pipe the output to
-## less or bat, redirect into a file, whatever you like:
+## these phonies awk-filter slices of the source.
+## pipe the output to less or bat, redirect to a file,
+## whatever you like:
 
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
 words:    # compact list of the implemented forth words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
-glossary: # word list with stack effects. [!]
+glossary: # labels that implement words, with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
-DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; \
-/^; control flow/,/^$$/; /^; format\[5\]/,/^$$/
+DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; /^; control flow/,/^$$/
 
-design:   # example, memory map, registers, control flow, dict format. [!]
+design:   # example, memory map, registers, control flow. [!]
 	@awk '$(DESIGN)' $(SRC) ||:
+	@echo '; see full boostrap example in hello.fs.'
 
 reading:  # source format conventions.
 	@awk '/^# ;/,/^$$/' Makefile ||:
@@ -119,7 +120,7 @@ terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
 	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
 
-names:    # labels, variables, macros.
+names:    # all labels, variables, macros.
 	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
 skel:     # control flow: labels, jumps, calls, rets.
