@@ -110,9 +110,6 @@ teaser1:  # the interpreter. the heart of a forth. [!]
 teaser2:  # the bootstrap. *terrifying* [!]
 	@awk '/^; \[8\]/,/4\./' $(SRC) ||:
 
-glossary: # labels that implement words, with stack effects. [!]
-	@awk '/--/' $(SRC) ||:
-
 DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; /^; control flow/,/^$$/
 
 design:   # example, memory map, registers, control flow. [!]
@@ -122,15 +119,18 @@ design:   # example, memory map, registers, control flow. [!]
 reading:  # source format conventions.
 	@awk '/^# ;/,/^$$/' Makefile ||:
 
-terse:    # just the code, no asides.
-	@echo '; see $(SRC) for notes [5c] [6b] etc.'
-	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
+glossary: # labels that implement words, with stack effects. [!]
+	@awk '/--/' $(SRC) ||:
 
 names:    # all labels, variables, macros.
 	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
 skel:     # control flow: labels, jumps, calls, rets.
 	@awk '/--$$|^\.?[a-z]|^ +(j|call|ret)/' $(SRC) ||:
+
+terse:    # just the code, no asides. [!]
+	@echo '; see $(SRC) for notes [5c] [6b] etc.'
+	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
 
 notes:    # anchored note contents, tricky highlights.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
