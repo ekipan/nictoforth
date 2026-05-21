@@ -147,7 +147,7 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
 
 help:     # this list. [!] marks important targets.
-	@awk '/^## |^\w/ && !/\^/; /^##$$/{print""}' Makefile ||:
+	@awk '/^## |^[a-z]|\?=/ && !/\^/; /^##$$/{print""}' Makefile ||:
 
 ##
 ## try:
