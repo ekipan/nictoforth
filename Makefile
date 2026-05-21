@@ -42,16 +42,21 @@ usage:              # help banner.
 	#   nictoforth, across an emulated serial line.
 	#   ux is hostile, it's more intended for source study.
 	#
-	#   - try "make help" back in your shell.
-	#   - see  hello.fs  for some code to paste. [!]
 	#   - errors give "?" and reset the stacks.
 	#   - only backspace and return, other controls put garbage.
 	#   - make sure your terminal sends backspace 127's.
 	#     it does delete from the buffer but not your screen.
 	#
+	#   the boot dictionary only has one word named `;`, and
+	#   it's a weirdo. you should copypaste  hello.fs  to define
+	#   the builtins then `:` and the rest. [!]
+	#
+	#   "make help", back in your shell, to explore.
+	#   "make r" skips this bigass banner.
 
 r: o/boot           # run w/o usage.
 	#   ctrl-a, x to quit qemu. [!]
+	#
 	$(QEMU) -no-reboot -display none -serial mon:stdio \
 	  -drive if=floppy,format=raw,file=$<
 
@@ -111,8 +116,8 @@ teaser2:  # the bootstrap. *terrifying* and heavily documented.
 DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; /^; control flow/,/^$$/
 
 design:   # example, memory map, registers, control flow. [!]
+	@printf '; see  hello.fs  to define `:`, then:\n;\n'
 	@awk '$(DESIGN)' $(SRC) ||:
-	@echo '; see full boostrap example in hello.fs.'
 
 reading:  # source format conventions.
 	@awk '/^# ;/,/^$$/' Makefile ||:
