@@ -59,17 +59,14 @@ Forth source for the full [wacky bootstrap][fs].
 You can ask the Makefile for more info:
 
 ```txt
-[nix-shell]$ make help
+[nix-shell]$ make help # heavily abridged:
 (...)
-## info phonies awk'd from the source. pipe the output to
-## less or bat, redirect into a file, whatever you like:
-words:    # compact list of the implemented forth words.
-glossary: # word list with stack effects. [!]
-design:   # example, memory map, registers, control flow, dict format. [!]
-reading:  # source format conventions.
+## these phonies filter slices of the source:
+words:    # compact list of the implemented forth words. [!]
+design:   # example, memory map, registers, control flow. [!]
+glossary: # labels that implement words, with stack effects.
+skel:     # control flow: labels, jumps, calls, rets. [!]
 terse:    # just the code, no asides.
-names:    # labels, variables, macros.
-skel:     # control flow: labels, jumps, calls, rets.
 (...)
 
 [nix-shell]$ make words

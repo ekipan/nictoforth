@@ -148,5 +148,6 @@ help:     # this list. [!] marks important targets.
 ##  $ make skel | bat -l nasm # or: | less
 ##  $ make terse >o/terse.asm
 
-.PHONY: all clean count demo design doc glossary graph help names
-.PHONY: notes phonies reading run serial status terse usage words xrefs
+.PHONY: all clean count demo design doc glossary help names notes
+.PHONY: phonies r reading run skel status teaser1 teaser2 terse usage
+.PHONY: words xrefs
