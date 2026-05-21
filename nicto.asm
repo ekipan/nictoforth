@@ -192,10 +192,13 @@ key:    ; key ( -- c )
         push pushax     ; defer pstack push after:
 .al:    mov ah,2        ; serial receive.
         call com1
-        shl ah,1
+        shl ah,1        ; [3z]
         jc .al          ; receive error?
         mov ah,0
         ret
+
+; [3z] `shr ah,8` puts error into carry *and* 0 into ah,
+; saving a byte vs mov, but 8-shifting reg8 is UB.
 
 emit:   ; emit ( c -- )
         mov al,B[bp]
