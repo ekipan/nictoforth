@@ -14,17 +14,17 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 ##
 ## target files you can make:
 
-o/boot: $(SRC) o/dir # (default)
+o/boot: $(SRC) o/stub # (default)
 	$(ASM) -f bin -l $@l -o $@ $<
 
-o/nopad: $(SRC) o/dir
+o/nopad: $(SRC) o/stub
 	$(ASM) -f bin -l $@l -o $@ -D NOPAD $<
 
-o/dir: # (blank stub)
+o/stub:
 	#
 	#   [!] New here? Do "make help" next. *Tons* of info!
 	#
-	mkdir -p o; touch $@
+	mkdir -p $@
 
 ##
 ## development phonies:
