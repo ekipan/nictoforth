@@ -201,14 +201,14 @@ emit:   ; emit ( c -- )
         mov al,B[bp]
         INC2 bp
 .al:    mov ah,1        ; serial transmit.
-com1:   xor dx,dx
+com1:   xor dx,dx       ; clobbers dx.
         int 0x14
         ret
 
 %macro DEBUG 1 ; 7 bytes per use.
         push ax
         mov al,%1
-        call emit.al
+        call emit.al    ; emit DEBUG char.
         pop ax
 %endmacro ; places to plunder bytes: %ifs, [1-2,7-8].
 
@@ -322,8 +322,8 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov dx,W[si]    ; [5a] dx = xt.
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
-        test bx,bx      ; nz if found. [0b]
-        ret
+        test bx,bx
+        ret             ; nz if found. [0b]
 
 ; (a bit of fluff: as I've spent bytes decoupling bits
 ; of the interpreter I've watched its design converge
