@@ -67,9 +67,10 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
+PHONIES = awk '/^[a-z][^/]/{print$$1}' Makefile | tr -d :
+
 phonies: # ^ to update this Makefile.
-	@awk '/^[a-z][^/]/{print$$1}' Makefile | \
-	  tr -d : | sort | xargs -n 10 echo '.PHONY:'
+	@$(PHONIES) | sort | xargs -n 10 echo '.PHONY:'
 
 status: # ^ for demo, to update the README.
 	git rev-parse @
@@ -150,12 +151,15 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 help:     # this list. [!] marks important targets.
 	@awk '/^## |^[a-z]|\?=/ && !/\^/; /^##$$/{print""}' Makefile ||:
 
+h:        # just the phony target names.
+	@$(PHONIES) | xargs -n 8 ||:
+
 ##
 ## try:
 ##  $ make words # or teaser1 or design or ...
 ##  $ make skel | bat -l nasm # or: | less
 ##  $ make terse >o/terse.asm
 
-.PHONY: all clean count demo design doc glossary help names notes
+.PHONY: all clean count demo design doc glossary h help names notes
 .PHONY: phonies r reading run skel status teaser1 teaser2 terse usage
 .PHONY: words xrefs
