@@ -92,7 +92,10 @@ demo: status clean count run # ^ needs manual paste.
 # code_name: ; forth-word ( stack -- effect ) remark.
 # .local_code_name:
 #         instruction   ; [0a] anchored instruction.
-#         ret           ; cross-reference [0b].
+#         jz label      ; question? (branch if yes)
+#         ; remark about the state in this context.
+#         instruction   ; cross-reference [0b].
+#         ret           ; describe out flags.
 # .LocalDataName:
 #         dw 1234
 #
