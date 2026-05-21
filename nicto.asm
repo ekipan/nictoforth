@@ -297,7 +297,7 @@ LenMask   equ 0x1f ; max 31 characters.
 
 Dictionary: ; starts with only one word. the format:
         dw 0      ; link: 0 marks end of dictionary.
-        db 1,';'  ; name: len+flags byte then characters.
+        db 1,';'  ; name: flags+len byte then characters.
         dw c.prim ; xt: execution token, a code address.
         ; nt: a name token is a link field address.
 
@@ -313,11 +313,11 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         jz .eod         ; end-of-dictionary?
         mov si,bx
         lodsw           ; skip link.
-        lodsb           ; al = len+flags.
+        lodsb           ; al = flags+len.
         mov ah,al       ; needed for dispatch [5c].
-        and al,LenMask|Hidden
+        and al,Hidden|LenMask
         cmp al,B[bp+0]
-        jne .prev       ; wrong length or hidden?
+        jne .prev       ; hidden or wrong length?
         mov di,W[bp+2]
         mov cx,W[bp+0]
         repe cmpsb
@@ -350,7 +350,7 @@ interpret: ; ( ... "name" -- ... ) default Main [6b].
         call find
         ; [5b] possible underflow self-correction.
         jz error        ; didn't find a word? [0b]
-        ; [5c] dispatch coupled to find: ah = len+flags.
+        ; [5c] dispatch coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
