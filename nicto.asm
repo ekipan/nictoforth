@@ -155,21 +155,21 @@ rpop:   ; r> ( r:n -- n )
 ; [2a] shared tails pushax/putax live here so
 ; surrounding code saves bytes with short jumps.
 
-cin:    ; >in ( -- addr )
+toin:   ; >in ( -- addr )
         mov ax,ToIn
 pushax: DEC2 bp         ; [2a]
 putax:  mov W[bp],ax    ; [2a]
         ret
 
-dptr:   ; dp ( -- addr ) address of `here`.
+dp:   ; dp ( -- addr ) address of `here`.
         mov ax,Here
         jmp pushax
 
-sptr:   ; sp@ ( -- addr )
+spfch:  ; sp@ ( -- addr )
         mov ax,bp
         jmp pushax
 
-rptr:   ; rp@ ( -- addr )
+rpfch: ; rp@ ( -- addr )
         mov ax,sp
         INC2 ax         ; skip own return address.
         jmp pushax
@@ -529,7 +529,7 @@ c: ; the story of a typical colon word:
 .List:  ; db udiv2-plus2, and-udiv2, invert-and, ...
         DBO udiv2, and, invert, equal0, plus
         DBO drop, dup, swap, rpush, rpop
-        DBO cin, dptr, sptr, rptr, fetch, store
+        DBO toin, dp, spfch, rpfch, fetch, store
         DBO key, emit, line, lex ; [8f]
         DBO find, execute, abort, quit
         DBO .head, .comma, .on, .call
