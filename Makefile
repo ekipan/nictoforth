@@ -108,7 +108,7 @@ words:    # compact list of the implemented forth words. [!]
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
 teaser1:  # the interpreter routine. the heart of a forth. [!]
-	@awk '/^ok/,/jmp/' $(SRC)
+	@awk '/^ok/,/jmp/' $(SRC) ||:
 
 teaser2:  # the bootstrap. *terrifying* and heavily documented.
 	@awk '/^; \[8\]/,/4\./' $(SRC) ||:
