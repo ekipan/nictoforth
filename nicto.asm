@@ -369,8 +369,9 @@ execute: ; execute ( ... xt -- ... )
 ; [5c] could reuse from forth if the flags were taken
 ; from the nt on the stack, but it costs 3 bytes.
 ; sectorforth has a *wildly* dense dispatch routine I
-; adore. sadly this simple one costs the same and has
-; a milder gotcha: State high byte is ignored.
+; adore (check it out!  $ git show bf7b6fb  #).
+; sadly this simple one costs the same and has a milder
+; gotcha: State high byte is ignored.
 
 ; [6] INITIALIZATION, MAIN LOOP ----------------------
 
