@@ -29,7 +29,7 @@ o/dir: # (blank stub)
 ##
 ## development phonies:
 
-clean:
+clean:              # remove o directory.
 	rm -rf o
 
 all: o/boot o/nopad
@@ -95,19 +95,17 @@ demo: status clean count run # ^ needs manual paste.
 # ; (background or playful aside.)
 
 ##
-## these phonies awk-filter slices of the source.
-## pipe the output to less or bat, redirect to a file,
-## whatever you like:
+## these phonies filter slices of the source:
 
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
-words:    # compact list of the implemented forth words.
+words:    # compact list of the implemented forth words. [!]
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
-teaser1:  # the interpreter. the heart of a forth. [!]
+teaser1:  # the interpreter routine. the heart of a forth. [!]
 	@awk '/^ok/,/jmp/' $(SRC)
 
-teaser2:  # the bootstrap. *terrifying* [!]
+teaser2:  # the bootstrap. *terrifying* and heavily documented.
 	@awk '/^; \[8\]/,/4\./' $(SRC) ||:
 
 DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; /^; control flow/,/^$$/
@@ -119,16 +117,16 @@ design:   # example, memory map, registers, control flow. [!]
 reading:  # source format conventions.
 	@awk '/^# ;/,/^$$/' Makefile ||:
 
-glossary: # labels that implement words, with stack effects. [!]
+glossary: # labels that implement words, with stack effects.
 	@awk '/--/' $(SRC) ||:
 
 names:    # all labels, variables, macros.
 	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
-skel:     # control flow: labels, jumps, calls, rets.
+skel:     # control flow: labels, jumps, calls, rets. [!]
 	@awk '/--$$|^\.?[a-z]|^ +(j|call|ret)/' $(SRC) ||:
 
-terse:    # just the code, no asides. [!]
+terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
 	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
 
@@ -143,6 +141,12 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 
 help:     # this list. [!] marks important targets.
 	@awk '/^## |^\w/ && !/\^/; /^##$$/{print""}' Makefile ||:
+
+##
+## try:
+##  $ make words # or teaser1 or design or ...
+##  $ make skel | bat -l nasm # or: | less
+##  $ make terse >o/terse.asm
 
 .PHONY: all clean count demo design doc glossary graph help names
 .PHONY: notes phonies reading run serial status terse usage words xrefs
