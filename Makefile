@@ -67,7 +67,7 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
-PHONIES = awk '/^[a-z][^/]/{print$$1}' Makefile | tr -d :
+PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
 
 phonies: # ^ to update this Makefile.
 	@$(PHONIES) | sort | xargs -n 10 echo '.PHONY:'
@@ -112,7 +112,7 @@ demo: status clean count run # ^ needs manual paste.
 # '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
 
 words:    # compact list of the implemented forth words. [!]
-	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
+	@awk '/ -- / && !/^interp/ {print$$3}' $(SRC) | xargs -n 12 ||:
 
 teaser1:  # the interpreter routine. the heart of a forth. [!]
 	@awk '/^ok/,/jmp/' $(SRC) ||:
@@ -133,14 +133,14 @@ glossary: # labels that implement words, with stack effects.
 	@awk '/--/' $(SRC) ||:
 
 names:    # all labels, variables, macros.
-	@awk '/--$$|^\.|^\w|^%(def|mac)/' $(SRC) ||:
+	@awk '/---|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
 skel:     # control flow: labels, jumps, calls, rets. [!]
-	@awk '/--$$|^\.?[a-z]|^ +(j|call|ret)/' $(SRC) ||:
+	@awk '/---|^\.?[a-z]|^ +(j|call|ret)/' $(SRC) ||:
 
 terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'
-	@awk '/--$$/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
+	@awk '/---/; !/^;/; $(DESIGN)' $(SRC) | cat -s ||:
 
 notes:    # anchored note contents, tricky highlights.
 	@awk '/^; \[/,/^$$/' $(SRC) ||:
@@ -152,7 +152,7 @@ xrefs:    # inventory cross-ref anchors, for maintenance.
 	@awk '/; \[/' $(SRC) ||:
 
 help:     # this list. [!] marks important targets.
-	@awk '/^## |^[a-z]|\?=/ && !/\^/; /^##$$/{print""}' Makefile ||:
+	@awk '/^## |^[a-z]|\?=/ && !/\^/; /^##$$/ {print""}' Makefile ||:
 
 h:        # just the phony target names.
 	@$(PHONIES) | xargs -n 8 ||:
