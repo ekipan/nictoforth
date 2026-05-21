@@ -358,7 +358,7 @@ interpret: ; ( ... "name" -- ... ) default Main [6b].
         jne c.call      ; compile mode?
 execute: ; execute ( ... xt -- ... )
         INC2 bp
-        jmp W[bp-2]     ; execute other cases.
+        jmp W[bp-2]
 
 ; [5b] underflowing the stack wraps bp to low addresses,
 ; see map [0a]. `jg` corrects it (bp > 0), but pushing
