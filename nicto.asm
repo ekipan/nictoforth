@@ -291,9 +291,9 @@ lex:    ; lex ( "name" -- addr len )
 
 ; [5] TEXT INTERPRETER -------------------------------
 
-ImmedFlag  equ 0x80 ; execute even in compile mode.
-HiddenFlag equ 0x20 ; ignore when `find`ing words.
-LenMask    equ 0x1f ; max 31 characters.
+Immediate equ 0x80 ; execute even in compile mode.
+Hidden    equ 0x20 ; ignore when `find`ing words.
+LenMask   equ 0x1f ; max 31 characters.
 
 Dictionary: ; starts with only one word. the format:
         dw 0      ; link: 0 marks end of dictionary.
@@ -315,7 +315,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         lodsw           ; skip link.
         lodsb           ; al = len+flags.
         mov ah,al       ; needed for dispatch [5c].
-        and al,LenMask|HiddenFlag
+        and al,LenMask|Hidden
         cmp al,B[bp+0]
         jne .prev       ; wrong length or hidden?
         mov di,W[bp+2]
@@ -352,7 +352,7 @@ interpret: ; ( ... "name" -- ... ) default Main [6b].
         jz error        ; didn't find a word? [0b]
         ; [5c] dispatch coupled to find: ah = len+flags.
         INC2 bp         ; ( xt nt ) drop
-        shl ah,1        ; rely on ImmedFlag = 0x80.
+        shl ah,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
         cmp B[State],0
         jne c.call      ; compile mode?
@@ -469,7 +469,7 @@ c: ; the story of a typical colon word:
 ; 6. and optionally immediafy.
 .immed: ; immediate ( -- )
         mov bx,W[Latest]
-        or B[bx+2],ImmedFlag
+        or B[bx+2],Immediate
         ret
 
 ; [8] BOOTSTRAP --------------------------------------
