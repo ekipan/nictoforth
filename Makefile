@@ -10,8 +10,6 @@
 SRC ?= nicto.asm
 ASM ?= nasm # yasm also works fine.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
-QRUN ?= $(QEMU) -no-reboot -display none \
-  -drive if=floppy,format=raw,file=$<
 
 ##
 ## target files you can make:
@@ -39,6 +37,13 @@ all: o/boot o/nopad
 count: o/nopad # print assembled size.
 	wc -c <$< # assembled size, out of 510 max:
 
+RUN = $(QEMU) -drive if=floppy,format=raw,file=$< \
+  -display none -no-reboot
+
+r: o/boot      # run w/o usage banner.
+	# "make run" instead for help. ctrl-a, x to quit qemu. [!]
+	$(RUN) -serial mon:stdio
+
 run: o/boot    # qemu serial session. [!]
 	#
 	#   nictoforth, across an emulated serial line.
@@ -58,11 +63,7 @@ run: o/boot    # qemu serial session. [!]
 	#   ctrl-a, c to swap serial<->monitor.
 	#   ctrl-a, x to quit qemu. [!]
 	#
-	$(QRUN) -serial mon:stdio
-
-r: o/boot      # run w/o usage banner.
-	# ctrl-a, x to quit qemu.
-	$(QRUN) -serial mon:stdio
+	$(RUN) -serial mon:stdio
 
 # my maintainer phonies, caret ^ hides from "make help":
 
