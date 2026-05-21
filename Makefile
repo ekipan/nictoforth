@@ -104,6 +104,12 @@ demo: status clean count run # ^ needs manual paste.
 words:    # compact list of the implemented forth words.
 	@awk '/--/ && !/^;|^interp/ {print $$3}' $(SRC) | xargs -n 12 ||:
 
+teaser1:  # the interpreter. the heart of a forth. [!]
+	@awk '/^ok/,/jmp/' $(SRC)
+
+teaser2:  # the bootstrap. *terrifying* [!]
+	@awk '/^; \[8\]/,/4\./' $(SRC) ||:
+
 glossary: # labels that implement words, with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
