@@ -39,12 +39,13 @@
 ; tib at 0, saving parse code but losing bios vars.
 ; I chose a higher segment for more dictionary space.
 ;
-; [0a] segment 0x05c0 memory map:
-;   0000-0fff  [text->0.......]  input buffer.
-;   1000-1003  [ToIn][State]     variables.
-;   1004-1fff  [.....sp<-addrs]  return stack.
-;   2000-....  [code->Here....]  kernel, dictionary.
-;   ....-ffff  [......bp<-data]  parameter stack.
+; [0a] segment 0x05c0 memory map (and growth):
+;   0000-0fff [text->0.......] input buffer.
+;   1000-1003 [ToIn][State]    variables.
+;   1004-1fff [.....sp<-addrs] return stack (down).
+;   2000-.... [code->Here....] kernel, dictionary (up).
+;   ....-ffff [....bp<-values] parameter stack (down).
+;   text input buffer is zero-terminated [3c].
 ;
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
@@ -261,7 +262,7 @@ lex:    ; lex ( "name" -- addr len )
         xor cx,cx
         mov al,32       ; space.
 .skip:  ;DEBUG '.'
-        cmp B[di],0     ; zero terminator.
+        cmp B[di],0     ; zero terminator [3c].
         je .eob         ; end-of-buffer?
         scasb ; cmp 32,B[di]
         jae .skip       ; space or control?
