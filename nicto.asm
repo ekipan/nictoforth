@@ -192,12 +192,12 @@ key:    ; key ( -- c )
         push pushax     ; defer pstack push after:
 .al:    mov ah,2        ; serial receive.
         call com1
-        shl ah,1        ; [3z]
+        shl ah,1        ; [3a]
         jc .al          ; receive error?
         mov ah,0
         ret
 
-; [3z] `shr ah,8` puts error into carry *and* 0 into ah,
+; [3a] `shr ah,8` puts error into carry *and* 0 into ah,
 ; saving a byte vs mov, but 8-shifting reg8 is UB.
 
 emit:   ; emit ( c -- )
@@ -225,7 +225,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 .echo:  call emit.al
 .wait:  call key.al
 %if 1 ; 0 or 12 or 22 bytes. pick your ux.
-        cmp al,127      ; [3a]
+        cmp al,127      ; [3b]
         jne .check      ; not delete?
         dec di
         jns .bsp        ; di >= 0, still in buffer?
@@ -243,10 +243,10 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 .check: cmp al,13
         jne .store      ; not a carriage return?
         mov ax,32       ; ah = zero terminator.
-        stosw           ; [3b]
+        stosw           ; [3c]
         jmp emit.al     ; friendly space.
 
-; [3a] should check 8 too. I'm tired of this routine.
+; [3b] should check 8 too. I'm tired of this routine.
 ; `test di,di | jz .wait | dec di` would be simpler and
 ; avoid the extra 8 emit but costs another byte.
 
@@ -278,7 +278,7 @@ lex:    ; lex ( "name" -- addr len )
         ret             ; cxz if eob. [0b]
 
 ; [4a] well, almost standard. `line` always stores a
-; space [3b] before the zero terminator but a custom
+; space [3c] before the zero terminator but a custom
 ; interpreter [6b] might not, so either: assume it does
 ; anyway (fragile), recheck (costly), or rewind
 ; (nonstandard) as above.
