@@ -292,9 +292,9 @@ lex:    ; lex ( "name" -- addr len )
 
 ; [5] TEXT INTERPRETER -------------------------------
 
-Immediate equ 0x80 ; execute even in compile mode.
-Hidden    equ 0x20 ; ignore when `find`ing words.
-LenMask   equ 0x1f ; max 31 characters.
+Immediate equ 0x80 ; flag: execute even in compile mode.
+Hidden    equ 0x20 ; flag: ignore when `find`ing words.
+Length    equ 0x1f ; mask: max 31 characters.
 
 Dictionary: ; starts with only one word. the format:
         dw 0      ; link: 0 marks end of dictionary.
@@ -316,7 +316,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         lodsw           ; skip link.
         lodsb           ; al = flags+len.
         mov ah,al       ; needed for dispatch [5c].
-        and al,Hidden|LenMask
+        and al,Hidden|Length
         cmp al,B[bp+0]
         jne .prev       ; hidden or wrong length?
         mov di,W[bp+2]
