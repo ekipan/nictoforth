@@ -45,7 +45,6 @@
 ;   1004-1fff [.....sp<-addrs] return stack (down).
 ;   2000-.... [code->Here....] kernel, dictionary (up).
 ;   ....-ffff [....bp<-values] parameter stack (down).
-;   text input buffer is zero-terminated [3c].
 ;
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
@@ -53,7 +52,8 @@
 ;   ax bx cx dx si di = scratch for code words.
 ;
 ; one exception: ah couples find -> dispatch [5c].
-; [0b] lex and find set flags for compactness.
+; text input buffer is zero-terminated [3c].
+; `lex find` set flags [5d] for compact `interpret`.
 
 ToIn    equ 0x1000    ; next unparsed [4] character.
 State   equ 0x1002    ; low byte nonzero = compile [5c].
@@ -276,7 +276,7 @@ lex:    ; lex ( "name" -- addr len )
         sub bp,4
         mov W[bp+2],di
         mov W[bp+0],cx
-        ret             ; cxz if eob. [0b]
+        ret             ; cxz if eob. [5d]
 
 ; [4b] the DEBUG macro exists because of the `scasb`
 ; instruction. why tf is the memory load on the rhs??
@@ -330,7 +330,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
         test bx,bx
-        ret             ; nz if found. [0b]
+        ret             ; nz if found. [5d]
 
 ; (a bit of fluff: as I've spent bytes decoupling bits
 ; of the interpreter I've watched its design converge
@@ -350,10 +350,10 @@ ok:     ;DEBUG 'K'
         call line
 interpret: ; ( ... "name" -- ... ) default Main [6b].
         call lex
-        jcxz ok         ; end of line? [0b]
+        jcxz ok         ; [5d] end of line?
         call find
         ; [5b] possible underflow self-correction.
-        jz error        ; didn't find a word? [0b]
+        jz error        ; [5d] didn't find a word?
         ; [5c] dispatch coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
