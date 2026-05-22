@@ -162,7 +162,7 @@ pushax: DEC2 bp         ; [2a]
 putax:  mov W[bp],ax    ; [2a]
         ret
 
-dp:   ; dp ( -- addr ) address of `here`.
+dp:     ; dp ( -- addr ) address of `here`.
         mov ax,Here
         jmp pushax
 
@@ -170,7 +170,7 @@ spfch:  ; sp@ ( -- addr )
         mov ax,bp
         jmp pushax
 
-rpfch: ; rp@ ( -- addr )
+rpfch:  ; rp@ ( -- addr )
         mov ax,sp
         INC2 ax         ; skip own return address.
         jmp pushax
