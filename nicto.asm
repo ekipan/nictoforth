@@ -1,9 +1,18 @@
 ; (c) 2025-2026, see LICENSE (it's MIT).
 
+; ====================================================
+; TODO this is a work-in-progress branch investigating
+; storing TOS in bx, at @mschwartz's suggestion. good
+; golly it squeezes a lot of bytes (currently 476, -20
+; from the main branch) but also good golly is abi a
+; lot more complex (still debugging), and thus counter
+; to the "fun to read" goal in my opinion.
+; ====================================================
+
 ; nictoforth: nick's 16-bit x86 bootsector forth.
 
-;   preamble [0] design [1] basics [2] memory [3] i/o
-;   [4] parse [5] interp [6] init [7] compile [8] boot
+;   preamble, [0] architecture, [1-2] primitives,
+;   [3] i/o, [4-6] interpreter, [7-8] compiler.
 
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
@@ -48,12 +57,14 @@
 ;
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
-;   bp = param stack pointer, sp = return stack pointer.
-;   ax bx cx dx si di = scratch for code words.
-;
-; one exception: ah couples find -> dispatch [5c].
-; underflow check [5b] limits param stack to top 32k.
+;   sp = return stack pointer.
+;   bx = top of paramter stack.
+;   bp = free slot TODO xref, then rest of parameter stack.
+;   ax cx dx si di = scratch for code words, except:
+;   ah = `find` flags+len, coupling to `dispatch` [5c].
+
 ; text input buffer is zero-terminated [3c].
+; underflow check [5b] limits param stack to top 32k.
 ; `lex find` set flags [5d] for compact `interpret`.
 
 ToIn    equ 0x1000    ; next unparsed [4] character.
@@ -85,65 +96,52 @@ Main:   dw interpret  ; custom interpreter vector [6b].
 ; [1] ARITHMETIC, STACK ------------------------------
 
 plus2:  ; 2+ ( n -- n+2 )
-        add W[bp],2
+        INC2 bx
         ret
 
 udiv2:  ; 2u/ ( u -- u/2 )
-        shr W[bp],1
+        shr bx,1
         ret
 
 and:    ; and ( n1 n2 -- n1&n2 )
-        mov ax,W[bp]
-        and W[bp+2],ax
-        jmp drop        ; [1a]
+        and W[bp+2],bx
+        jmp drop
 
+equal0: ; 0= ( n -- flag ) give -1 if n is zero.
+        neg bx          ; c = nonzero?
+        sbb bx,bx       ; bx = bx - bx - c = -c
 invert: ; invert ( n -- ~n )
-        not W[bp]
+        not bx
         ret
 
-; [1a] (`INC2 bp` here instead would fall into invert,
-; implementing `nand` for same code cost. delightfully
-; goofy and an homage to my parentforths. I miss it.)
-
-equal0: ; 0= ( n -- flag )
-        xor ax,ax
-        cmp W[bp],ax
-        jnz putax       ; not zero? put zero [2a].
-        dec ax
-        jmp putax
-
 plus:   ; + ( n1 n2 -- n1+n2 )
-        mov ax,W[bp]
-        add W[bp+2],ax
-drop:   ; drop ( n -- ) free tail word!
+        add W[bp+2],bx
+        jmp drop
+
+drop2:  ; 2drop ( a b -- ) g if underflow. TODO
+        INC2 bp
+drop:   ; drop ( a -- )
+        mov bx,W[bp+2]
+nip:    ; nip ( a b -- b ) g if underflow.
         INC2 bp
         ret
 
-%if 1 ; 5 bytes, plus 1 in c.List [8].
-dup:    ; dup ( n -- n n )
-        mov ax,W[bp]
-        jmp pushax
-%endif
+dup:    ; dup ( a -- a a )
+        mov ax,bx       ; TODO insert `lit` after?
+pushax: mov W[bp],bx    ; store in free slot TODO xref
+        mov bx,ax
+undrop: DEC2 bp
+swap:   ; swap ( a b -- b a )
+        xchg W[bp+2],bx
+        ret
 
-%if 1 ; 8 plus 1 bytes [1b].
-swap:   ; swap ( x y -- y x )
-        mov ax,W[bp]
-        xchg W[bp+2],ax
-        jmp putax
-%endif
-
-; [1b] you can define all stack words in terms of
-; `sp@ 2+ @ !`, so `swap` comes and goes a lot for bytes.
-; (yeah this hurts. or bittersweet win. whichever
-; currently applies, I'm tired of editing.)
-
-rpush:  ; >r ( n -- r:n )
+rpush:  ; >r ( a -- r:a )
         pop dx
-        push W[bp]
+        push bx
         push dx
         jmp drop
 
-rpop:   ; r> ( r:n -- n )
+rpop:   ; r> ( r:a -- a )
         pop dx
         pop ax
         push dx
@@ -154,20 +152,15 @@ rpop:   ; r> ( r:n -- n )
 
 ; [2] MEMORY -----------------------------------------
 
-; [2a] shared tails pushax/putax live here so
-; surrounding code saves bytes with short jumps.
-
 toin:   ; >in ( -- addr )
         mov ax,ToIn
-pushax: DEC2 bp         ; [2a]
-putax:  mov W[bp],ax    ; [2a]
-        ret
+        jmp pushax
 
 dp:     ; dp ( -- addr ) address of `here`.
         mov ax,Here
         jmp pushax
 
-spfch:  ; sp@ ( -- addr )
+spfch:  ; sp@ ( -- addr ) note: first cell is garbage.
         mov ax,bp
         jmp pushax
 
@@ -177,16 +170,13 @@ rpfch:  ; rp@ ( -- addr )
         jmp pushax
 
 fetch:  ; @ ( addr -- n )
-        mov bx,W[bp]
-        mov ax,W[bx]
-        jmp putax
+        mov bx,W[bx]
+        ret
 
 store:  ; ! ( n addr -- )
-        mov bx,W[bp]
         mov ax,W[bp+2]
-        add bp,4        ; 3 bytes `add` < 4 `inc`s.
         mov W[bx],ax
-        ret
+        jmp drop2
 
 ; [3] INPUT/OUTPUT -----------------------------------
 
@@ -203,10 +193,10 @@ key:    ; key ( -- c )
 ; saving a byte vs mov, but 8-shifting reg8 is UB.
 
 emit:   ; emit ( c -- )
-        mov al,B[bp]
-        INC2 bp
+        mov al,bl
+        call drop
 .al:    mov ah,1        ; serial transmit.
-com1:   xor dx,dx       ; clobbers dx.
+com1:   xor dx,dx
         int 0x14
         ret
 
@@ -275,8 +265,9 @@ lex:    ; lex ( "name" -- addr len )
 .eob:   mov W[ToIn],di
         sub di,cx       ; di = start of word.
         sub bp,4
+        mov W[bp+4],bx
         mov W[bp+2],di
-        mov W[bp+0],cx
+        mov bx,cx
         ret             ; cxz if eob. [5d]
 
 ; the DEBUG macro exists because of the `scasb`
@@ -312,6 +303,7 @@ Dictionary: ; starts with only one word. entry format:
 
 find:   ; find ( addr len -- xt nt | addr 0 )
         ;DEBUG 'F'
+        mov W[bp+0],bx  ; save len in free slot TODO.
         mov bx,Latest
 .prev:  mov bx,W[bx]    ; bx = nt (or 0).
         test bx,bx
@@ -329,9 +321,8 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         jne .prev       ; name characters differ?
         mov dx,W[si]    ; [5a] dx = xt.
         mov W[bp+2],dx
-.eod:   mov W[bp+0],bx
         test bx,bx
-        ret             ; nz if found. [5d]
+.eod:   ret             ; nz if found. [5d]
 
 ; (a bit of fluff: as I've spent bytes decoupling bits
 ; of the interpreter I've watched its design converge
@@ -340,8 +331,8 @@ find:   ; find ( addr len -- xt nt | addr 0 )
 ; opens your eyes!)
 
 ok:     ;DEBUG 'K'
-        add bp,4        ; drop empty lex.
-        jg error        ; [5b] underflow?
+        call drop2      ; drop empty lex.
+        jg error        ; [5b] underflow? TODO why jge?
 %if 1 ; 10 bytes. *the* iconic forth ux.
         mov al,'o'
         call emit.al
@@ -356,14 +347,14 @@ interpret: ; ( ... "name" -- ... ) default Main [6b].
         ; [5b] possible underflow self-correction.
         jz error        ; [5d] didn't find a word?
 dispatch: ; [5c] coupled to find: ah = flags+len.
-        INC2 bp         ; ( xt nt ) drop
+        call drop       ; xt nt -- xt
         shl ah,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
         cmp B[State],0
         jne c.call      ; compile mode?
 execute: ; execute ( ... xt -- ... )
-        INC2 bp
-        jmp W[bp-2]
+        push bx         ; return to bx from:
+        jmp drop
 
 ; [5b] underflowing the stack wraps bp > 0 (see [0a]),
 ; which `ok` corrects. pushing values there corrupts
@@ -386,7 +377,7 @@ execute: ; execute ( ... xt -- ... )
 error:  mov al,'?'
         call emit.al
 abort:  ; abort ( -- ) reset param stack and:
-        xor bp,bp       ; first push wraps to 0xfffe [0a].
+        mov bp,0xfffe   ; TODO xref
 quit:   ; quit ( -- ) everything else, then loop.
         cld             ; standard stuff:
         times 3 push cs
@@ -428,8 +419,8 @@ c: ; the story of a typical colon word:
         xchg ax,W[Latest] ; update latest.
         call .ax        ; link to old latest.
         mov si,W[bp+2]  ; si = addr.
-        mov cx,W[bp]    ; cx = len.
-        add bp,4
+        mov cx,bx       ; cx = len.
+        call drop2
         mov al,cl
         stosb           ; length. not bounds checked!
         rep movsb       ; name characters.
@@ -437,8 +428,8 @@ c: ; the story of a typical colon word:
 
 ; 2. then add an xt of here+2 (it's complicated [8]):
 .comma: ; , ( n -- )
-        mov ax,W[bp]
-        INC2 bp
+        mov ax,bx
+        call drop
         jmp .ax
 
 ; 3. switch the compiler on:
@@ -450,8 +441,8 @@ c: ; the story of a typical colon word:
 .call:  ; compile, ( xt -- )
         mov al,0xe8
         call .al
-        mov ax,W[bp]
-        INC2 bp
+        mov ax,bx
+        call drop
         DEC2 ax
         sub ax,di       ; relative address.
 .ax:    mov di,W[Here]
@@ -470,8 +461,10 @@ c: ; the story of a typical colon word:
 
 ; 6. and optionally immediafy.
 .immed: ; immediate ( -- )
+        push bx         ; save tos.
         mov bx,W[Latest]
         or B[bx+2],Immediate
+        pop bx
         ret
 
 ; [8] BOOTSTRAP --------------------------------------
