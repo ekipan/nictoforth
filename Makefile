@@ -89,6 +89,8 @@ demo: status clean count run # ^ needs manual paste.
 # EquateName  equ 1234
 # DataName:   dw 1234
 #
+# ; asides have semicolon on column 1.
+#
 # code_name: ; forth-word ( stack -- effect ) remark.
 # .local_code_name:
 #         instruction   ; [0a] anchored instruction.
@@ -101,8 +103,6 @@ demo: status clean count run # ^ needs manual paste.
 #
 # ; [0b] anchored note, immediately after semicolon.
 # ; might include cross-references [0a].
-#
-# ; unanchored note.
 #
 # ; (background or playful aside.)
 
