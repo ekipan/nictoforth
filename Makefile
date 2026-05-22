@@ -72,13 +72,29 @@ PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
 phonies: # ^ to update this Makefile.
 	@$(PHONIES) | sort | xargs -n 10 echo '.PHONY:'
 
-status: # ^ for demo, to update the README.
+demo1: # ^ to update the README.
+	#
+	#   1. confirm the state of the system at demo time.
+	#
 	git rev-parse @
 	git status --short
+	#
+	#   2. then I'll need to copy some forth source (I haven't
+	#      figured out how to automate that part with qemu yet).
+	#
+	rg '^[^\\]' hello.fs | kwrite -i &>/dev/null
+	#
+	#   3. and now 'make clean all count r',
+	#      which is an abridged 'run'.
+	#
 
-demo: status clean count run # ^ needs manual paste.
-# I've tried to automate this but attempts at piping
-# things into qemu have been met with frustration.
+demo: demo1 clean all count r # ^
+	#
+	#   you should look at the full hello.fs
+	#   source for detailed explanations.
+	#
+	#   https://github.com/ekipan/nictoforth
+	#
 
 # ; format conventions you can expect in the
 # ; asm source (and which are used to parse it):
