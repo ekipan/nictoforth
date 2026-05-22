@@ -67,37 +67,32 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
-list: o/nopad # ^ personal preference.
-	bat -pl nasm $<l
+list: o/nopad # ^ requires rg and bat.
+	rg '^.{40}[^;]' o/nopadl | LESS=-SFMR bat -pl nasm
 
 PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
 
 phonies: # ^ to update this Makefile.
 	@$(PHONIES) | sort | xargs -n 8 echo '.PHONY:'
 
-demo1: # ^ to update the README.
-	#
-	#   1. confirm the state of the system at demo time.
-	#
-	git rev-parse @
-	git status --short
-	#
-	#   2. then I'll need to copy some forth source (I haven't
-	#      figured out how to automate that part with qemu yet).
-	#
-	rg '^[^\\]' hello.fs | kwrite -i &>/dev/null
-	#
-	#   3. and now 'make clean all count r',
-	#      which is an abridged 'run'.
-	#
-
-demo: demo1 clean all count r # ^
-	#
-	#   you should look at the full hello.fs
-	#   source for detailed explanations.
+demo1: # ^ to update the gist for the README.
+	@clear; echo '$$ make demo'
 	#
 	#   https://github.com/ekipan/nictoforth
 	#
+	#   1. confirm the state of the system at demo time.
+	#   2. I copy some forth source in my editor (I haven't
+	#      figured out how to automate that part with qemu yet).
+	#   3. run and paste. you should look at the full 'hello.fs'
+	#      source for detailed explanations though.
+	#
+	git rev-parse @
+	git status --short
+	rg '^[^\\]' hello.fs | kwrite -i &>/dev/null
+	@printf '\nmake clean all count r # r is abridged run\n'
+
+demo: demo1 clean all count r # ^
+	@printf '$$\n'
 
 # ; format conventions you can expect in the
 # ; asm source (and which are used to parse it):
