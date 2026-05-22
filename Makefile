@@ -67,10 +67,13 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
+list: o/nopad # ^ personal preference.
+	bat -pl nasm $<l
+
 PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
 
 phonies: # ^ to update this Makefile.
-	@$(PHONIES) | sort | xargs -n 10 echo '.PHONY:'
+	@$(PHONIES) | sort | xargs -n 8 echo '.PHONY:'
 
 demo1: # ^ to update the README.
 	#
@@ -179,6 +182,6 @@ h:        # just the phony target names.
 ##  $ make skel | bat -l nasm # or: | less
 ##  $ make terse >o/terse.asm
 
-.PHONY: all clean count demo design doc glossary h help names notes
-.PHONY: phonies r reading run skel status teaser1 teaser2 terse usage
-.PHONY: words xrefs
+.PHONY: all clean count demo demo1 design doc glossary
+.PHONY: h help list names notes phonies r reading
+.PHONY: run skel teaser1 teaser2 terse words xrefs
