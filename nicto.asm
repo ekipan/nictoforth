@@ -395,11 +395,11 @@ quit:   ; quit ( -- ) everything else, then loop.
         pop es
         pop ss          ; [6a]
         mov sp,$$       ; rstack under the kernel [0a].
+        push abort      ; in case user types `r>` etc.
         ; serial init omitted.
         ; seabios seems to take care of it idk.
         mov B[State],0  ; start in execute mode [5c].
         call line
-        push abort      ; in case user types `r>` etc.
 .loop:  push .loop
         jmp [Main]      ; swappable [6b] interpreter.
 
