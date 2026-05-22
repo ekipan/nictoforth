@@ -143,7 +143,7 @@ design:   # example, memory map, registers, control flow. [!]
 reading:  # source format conventions.
 	@awk '/^# ;/,/^$$/' Makefile ||:
 
-glossary: # labels that implement words, with stack effects.
+glossary: # labels that implement words, with stack effects. [!]
 	@awk '/--/' $(SRC) ||:
 
 names:    # all labels, variables, macros.
