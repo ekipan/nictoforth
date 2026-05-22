@@ -58,10 +58,10 @@ run: o/boot    # qemu serial session. [!]
 	#   it's a weirdo. you should copypaste  hello.fs  to define
 	#   the builtins then `:` and the rest. [!]
 	#
-	#   "make help", back in your shell, to explore.
-	#   "make r" skips this bigass banner.
-	#   ctrl-a, c to swap serial<->monitor.
-	#   ctrl-a, x to quit qemu. [!]
+	#   - ctrl-a, c to swap serial<->monitor.
+	#   - ctrl-a, x to quit qemu. [!]
+	#   - "make help", back in your shell, to explore.
+	#   - "make r" skips this bigass banner.
 	#
 	$(RUN) -serial mon:stdio
 
@@ -101,7 +101,7 @@ demo: status clean count run # ^ needs manual paste.
 # .LocalDataName:
 #         dw 1234
 #
-# ; [0b] anchored note, immediately after semicolon.
+# ; [0b] anchored note, marker after semicolon.
 # ; might include cross-references [0a].
 #
 # ; (background or playful aside.)
@@ -109,7 +109,7 @@ demo: status clean count run # ^ needs manual paste.
 ##
 ## these phonies filter slices of the source:
 
-# '||:' silence SIGPIPEs. 'cat -s' squeeze blanks.
+# '||:' silences SIGPIPE. 'cat -s' squeezes blanks.
 
 words:    # compact list of the implemented forth words. [!]
 	@awk '/ -- / && !/^interp/ {print$$3}' $(SRC) | xargs -n 12 ||:

@@ -69,7 +69,7 @@ Main:   dw interpret  ; custom interpreter vector [6b].
 ; bytes aren't cheap.
 ;
 ; FUTURE: to try, or nice-to-haves, budget willing:
-; bx tos. numbers parser. c, c! c@ move bye xor rp! sp!
+; bx tos. lit c, c! c@ move bye xor rp! sp!
 ; case insens. c.ret tco, infeasible tbh.
 ;
 ; time to dive in. good luck and happy reading!
@@ -101,9 +101,9 @@ invert: ; invert ( n -- ~n )
         not W[bp]
         ret
 
-; [1a] an earlier version fell through into invert,
-; implementing `nand` which was both delightfully silly
-; and homage to my parentforths. I'll miss it.
+; [1a] (`INC2 bp` here instead would fall into invert,
+; implementing `nand` for same code cost. delightfully
+; goofy and an homage to my parentforths. I miss it.)
 
 equal0: ; 0= ( n -- flag )
         xor ax,ax
@@ -271,9 +271,9 @@ lex:    ; lex ( "name" -- addr len )
         inc cx          ; cx = len.
         scasb           ; [4b] cmp al,B[di++]
         jb .scan        ; name character?
-        dec di          ; [4a] di = end addr.
+        dec di          ; [4a] di = end of word.
 .eob:   mov W[ToIn],di
-        sub di,cx       ; di = start addr.
+        sub di,cx       ; di = start of word.
         sub bp,4
         mov W[bp+2],di
         mov W[bp+0],cx
@@ -300,7 +300,7 @@ Immediate equ 0x80 ; flag: execute even in compile mode.
 Hidden    equ 0x20 ; flag: ignore when `find`ing words.
 Length    equ 0x1f ; mask: max 31 characters.
 
-Dictionary: ; starts with only one word. the format:
+Dictionary: ; starts with only one word. entry format:
         dw 0      ; link: 0 marks end of dictionary.
         db 1,';'  ; name: flags+len byte then characters.
         dw c.prim ; xt: execution token, a code address.
@@ -365,23 +365,21 @@ execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]
 
-; [5b] underflowing the stack wraps bp to low addresses,
-; see map [0a]. `jg` corrects it (bp > 0), but pushing
-; values there corrupts the in buffer, so it may also
-; self-correct in the middle of a line if bp and ToIn
-; happen to collide!
+; [5b] underflowing the stack wraps bp > 0 (see [0a]),
+; which `ok` corrects. pushing values there corrupts
+; the in buffer tho, so it may also self-correct if bp
+; and ToIn happen to collide!
 
-; [5c] could reuse from forth if the flags were taken
-; from the nt on the stack, but it costs 3 bytes.
-; sectorforth has a *wildly* dense dispatch routine I
-; adore (check it out!  $ git show bf7b6fb  #).
-; sadly this simple one costs the same and has a milder
-; gotcha: State high byte is ignored.
+; [5c] State high byte is ignored, a milder gotcha
+; than sectorforth's *wildly* dense routine I adored,
+; at same code cost. check it out!  $ git show bf7b6fb
+; costs 3 bytes to decouple, taking the flags from the
+; nt on the stack to be reusable from forth.
 
 ; [6] INITIALIZATION, MAIN LOOP ----------------------
 
 ; variables: (a) ToIn State (b) Here Latest Main.
-; either: all at 0x1000, but need (b) inits before abort.
+; either: all at 0x1000, but need (b) inits pre-abort.
 ; or: current split, but need two words to give addrs
 ; to forth. same code cost, I like this better.
 
@@ -412,11 +410,10 @@ quit:   ; quit ( -- ) everything else, then loop.
 ; [6a] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
 
-; [6b] vectored Main costs 4 bytes, enabling interpreter
-; hotswap: define a new interpreter in forth, reuse
-; `line lex find abort c.call execute`, maybe add number
-; parsing or whatever, then store it into Main and it
-; becomes the new main loop:  ' my-interpret Main !
+; [6b] 4 bytes vectored Main buys hotswap: define a new
+; interpreter in forth with `line lex find abort c.call
+; execute`, add number parsing or whatever, then store
+; into Main to switch:   ' my-interpret Main !
 
 ; [7] COMPILER ---------------------------------------
 
