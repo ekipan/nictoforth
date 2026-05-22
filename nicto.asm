@@ -265,11 +265,11 @@ lex:    ; lex ( "name" -- addr len )
 .skip:  ;DEBUG '.'
         cmp B[di],0     ; zero terminator [3c].
         je .eob         ; end-of-buffer?
-        scasb           ; [4b] cmp al,B[di++]
+        scasb ; cmp al,B[di++]
         jae .skip       ; space or control?
 .scan:  ;DEBUG '!'
         inc cx          ; cx = len.
-        scasb           ; [4b] cmp al,B[di++]
+        scasb ; cmp al,B[di++]
         jb .scan        ; name character?
         dec di          ; [4a] di = end of word.
 .eob:   mov W[ToIn],di
@@ -279,7 +279,7 @@ lex:    ; lex ( "name" -- addr len )
         mov W[bp+0],cx
         ret             ; cxz if eob. [5d]
 
-; [4b] the DEBUG macro exists because of the `scasb`
+; the DEBUG macro exists because of the `scasb`
 ; instruction. why tf is the memory load on the rhs??
 
 ; [4a] well, almost standard. `line` always stores a
@@ -355,7 +355,7 @@ interpret: ; ( ... "name" -- ... ) default Main [6b].
         call find
         ; [5b] possible underflow self-correction.
         jz error        ; [5d] didn't find a word?
-        ; [5c] dispatch coupled to find: ah = flags+len.
+dispatch: ; [5c] coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
