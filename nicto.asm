@@ -264,11 +264,11 @@ lex:    ; lex ( "name" -- addr len )
 .skip:  ;DEBUG '.'
         cmp B[di],0     ; zero terminator [3c].
         je .eob         ; end-of-buffer?
-        scasb ; cmp 32,B[di]
+        scasb           ; [4b] cmp al,B[di++]
         jae .skip       ; space or control?
 .scan:  ;DEBUG '!'
         inc cx          ; cx = len.
-        scasb ; cmp 32,B[di]
+        scasb           ; [4b] cmp al,B[di++]
         jb .scan        ; name character?
         dec di          ; [4a] di = end addr.
 .eob:   mov W[ToIn],di
@@ -277,6 +277,9 @@ lex:    ; lex ( "name" -- addr len )
         mov W[bp+2],di
         mov W[bp+0],cx
         ret             ; cxz if eob. [0b]
+
+; [4b] the DEBUG macro exists because of the `scasb`
+; instruction. why tf is the memory load on the rhs??
 
 ; [4a] well, almost standard. `line` always stores a
 ; space [3c] before the zero terminator but a custom
