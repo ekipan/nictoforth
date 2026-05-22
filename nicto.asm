@@ -52,6 +52,7 @@
 ;   ax bx cx dx si di = scratch for code words.
 ;
 ; one exception: ah couples find -> dispatch [5c].
+; underflow check [5b] limits param stack to top 32k.
 ; text input buffer is zero-terminated [3c].
 ; `lex find` set flags [5d] for compact `interpret`.
 
