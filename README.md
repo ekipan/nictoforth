@@ -123,8 +123,11 @@ head.
 You could:
 
 - Read the [detailed narrative][asm] of the assembly.
-- Do a `make terse | bat -l nasm` or `| less` to see
-  just the code please, thanks. (My kinda reading!)
+- Check `make design`, `make glossary`, `make skel`, etc
+  for a slower on-ramp. Try piping `| bat -l nasm` for
+  colors (or `| less` if you don't have bat).
+- Do a `make terse` to see just the code please, thanks.
+  (My kinda reading!)
 - Explore [the forth code][fs] beyond the race to hello
   world.
 - Try to find more bytes while staying "fun to read
