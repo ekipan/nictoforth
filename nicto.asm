@@ -201,8 +201,8 @@ key:    ; key ( -- c )
         mov ah,0
         ret
 
-; [3a] `shr ah,8` puts error into carry *and* 0 into ah,
-; saving a byte vs mov, but 8-shifting reg8 is UB.
+; [3a] `shr ah,8` might put error into carry *and* zero
+; ah, saving a byte vs mov, but 8-shifting reg8 is UB.
 
 emit:   ; emit ( c -- )
         mov al,B[bp]
