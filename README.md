@@ -76,7 +76,7 @@ quit head, , ] compile, ; exit immediate ;
 ```
 
 - `line` gets input, so to a first approximation is
-  `0 4096 accept`,
+  `0 1024 accept`,
 - `lex` is nonstandard `parse-name`: it rewinds `>in`
   onto the delimiter,
 - `find` is very nonstandard (see `make glossary`),

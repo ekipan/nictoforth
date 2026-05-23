@@ -32,18 +32,18 @@
 
         bits 16
         cpu 186 ; need `push imm16`
-        org 0x2000 ; 0x05c0:0x2000 = 0x07c00, bios boot.
-        jmp 0x05c0:abort ; cs ds es ss = 0x05c0 [6].
+        org 0x0c00 ; 0x700:0xc00 = 0x7c00, bios boot.
+        jmp 0x0700:abort ; cs ds es ss = 0x0700 [6].
 
 ; both my parentforths park in segment 0x50 and put the
 ; tib at 0, saving parse code but losing bios vars.
 ; I chose a higher segment for more dictionary space.
 ;
-; [0a] segment 0x05c0 memory map (and growth):
-;   0000-0fff [text->0.......] input buffer.
-;   1000-1003 [ToIn][State]    variables.
-;   1004-1fff [.....sp<-addrs] return stack (down).
-;   2000-.... [code->Here....] kernel, dictionary (up).
+; [0a] segment 0x700 memory map (and growth):
+;   0000-03ff [text->0.......] input buffer.
+;   0400-0403 [ToIn][State]    variables.
+;   0404-0bff [.....sp<-addrs] return stack (down).
+;   0c00-.... [code->Here....] kernel, dictionary (up).
 ;   ....-ffff [....bp<-values] parameter stack (down).
 ;   text input buffer is zero-terminated [3c].
 ;
@@ -54,8 +54,8 @@
 ;   ah, couples `find -> dispatch` [5c].
 ;   flags, couple `lex | find -> interpret` [5d].
 
-ToIn    equ 0x1000    ; next unparsed [4] character.
-State   equ 0x1002    ; low byte nonzero = compile [5c].
+ToIn    equ 0x400     ; next unparsed [4] character.
+State   equ 0x402     ; low byte nonzero = compile [5c].
 Here:   dw c.Here     ; next free byte to compile [7] to.
 Latest: dw Dictionary ; head of find [5] linked list.
 Main:   dw interpret  ; custom interpreter vector [6b].
@@ -377,7 +377,7 @@ execute: ; execute ( ... xt -- ... )
 ; [6] INITIALIZATION, MAIN LOOP ----------------------
 
 ; variables: (a) ToIn State (b) Here Latest Main.
-; either: all at 0x1000, but need (b) inits pre-abort.
+; either: all at 0x400, but need (b) inits pre-abort.
 ; or: current split, but need two words to give addrs
 ; to forth. same code cost, I like this better.
 
