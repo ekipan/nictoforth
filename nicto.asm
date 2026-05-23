@@ -5,8 +5,8 @@
 ; contents: [0] design [1] basics [2] memory [3] i/o
 ;   [4] parse [5] interp [6] init [7] compile [8] boot
 ;
-; diagrams: [0a] memory map, registers [5f] dict format
-;   [6c] control flow [8a] with data [8f] boot excerpt
+; diagrams: [0a] memory map, registers [5a] dict format
+;   [6a] control flow [8a] with data [8f] boot excerpt
 
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
@@ -55,14 +55,14 @@
 ;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
 ;   ax bx cx dx si di = scratch for code words, except:
-;   ah, couples `find -> dispatch` [5c].
+;   ah, couples `find -> dispatch` [5e].
 ;   flags, couple `lex | find -> interpret` [5d].
 
 ToIn    equ 0x400     ; next unparsed [4] character.
-State   equ 0x402     ; low byte nonzero = compile [5c].
+State   equ 0x402     ; low byte nonzero = compile [5e].
 Here:   dw c.Here     ; next free byte to compile [7] to.
 Latest: dw Dictionary ; head of find [5] linked list.
-Main:   dw interpret  ; custom interpreter vector [6b].
+Main:   dw interpret  ; custom interpreter vector [6c].
 
 ; milliforth groups the variables and keeps their base
 ; address in bx, saving instruction bytes at complexity
@@ -286,7 +286,7 @@ lex:    ; lex ( "name" -- addr len )
 
 ; [4a] well, almost standard. `line` always stores a
 ; space [3c] before the zero terminator but a custom
-; interpreter [6b] might not, so either: assume it does
+; interpreter [6c] might not, so either: assume it does
 ; anyway (fragile), recheck (costly), or rewind
 ; (nonstandard) as above.
 
@@ -302,15 +302,15 @@ Immediate equ 0x80 ; flag: execute even in compile mode.
 Hidden    equ 0x20 ; flag: ignore when `find`ing words.
 Length    equ 0x1f ; mask: max 31 characters.
 
-Dictionary: ; [5f] starts with only one entry. format:
+Dictionary: ; [5a] starts with only one entry. format:
         dw 0      ; link: 0 marks end of dictionary.
         db 1,';'  ; name: flags+len byte then characters.
         dw c.prim ; xt: execution token, a code address.
         ; nt: a name token is a link field address.
 
-; the xt field is mainly for byte savings [8].
+; [5b] the xt field is mainly for byte savings [8].
 ; it looks like indirect threading but don't be fooled:
-; `find` fetches direct addresses [5a] for dispatch.
+; `find` fetches direct addresses for dispatch.
 
 find:   ; find ( addr len -- xt nt | addr 0 )
         ;DEBUG 'F'
@@ -321,7 +321,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = flags+len.
-        mov ah,al       ; needed for dispatch [5c].
+        mov ah,al       ; needed for dispatch [5e].
         and al,Hidden|Length
         cmp al,B[bp+0]
         jne .prev       ; hidden or wrong length?
@@ -329,7 +329,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         mov cx,W[bp+0]
         repe cmpsb
         jne .prev       ; name characters differ?
-        mov dx,W[si]    ; [5a] dx = xt.
+        mov dx,W[si]    ; [5b] dx = xt.
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
         test bx,bx
@@ -343,7 +343,7 @@ find:   ; find ( addr len -- xt nt | addr 0 )
 
 ok:     ;DEBUG 'K'
         add bp,4        ; drop empty lex.
-        jg error        ; [5b] underflow?
+        jg error        ; [5c] underflow?
 %if 1 ; 10 bytes. *the* iconic forth ux.
         mov al,'o'
         call emit.al
@@ -351,13 +351,13 @@ ok:     ;DEBUG 'K'
         call emit.al
 %endif
         call line
-interpret: ; ( ... "name" -- ... ) default Main [6b].
+interpret: ; ( ... "name" -- ... ) default Main [6c].
         call lex
         jcxz ok         ; [5d] end of line?
         call find
-        ; [5b] possible underflow self-correction.
+        ; [5c] possible underflow self-correction.
         jz error        ; [5d] didn't find a word?
-dispatch: ; [5c] coupled to find: ah = flags+len.
+dispatch: ; [5e] coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
@@ -367,12 +367,12 @@ execute: ; execute ( ... xt -- ... )
         INC2 bp
         jmp W[bp-2]
 
-; [5b] underflowing the stack wraps bp > 0 (see [0a]),
+; [5c] underflowing the stack wraps bp > 0 (see [0a]),
 ; which `ok` corrects (limiting to 0x8000-ffff). pushing
 ; values there corrupts the in buffer tho, so it may
 ; also self-correct if bp and ToIn happen to collide!
 
-; [5c] State high byte is ignored, a milder gotcha
+; [5e] State high byte is ignored, a milder gotcha
 ; than sectorforth's *wildly* dense routine I adored,
 ; at same code cost. check it out!  $ git show bf7b6fb
 ; costs 3 bytes to decouple, taking the flags from the
@@ -394,32 +394,32 @@ quit:   ; quit ( -- ) everything else, then loop.
         times 3 push cs
         pop ds
         pop es
-        pop ss          ; [6a]
+        pop ss          ; [6b]
         mov sp,$$       ; rstack under the kernel [0a].
         push abort      ; in case user types `r>` etc.
         ; serial init omitted.
         ; seabios seems to take care of it idk.
-        mov B[State],0  ; start in execute mode [5c].
+        mov B[State],0  ; start in execute mode [5e].
         call line
 .loop:  push .loop
-        jmp [Main]      ; swappable [6b] interpreter.
+        jmp [Main]      ; swappable [6c] interpreter.
 
-; [6c] control flow (see example [8a] with data flow):
+; [6a] control flow (see example [8a] with data flow):
 ;   boot[0] -> abort -> line[3] -> .loop
 ;   -> [Main]interpret -> lex[4] (-> ok -> line -> lex)
 ;   -> find[5] -> error | c.call[7] | execute -> .loop
 
-; [6a] apparently setting ss disables interrupts briefly
+; [6b] apparently setting ss disables interrupts briefly
 ; so it makes the sp load safer. sure, I'll have it.
 
-; [6b] 4 bytes vectored Main buys hotswap: define a new
+; [6c] 4 bytes vectored Main buys hotswap: define a new
 ; interpreter in forth with `line lex find abort c.call
 ; execute`, add number parsing or whatever, then store
 ; into Main to switch:   ' my-interpret Main !
 
 ; [7] COMPILER ---------------------------------------
 
-; format[5f]:  dw link | db len,'name' | dw xt
+; format[5a]:  dw link | db len,'name' | dw xt
 ; shared tails c.ax/al/done sync di and W[Here].
 
 c: ; the story of a typical colon word:
@@ -445,10 +445,10 @@ c: ; the story of a typical colon word:
 
 ; 3. switch the compiler on:
 .on:    ; ] ( -- )
-        mov B[State],1  ; for dispatch [5c].
+        mov B[State],1  ; for dispatch [5e].
         ret
 
-; 4. dispatch [5c] compiles words into the definition:
+; 4. dispatch [5e] compiles words into the definition:
 .call:  ; compile, ( xt -- )
         mov al,0xe8
         call .al
@@ -481,7 +481,7 @@ c: ; the story of a typical colon word:
 ; okay lean the fuck in, this is unbelievably complex.
 ; the core idea is straightforward enough:
 ;
-; the xt field in the dictionary format [5f] lets me
+; the xt field in the dictionary format [5a] lets me
 ; split code from names, so I omit precious name bytes
 ; from the kernel. after boot, c.prim (named `;`) will
 ; name the builtins one at a time, constructing their
@@ -550,7 +550,7 @@ c: ; the story of a typical colon word:
 ; c.semi becomes `;`, shadowing c.prim. c.prim and
 ; c.List become dead code.
 ;
-; [8h] besides c.prim, c.List, and dispatch [5c], every
+; [8h] besides c.prim, c.List, and dispatch [5e], every
 ; byte of kernel code is available. `interpret` you can
 ; fetch from Main. most words from then on will have xt
 ; fields that point to their next address. waste later
