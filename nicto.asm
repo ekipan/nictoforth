@@ -213,14 +213,14 @@ emit:   ; emit ( c -- )
         mov al,B[bp]
         INC2 bp
 .al:    mov ah,1        ; serial transmit.
-com1:   xor dx,dx       ; clobbers dx.
+com1:   xor dx,dx       ; clobber.
         int 0x14
         ret
 
 %macro DEBUG 1 ; 7 bytes per use.
         push ax
         mov al,%1
-        call emit.al    ; emit DEBUG char.
+        call emit.al    ; (part of DEBUG macro.)
         pop ax
 %endmacro ; places to plunder bytes: %ifs, [1-2,7-8].
 
