@@ -2,8 +2,11 @@
 
 ; nictoforth: nick's 16-bit x86 bootsector forth.
 
-;   preamble [0] design [1] basics [2] memory [3] i/o
+; contents: [0] design [1] basics [2] memory [3] i/o
 ;   [4] parse [5] interp [6] init [7] compile [8] boot
+;
+; diagrams: [0a] memory map, registers [5] dict format
+;   [6c] control flow [8a] with data [8f] boot excerpt
 
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
@@ -40,7 +43,7 @@
 ; tib at 0, saving parse code but losing bios vars.
 ; I chose a higher segment for more dictionary space.
 ;
-; [0a] segment 0x700 memory map (and growth):
+; [0a] memory map (and growth), segment 0x700:
 ;   0000-03ff [text->0.......] input buffer.
 ;   0400-0403 [ToIn][State]    variables.
 ;   0404-0bff [.....sp<-addrs] return stack (down).
@@ -401,7 +404,7 @@ quit:   ; quit ( -- ) everything else, then loop.
 .loop:  push .loop
         jmp [Main]      ; swappable [6b] interpreter.
 
-; control flow (see example [8a] with data flow):
+; [6c] control flow (see example [8a] with data flow):
 ;   boot[0] -> abort -> line[3] -> .loop
 ;   -> [Main]interpret -> lex[4] (-> ok -> line -> lex)
 ;   -> find[5] -> error | c.call[7] | execute -> .loop
