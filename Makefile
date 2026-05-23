@@ -20,6 +20,9 @@ o/boot: $(SRC) o/stub # (default)
 o/nopad: $(SRC) o/stub
 	$(ASM) -f bin -l $@l -o $@ -D NOPAD $<
 
+o/%l: o/% # assembler listings made as a side-effect.
+	# made listing.
+
 o/stub:
 	#
 	#   [!] New here? Do "make help" next. *Tons* of info!
@@ -67,8 +70,8 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
-list: o/nopad # ^ requires rg and bat.
-	rg '^.{40}[^;]' o/nopadl | LESS=-SFMR bat -pl nasm
+list: o/nopadl # ^ requires bat.
+	grep -P '^.{40}[^;]' $< | LESS=SFMR bat -pl nasm
 
 PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
 
