@@ -186,8 +186,8 @@ fetch:  ; @ ( addr -- n )
 store:  ; ! ( n addr -- )
         mov bx,W[bp]
         mov ax,W[bp+2]
-        add bp,4        ; 3 bytes `add` < 4 `inc`s.
         mov W[bx],ax
+        add bp,4        ; 3 bytes `add` < 4 `inc`s.
         ret
 
 ; [3] INPUT/OUTPUT -----------------------------------
