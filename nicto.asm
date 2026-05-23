@@ -23,7 +23,8 @@
 ; [0] ARCHITECTURE -----------------------------------
 
 ; subroutine threaded because I like how it reads and
-; writes (shoutouts to durexforth!). this forth code:
+; writes (shoutouts to durexforth!). after defining
+; colon `:` (see hello.fs), this forth code:
 ;
 ;   : double dup + ; \ compiles to:
 ;

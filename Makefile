@@ -134,10 +134,9 @@ teaser1:  # the interpreter routine. the heart of a forth. [!]
 teaser2:  # the bootstrap. *terrifying* and heavily documented.
 	@awk '/^; \[8\]/,/4\./' $(SRC) ||:
 
-DESIGN = /: double/,/^$$/; /^; \[0a\]/,/^$$/; /^; control flow/,/^$$/
+DESIGN = /^; subrou|^; \[0a\]|^; control flow/,/^$$/
 
 design:   # example, memory map, registers, control flow. [!]
-	@printf '; see  hello.fs  to define `:`, then:\n;\n'
 	@awk '$(DESIGN)' $(SRC) ||:
 
 reading:  # source format conventions.
