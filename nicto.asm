@@ -5,7 +5,7 @@
 ; contents: [0] design [1] basics [2] memory [3] i/o
 ;   [4] parse [5] interp [6] init [7] compile [8] boot
 ;
-; diagrams: [0a] memory map, registers [5] dict format
+; diagrams: [0a] memory map, registers [5f] dict format
 ;   [6c] control flow [8a] with data [8f] boot excerpt
 
 ; after enjoying sectorforth and milliforth, I wondered:
@@ -302,7 +302,7 @@ Immediate equ 0x80 ; flag: execute even in compile mode.
 Hidden    equ 0x20 ; flag: ignore when `find`ing words.
 Length    equ 0x1f ; mask: max 31 characters.
 
-Dictionary: ; starts with only one word. entry format:
+Dictionary: ; [5f] starts with only one entry. format:
         dw 0      ; link: 0 marks end of dictionary.
         db 1,';'  ; name: flags+len byte then characters.
         dw c.prim ; xt: execution token, a code address.
@@ -419,7 +419,7 @@ quit:   ; quit ( -- ) everything else, then loop.
 
 ; [7] COMPILER ---------------------------------------
 
-; format[5]:  dw link | db len,'name' | dw xt
+; format[5f]:  dw link | db len,'name' | dw xt
 ; shared tails c.ax/al/done sync di and W[Here].
 
 c: ; the story of a typical colon word:
@@ -481,7 +481,7 @@ c: ; the story of a typical colon word:
 ; okay lean the fuck in, this is unbelievably complex.
 ; the core idea is straightforward enough:
 ;
-; the xt field in the dictionary format [5] lets me
+; the xt field in the dictionary format [5f] lets me
 ; split code from names, so I omit precious name bytes
 ; from the kernel. after boot, c.prim (named `;`) will
 ; name the builtins one at a time, constructing their
