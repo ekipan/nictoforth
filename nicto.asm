@@ -45,16 +45,14 @@
 ;   1004-1fff [.....sp<-addrs] return stack (down).
 ;   2000-.... [code->Here....] kernel, dictionary (up).
 ;   ....-ffff [....bp<-values] parameter stack (down).
+;   text input buffer is zero-terminated [3c].
 ;
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
-;   ax bx cx dx si di = scratch for code words.
-;
-; one exception: ah couples find -> dispatch [5c].
-; underflow check [5b] limits param stack to top 32k.
-; text input buffer is zero-terminated [3c].
-; `lex find` set flags [5d] for compact `interpret`.
+;   ax bx cx dx si di = scratch for code words, except:
+;   ah, couples `find -> dispatch` [5c].
+;   flags, couple `lex | find -> interpret` [5d].
 
 ToIn    equ 0x1000    ; next unparsed [4] character.
 State   equ 0x1002    ; low byte nonzero = compile [5c].
@@ -366,9 +364,9 @@ execute: ; execute ( ... xt -- ... )
         jmp W[bp-2]
 
 ; [5b] underflowing the stack wraps bp > 0 (see [0a]),
-; which `ok` corrects. pushing values there corrupts
-; the in buffer tho, so it may also self-correct if bp
-; and ToIn happen to collide!
+; which `ok` corrects (limiting to 0x8000-ffff). pushing
+; values there corrupts the in buffer tho, so it may
+; also self-correct if bp and ToIn happen to collide!
 
 ; [5c] State high byte is ignored, a milder gotcha
 ; than sectorforth's *wildly* dense routine I adored,
