@@ -1,12 +1,17 @@
 ; (c) 2025-2026, see LICENSE (it's MIT).
 
-; nictoforth: nick's 16-bit x86 bootsector forth.
-
 ; contents: [0] design [1] basics [2] memory [3] i/o
 ;   [4] parse [5] interp [6] init [7] compile [8] boot
 ;
 ; diagrams: [0a] memory map, registers [5a] dict format
 ;   [6a] control flow [8a] with data [8f] boot excerpt
+;
+; awk this source with: `make design` for diagrams,
+; `make skel` calls/rets, `make terse` no asides,
+; `make help` see all targets.
+
+; nictoforth: nick's 16-bit x86 bootsector forth
+; ==============================================
 
 ; after enjoying sectorforth and milliforth, I wondered:
 ; how much useful (and flexible!) forth can I cram into
