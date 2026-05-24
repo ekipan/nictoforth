@@ -176,8 +176,8 @@ h:        # just the phony target names.
 ##
 ## try:
 ##  $ make words # or teaser1 or design or ...
-##  $ make skel | bat -l nasm # or: | less
-##  $ make terse >o/terse.asm
+##  $ make skel >o/skel.asm  # or: ... | less
+##  $ make terse | vim - -c 'set ft=nasm'
 
 .PHONY: all clean count demo demo1 design doc glossary
 .PHONY: h help list names notes phonies r reading
