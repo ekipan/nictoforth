@@ -64,7 +64,7 @@
 ;   flags, couple `lex | find -> interpret` [5d].
 
 ToIn    equ 0x400     ; next unparsed [4] character.
-State   equ 0x402     ; low byte nonzero = compile [5e].
+State   equ 0x402     ; low byte nonzero = compile [5f].
 Here:   dw c.Here     ; next free byte to compile [7] to.
 Latest: dw Dictionary ; head of find [5] linked list.
 Main:   dw interpret  ; custom interpreter vector [6c].
@@ -377,11 +377,12 @@ execute: ; execute ( ... xt -- ... )
 ; values there corrupts the in buffer tho, so it may
 ; also self-correct if bp and ToIn happen to collide!
 
-; [5e] State high byte is ignored, a milder gotcha
+; [5e] costs 3 bytes to decouple, taking the flags from
+; the nt on the stack to be reusable from forth.
+
+; [5f] State high byte is ignored, a milder gotcha
 ; than sectorforth's *wildly* dense routine I adored,
 ; at same code cost. check it out!  $ git show bf7b6fb
-; costs 3 bytes to decouple, taking the flags from the
-; nt on the stack to be reusable from forth.
 
 ; [6] INITIALIZATION, MAIN LOOP ----------------------
 
@@ -404,7 +405,7 @@ quit:   ; quit ( -- ) everything else, then loop.
         push abort      ; in case user types `r>` etc.
         ; serial init omitted.
         ; seabios seems to take care of it idk.
-        mov B[State],0  ; start in execute mode [5e].
+        mov B[State],0  ; start in execute mode [5f].
         call line
 .loop:  push .loop
         jmp [Main]      ; swappable [6c] interpreter.
@@ -450,7 +451,7 @@ c: ; the story of a typical colon word:
 
 ; 3. switch the compiler on:
 .on:    ; ] ( -- )
-        mov B[State],1  ; for dispatch [5e].
+        mov B[State],1  ; for dispatch [5f].
         ret
 
 ; 4. dispatch [5e] compiles words into the definition:
