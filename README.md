@@ -153,7 +153,8 @@ reconnect history back to Milliforth.
 ---
 
 <details><summary>
-Bigass LLM rant, should probably be its own document.
+(Click for bigass LLM rant, should
+probably be its own document.)
 </summary>
 
 As an experiment, **I consulted LLMs** to polish the
