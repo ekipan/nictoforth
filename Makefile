@@ -137,10 +137,10 @@ teaser1:  # the interpreter routine. the heart of a forth. [!]
 teaser2:  # the bootstrap. *terrifying* and heavily documented.
 	@awk '/^; \[8\]/,/4\./' $(SRC) ||:
 
-DESIGN = /^; subrou|; \[(0a|5a|6a)\]/,/^$$/
+DESIGN = /^; subrou|^; \[(0a|6a)\]/,/^$$/
 
 design:   # example, mem map, regs, dict format, control flow. [!]
-	@awk '$(DESIGN)' $(SRC) ||:
+	@awk '$(DESIGN); /; \[5a\]/,/^$$/' $(SRC) ||:
 
 reading:  # source format conventions.
 	@awk '/^# ;/,/^$$/' Makefile ||:
