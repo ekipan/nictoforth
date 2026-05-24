@@ -366,7 +366,7 @@ dispatch: ; [5e] coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
-        cmp B[State],0
+        cmp B[State],0  ; [5f]
         jne c.call      ; compile mode?
 execute: ; execute ( ... xt -- ... )
         INC2 bp
