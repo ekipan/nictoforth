@@ -162,14 +162,16 @@ docs copy. First time touching the things, I was
 curious.
 
 I didn't keep an audit trail, I'm not willing to let
-the bot touch my hobby repo, but I'll still take
-ownership of all the words and especially the code.
-You've read this far, maybe you know my voice.
+the bot touch my hobby repo, but I assert that **very
+close to 100% of the words,** code and prose, I wrote
+myself. It's rare they'll generate stuff I like anyway,
+at least the one I experimented with.
 
 ### Benefits I've reaped
 
-- If it hallucinates an explanation then maybe I can
-  make the text clearer. Add examples, concretize.
+- I very often ask it to explain snippets. If it
+  hallucinates then I try to clarify the text. Add
+  examples, concretize.
 - When I felt overcommenting dread it showed me my code
   without them. Refreshed, I got the idea for
   `make terse`.
@@ -178,10 +180,9 @@ You've read this far, maybe you know my voice.
   Now that I've read the docs and squeezed them I'm
   comfortable calling them my own (~10 instructions).
 - Occasional brainstorming for saved bytes, though
-  hallucinations make this mostly a wash. The
-  frustration has made me read the docs more though!
-  Maybe one day I will understand x86 instruction
-  encoding syntax.
+  basically always a wash. The frustration has made me
+  read the docs more though! Maybe one day I will
+  understand x86 instruction encoding syntax.
 - It led me to references like [Cloutier's][clo]!
 
 ### The harm
