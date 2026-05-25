@@ -3,10 +3,14 @@
 # Nictoforth
 [top]: #nictoforth
 
-A 510-byte x86 bootsector Forth that wants to be:
-
-```asm
-; (...) fun to read and hack on.
+```txt
+$ make help
+## nictoforth is an x86 bootsector forth that:
+##   - wants to be fun to read and hack on.
+##   - doesn't touch the disk after bios jumps in.
+##     just 510 bytes and you, across a serial line.
+##   - is unconcerned with being practical.
+(...)
 ```
 
 ["Bootsector"? "Forth"?][wtf] <- follow that to the
@@ -123,9 +127,10 @@ head.
 You could:
 
 - Read the [detailed narrative][asm] of the assembly.
-- Check `make design`, `make glossary`, `make skel`, etc
-  for a slower on-ramp. Try piping `| bat -l nasm` for
-  colors (or `| less` if you don't have bat).
+- Check `make help` to list phonies: `make design`,
+  `make glossary`, `make skel`, etc for a slower
+  on-ramp. Try piping `| bat -l nasm` for colors
+  (or `| less` or `| vim -` if you don't have bat).
 - Do a `make terse` to see just the code please, thanks.
   (My kinda reading!)
 - Explore [the forth code][fs] beyond the race to hello
