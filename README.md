@@ -282,7 +282,7 @@ Can't spoil all the surprises.
 [24b]: https://github.com/ekipan/nictoforth/commit/a837d57050404c17f21fc27df223048c91511b0e
 [ans]: https://forth-standard.org/standard/alpha
 [clo]: https://www.felixcloutier.com/x86/
-[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/798ecbeeed430b453c3dd5288330a1f44ea5fa72
+[dem]: https://gist.github.com/ekipan/641c40be1b86beba628d5d00b05da583/d873ba31f330d828ce9e74ccf3ce4d18f82de452
 [dus]: https://duskos.org/
 [mil]: https://github.com/fuzzballcat/milliForth
 [min]: https://github.com/meithecatte/miniforth
