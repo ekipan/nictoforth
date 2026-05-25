@@ -83,19 +83,16 @@ demo1: # ^ to update the gist for the README.
 	#
 	#   https://github.com/ekipan/nictoforth
 	#
-	#   1. confirm the state of the system at demo time.
-	#   2. I copy some forth source in my editor (I haven't
-	#      figured out how to automate that part with qemu yet).
-	#   3. run and paste. you should look at the full 'hello.fs'
-	#      source for detailed explanations though.
+	#   below I copypaste an abridged source from kwrite into qemu
+	#   (I haven't figured out how to automate it). you should look
+	#   at the full 'hello.fs' for detailed explanations though.
 	#
-	git rev-parse @
-	git status --short
-	rg '^[^\\]' hello.fs | kwrite -i &>/dev/null
+	git rev-parse @ # current commit:
+	git status --short # current state, should be clean:
+	awk '/^[^\\]/' hello.fs | kwrite -i &>/dev/null # to copy.
 	@printf '\nmake clean all count r # r is abridged run\n'
 
 demo: demo1 clean all count r # ^
-	@printf '$$\n'
 
 # ; format conventions you can expect in the
 # ; asm source (and which are used to parse it):
