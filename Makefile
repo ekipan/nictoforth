@@ -15,13 +15,13 @@ QEMU ?= qemu-system-i386 # or: qemu-kvm
 ## target files you can make:
 
 o/boot: $(SRC) o/stub # (default)
-	$(ASM) -f bin -l $@l -o $@ $<
+	$(ASM) -f bin -o $@ $<
 
 o/nopad: $(SRC) o/stub
-	$(ASM) -f bin -l $@l -o $@ -D NOPAD $<
+	$(ASM) -f bin -l o/list -o $@ -D NOPAD $<
 
-o/%l: o/% # assembler listings made as a side-effect.
-	# made listing.
+o/list: o/nopad
+	@# made as a side-effect, but make wants a command.
 
 o/stub:
 	#
@@ -70,7 +70,7 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
-list: o/nopadl # ^ requires bat.
+list: o/list # ^ requires bat.
 	grep -P '^.{40}[^;]' $< | LESS=SFMR bat -pl nasm
 
 PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
