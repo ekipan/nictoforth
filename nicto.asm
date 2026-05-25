@@ -233,7 +233,11 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 .store: stosb           ; store and loop.
 .echo:  call emit.al
 .wait:  call key.al
-%if 1 ; 0 or 12 or 22 bytes. pick your ux.
+%if 0 ; 4 bytes, press escape to re-input.
+        cmp al,27
+        je line         ; escape?
+%endif
+%if 1 ; 0 or 12 or 22 bytes. pick your backspace ux.
         cmp al,127      ; [3b]
         jne .check      ; not delete?
         dec di
