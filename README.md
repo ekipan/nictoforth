@@ -35,9 +35,9 @@ fine. Then `awk cat wc xargs` etc for info like
 `make glossary`. You can get them however you like,
 but if you have [Nix]:
 
-```bash
-nix-shell  # get assembler and qemu.
-make run   # assemble and enter serial session.
+```txt
+$ nix-shell  # get nasm and qemu.
+$ make run   # assemble and enter serial session.
 # try copypasting hello.fs.
 # press ctrl-a, x to quit qemu.
 ```
@@ -63,7 +63,7 @@ Forth source for the full [wacky bootstrap][fs].
 You can ask the Makefile for more info:
 
 ```txt
-[nix-shell]$ make help # heavily abridged:
+$ make help # heavily abridged:
 (...)
 ## these phonies filter slices of the source:
 words:    # compact list of the implemented forth words. [!]
@@ -73,7 +73,7 @@ skel:     # control flow: labels, jumps, calls, rets. [!]
 terse:    # just the code, no asides.
 (...)
 
-[nix-shell]$ make words
+$ make words
 2+ 2u/ and invert 0= + drop dup swap >r r> >in
 dp sp@ rp@ @ ! key emit line lex find execute abort
 quit head, , ] compile, ; exit immediate ;
