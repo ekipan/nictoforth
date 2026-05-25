@@ -146,7 +146,7 @@ names:    # all labels, variables, macros.
 	@awk '/---|^\.|^\w|^%(def|mac)/' $(SRC) ||:
 
 skel:     # control flow: labels, jumps, calls, rets. [!]
-	@awk '/---|^\.?[a-z]|^ +(j|call|ret|push (pu|ab))/' $(SRC) ||:
+	@awk '/---|^%|^\.?[a-z]|^ +(j|loop|call|ret|push (pu|ab))/' $(SRC) ||:
 
 terse:    # just the code, no asides.
 	@echo '; see $(SRC) for notes [5c] [6b] etc.'

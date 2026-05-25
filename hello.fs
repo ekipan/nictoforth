@@ -19,7 +19,7 @@ dup >in 0= + emit  >in 0= 0= + emit \ 32:
 
 \ lex ( -- addr len ) like standard `parse-name`.
 \ head, ( addr len -- ) need to `,` an xt after it.
-\ find ( addr len -- xt nt | addr 0 ) very nonstandard.
+\ find ( addr len -- xt nt | addr len 0 ) very nonstandard.
 
 \ -----
 

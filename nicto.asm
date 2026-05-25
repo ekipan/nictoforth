@@ -40,7 +40,7 @@
 ;   double: call dup | call plus | ret  ; instructions.
 
         bits 16
-        cpu 186 ; need `push imm16`
+        cpu 186 ; need: push imm16; imul a,b,c
         org 0x0c00 ; 0x700:0xc00 = 0x7c00, bios boot.
         jmp 0x0700:abort ; cs ds es ss = 0x0700 [6].
 
@@ -302,8 +302,23 @@ lex:    ; lex ( "name" -- addr len )
 ; could also recover standard `parse-name` after
 ; defining `+!` and `1`:   : parse-name lex 1 >in +! ;
 
-; a numbers parser, even single digits, costs tens of
-; bytes of code. I'd rather spend them on `swap`.
+%if 0 ; 26 bytes. immediates only, no lit.
+number: ; >number ( addr len 0 == n ) no error check.
+        mov si,W[bp+4]
+        mov cx,W[bp+2]
+        xor dx,dx
+.digit: lodsb
+        cbw             ; 1 byte < 2 bytes `mov ah,0`.
+        sub al,'0'      ; no range or minus check.
+        imul dx,dx,10   ; only decimal.
+        add dx,ax
+        loop .digit
+        xchg ax,dx      ; 1 byte < 2 bytes `mov`.
+        add bp,4
+        jmp putax
+%else
+number  equ error
+%endif
 
 ; [5] TEXT INTERPRETER -------------------------------
 
@@ -321,8 +336,9 @@ Dictionary: ; [5a] starts with only one entry. format:
 ; it looks like indirect threading but don't be fooled:
 ; `find` fetches direct addresses for dispatch.
 
-find:   ; find ( addr len -- xt nt | addr 0 )
+find:   ; find ( addr len -- xt nt | addr len 0 )
         ;DEBUG 'F'
+        DEC2 bp         ; add slot in case of 0.
         mov bx,Latest
 .prev:  mov bx,W[bx]    ; bx = nt (or 0).
         test bx,bx
@@ -332,16 +348,17 @@ find:   ; find ( addr len -- xt nt | addr 0 )
         lodsb           ; al = flags+len.
         mov ah,al       ; needed for dispatch [5e].
         and al,Hidden|Length
-        cmp al,B[bp+0]
+        cmp al,B[bp+2]
         jne .prev       ; hidden or wrong length?
-        mov di,W[bp+2]
-        mov cx,W[bp+0]
+        mov di,W[bp+4]
+        mov cx,W[bp+2]
         repe cmpsb
         jne .prev       ; name characters differ?
+        INC2 bp         ; found, drop slot and:
+        dec cx          ; clear z.
         mov dx,W[si]    ; [5b] dx = xt.
         mov W[bp+2],dx
 .eod:   mov W[bp+0],bx
-        test bx,bx
         ret             ; nz if found. [5d]
 
 ; (a bit of fluff: as I've spent bytes decoupling bits
@@ -365,7 +382,7 @@ interpret: ; ( ... "name" -- ... ) default Main [6c].
         jcxz ok         ; [5d] end of line?
         call find
         ; [5c] possible underflow self-correction.
-        jz error        ; [5d] didn't find a word?
+        jz number       ; [5d] didn't find a word?
 dispatch: ; [5e] coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
