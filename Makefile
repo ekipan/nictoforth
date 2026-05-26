@@ -86,10 +86,12 @@ demo1: # ^ to update the gist for the README.
 	#
 	git rev-parse @ # current commit:
 	git status --short # current state, should be clean:
+
+demo2: # ^ so I can 'make demo2 r' to test w/o clearing.
 	awk '/^[^\\]/' hello.fs | kwrite -i &>/dev/null # to copy.
 	@printf '\nmake clean all count r # r is abridged run\n'
 
-demo: demo1 clean all count r # ^
+demo: demo1 demo2 clean all count r # ^
 
 # ; format conventions you can expect in the
 # ; asm source (and which are used to parse it):
@@ -173,6 +175,6 @@ h:        # just the phony target names.
 ##  $ make skel >o/skel.asm  # or: ... | less
 ##  $ make terse | vim - -c 'set ft=nasm'
 
-.PHONY: all clean count demo demo1 design doc glossary
+.PHONY: all clean count demo demo1 demo2 design doc glossary
 .PHONY: h help list names notes phonies r reading
 .PHONY: run skel teaser1 teaser2 terse words xrefs
