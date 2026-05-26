@@ -184,14 +184,14 @@ rpfch:  ; rp@ ( -- addr )
         jmp pushax
 
 fetch:  ; @ ( addr -- n )
-        mov bx,W[bp]
-        mov ax,W[bx]
+        mov si,W[bp]
+        lodsw
         jmp putax
 
 store:  ; ! ( n addr -- )
-        mov bx,W[bp]
+        mov di,W[bp]
         mov ax,W[bp+2]
-        mov W[bx],ax
+        stosw
         add bp,4        ; 3 bytes `add` < 4 `inc`s.
         ret
 
