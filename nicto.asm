@@ -174,11 +174,11 @@ dp:     ; dp ( -- addr ) address of `here`.
         mov ax,Here
         jmp pushax
 
-spfch:  ; sp@ ( -- addr )
+spfetch: ; sp@ ( -- addr )
         mov ax,bp
         jmp pushax
 
-rpfch:  ; rp@ ( -- addr )
+rpfetch: ; rp@ ( -- addr )
         mov ax,sp
         INC2 ax         ; skip own return address.
         jmp pushax
@@ -562,7 +562,7 @@ c: ; the story of a typical colon word:
 .List:  ; db udiv2-plus2, and-udiv2, invert-and, ...
         DBO udiv2, and, invert, equal0, plus
         DBO drop, dup, swap, rpush, rpop
-        DBO toin, dp, spfch, rpfch, fetch, store
+        DBO toin, dp, spfetch, rpfetch, fetch, store
         DBO key, emit, line, lex ; [8f]
         DBO find, execute, abort, quit
         DBO .head, .comma, .on, .call
