@@ -316,8 +316,10 @@ number: ; >number ( addr len 0 == n ) no error check.
         xchg ax,dx      ; 1 byte < 2 bytes `mov`.
         add bp,4
         jmp putax
+
+missing equ number
 %else
-number  equ error
+missing equ error       ; might correct underflow [5c].
 %endif
 
 ; [5] TEXT INTERPRETER -------------------------------
@@ -382,7 +384,7 @@ interpret: ; ( ... "name" -- ... ) default Main [6c].
         jcxz ok         ; [5d] end of line?
         call find
         ; [5c] possible underflow self-correction.
-        jz number       ; [5d] didn't find a word?
+        jz missing      ; [5d] didn't find a word?
 dispatch: ; [5e] coupled to find: ah = flags+len.
         INC2 bp         ; ( xt nt ) drop
         shl ah,1        ; rely on Immediate = 0x80.
