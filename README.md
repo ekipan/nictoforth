@@ -20,11 +20,11 @@ Like its progenitors [Milliforth][mil] and
 [Sectorforth][sec], this is an **art Forth** exploring
 a constrained problem space, rather than a system you'd
 wanna write software for. All three **lack a builtin
-numbers parser,** for example.
+numbers parser,** for example. See below for more
+[practical Forths][wtf].
 
-[The source][asm] is full of cross-reference. Search
-for [5c] [6b] etc to jump around. Include a semicolon
-"; [5c]" to go straight to an anchor, skipping refs.
+**Fun to read:** In [the source][asm], Ctrl-F "[5a]"
+to jump to a cross-ref, and "; [5a]" for its anchor.
 
 ## How to use it?
 <!-------------->
@@ -127,10 +127,10 @@ head.
 You could:
 
 - Read the [detailed narrative][asm] of the assembly.
-- Check `make help` to list phonies: `make design`,
-  `make glossary`, `make skel`, etc for a slower
-  on-ramp. Try piping `| bat -l nasm` for colors
-  (or `| less` or `| vim -` if you don't have bat).
+- Check `make help` to list on-ramping phonies:
+  `make design`, `make glossary`, `make skel`, etc.
+  Try piping `| bat -l nasm` for colors (or `| less`
+  or `| vim -` if you don't have bat).
 - Do a `make terse` to see just the code please, thanks.
   (My kinda reading!)
 - Explore [the forth code][fs] beyond the race to hello
@@ -162,15 +162,17 @@ reconnect history back to Milliforth.
 probably be its own document.)
 </summary>
 
-As an experiment, **I consulted LLMs** to polish the
-docs copy. First time touching the things, I was
-curious.
+As an experiment, **I consulted LLMs,** mainly to
+polish that prose. First time touching the things, I
+was curious! I assert that **very nearly 100%** of the
+words and code **I wrote myself.** A main goal is to
+be fun to read, and nobody wants to read slop.
 
 I didn't keep an audit trail, I'm not willing to let
-the bot touch my hobby repo, but I assert that **very
-close to 100% of the words,** code and prose, I wrote
-myself. It's rare they'll generate stuff I like anyway,
-at least the one I experimented with.
+the bot at my repo. I'm sure I could get away with
+lying about it, but it's my hobby project. I **did**
+spend effort and I think you will see that. I'm sad
+that it's radioactive to lots of communities, though.
 
 ### Benefits I've reaped
 
@@ -247,10 +249,10 @@ your ear off.
 | the beloved [Starting Forth][sta]
 | the dense [ANS Forth glossary][ans]
 
-Forth was made to be a practical tool to solve
+Forth was made to be **a practical tool** to solve
 problems. I think [Miniforth][min] and [DuskOS][dus]
-are good examples in a similar space, though I haven't
-read much of them. As said at the top, however,
+are good examples in the x86 real-mode space, though I
+haven't read much of them. As said at the top, however,
 [Nictoforth is an art Forth][top] exploring how much
 readable language can fit entirely within the:
 
