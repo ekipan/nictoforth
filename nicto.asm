@@ -59,9 +59,10 @@
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
-;   ax bx cx dx si di = scratch for code words, except:
-;   dl, couples `find -> dispatch` [5e].
-;   flags, couple `lex | find -> interpret` [5d].
+;   ax = scratch, or input to: pushax emit.al etc.
+;   bx cx dx si di = scratch, except couplings:
+;     find -dl-> dispatch [5e],
+;     lex -cxz-> | find -zf-> interpret [5d].
 
 ToIn    equ 0x400     ; next unparsed [4] character.
 State   equ 0x402     ; low byte nonzero = compile [5f].
