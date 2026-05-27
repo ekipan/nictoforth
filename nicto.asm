@@ -130,13 +130,13 @@ drop:   ; drop ( n -- )
         INC2 bp
         ret
 
-%if 1 ; 5 bytes, plus 1 in c.List [8].
 dup:    ; dup ( n -- n n )
         mov ax,W[bp]
-        jmp pushax
-%endif
+pushax: DEC2 bp         ; [2a]
+putax:  mov W[bp],ax    ; [2a]
+        ret
 
-%if 1 ; 8 plus 1 bytes [1b].
+%if 1 ; 8 bytes, plus 1 in c.List [8].
 swap:   ; swap ( x y -- y x )
         mov ax,W[bp]
         xchg W[bp+2],ax
@@ -170,9 +170,7 @@ rpop:   ; r> ( r:n -- n )
 
 toin:   ; >in ( -- addr )
         mov ax,ToIn
-pushax: DEC2 bp         ; [2a]
-putax:  mov W[bp],ax    ; [2a]
-        ret
+        jmp pushax
 
 dp:     ; dp ( -- addr ) address of `here`.
         mov ax,Here
