@@ -60,7 +60,7 @@
 ;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
 ;   ax bx cx dx si di = scratch for code words, except:
-;   ah, couples `find -> dispatch` [5e].
+;   dl, couples `find -> dispatch` [5e].
 ;   flags, couple `lex | find -> interpret` [5d].
 
 ToIn    equ 0x400     ; next unparsed [4] character.
@@ -334,9 +334,9 @@ Dictionary: ; [5a] starts with only one entry. format:
         dw c.prim ; xt: execution token, a code address.
         ; nt: a name token is a link field address.
 
-; [5b] the xt field is mainly for byte savings [8].
+; the xt field is mainly for byte savings [8].
 ; it looks like indirect threading but don't be fooled:
-; `find` fetches direct addresses for dispatch.
+; `find` fetches direct addresses [5b] for dispatch.
 
 find:   ; find ( addr len -- xt nt | addr len 0 )
         ;DEBUG 'F'
@@ -348,7 +348,7 @@ find:   ; find ( addr len -- xt nt | addr len 0 )
         mov si,bx
         lodsw           ; skip link.
         lodsb           ; al = flags+len.
-        mov ah,al       ; needed for dispatch [5e].
+        mov dl,al       ; needed for dispatch [5e].
         and al,Hidden|Length
         cmp al,B[bp+2]
         jne .prev       ; hidden or wrong length?
@@ -356,10 +356,10 @@ find:   ; find ( addr len -- xt nt | addr len 0 )
         mov cx,W[bp+2]
         repe cmpsb
         jne .prev       ; name characters differ?
-        INC2 bp         ; found, drop slot and:
+        lodsw           ; [5b] found: ax = xt, so:
+        INC2 bp         ; drop slot and:
         dec cx          ; clear z.
-        mov dx,W[si]    ; [5b] dx = xt.
-        mov W[bp+2],dx
+        mov W[bp+2],ax
 .eod:   mov W[bp+0],bx
         ret             ; nz if found. [5d]
 
@@ -385,9 +385,9 @@ interpret: ; ( ... "name" -- ... ) default Main [6c].
         call find
         ; [5c] possible underflow self-correction.
         jz missing      ; [5d] didn't find a word?
-dispatch: ; [5e] coupled to find: ah = flags+len.
+dispatch: ; [5e] coupled to find: dl = flags+len.
         INC2 bp         ; ( xt nt ) drop
-        shl ah,1        ; rely on Immediate = 0x80.
+        shl dl,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
         cmp B[State],0  ; [5f]
         jne c.call      ; compile mode?
