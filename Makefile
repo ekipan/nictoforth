@@ -88,7 +88,7 @@ demo1: # ^ to update the gist for the README.
 	git status --short # current state, should be clean:
 
 demo2: # ^ so I can 'make demo2 r' to test w/o clearing.
-	awk '/^[^\\]/' hello.fs | kwrite -i &>/dev/null # to copy.
+	awk '/^[^\\]/' hello.fs | kwrite -i &>/dev/null & # to copy.
 	@printf '\nmake clean all count r # r is abridged run\n'
 
 demo: demo1 demo2 clean all count r # ^
