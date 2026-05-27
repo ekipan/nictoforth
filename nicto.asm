@@ -92,9 +92,9 @@ Main:   dw interpret  ; custom interpreter vector [6c].
 
 ; [1] BASICS -----------------------------------------
 
-; squeezing bytes: shared tails pushax/putax/popax/drop
-; live in [2] so surrounding code can short jump.
-; xchg reg16,ax < mov; cbw < mov ah,0; for al < 128.
+; [1a] squeezing bytes: xchg with ax < mov (1), and for
+; al < 128: cbw < mov ah,0 (1). pushax/putax/popax/drop
+; shared tails live in [2] for short jumps (1).
 
 store:  ; ! ( n addr -- )
         call popax
@@ -139,13 +139,13 @@ udiv2:  ; 2u/ ( u -- u/2 )
 and:    ; and ( n1 n2 -- n1&n2 )
         mov ax,W[bp]
         and W[bp+2],ax
-        jmp drop        ; [1a]
+        jmp drop        ; [1b]
 
 invert: ; invert ( n -- ~n )
         not W[bp]
         ret
 
-; [1a] (`INC2 bp` here instead would fall into invert,
+; [1b] (`INC2 bp` here instead would fall into invert,
 ; implementing `nand` for same code cost. delightfully
 ; goofy and an homage to my parentforths. I miss it.)
 
@@ -206,7 +206,7 @@ key:    ; key ( -- c )
         call com1
         shl ah,1        ; [3a]
         jc .al          ; receive error?
-        mov ah,0
+        cbw             ; only ascii [1a].
         ret
 
 ; [3a] `shr ah,8` might put error into carry *and* zero
@@ -310,12 +310,12 @@ number: ; >number ( addr len 0 == n ) no error check.
         mov cx,W[bp+2]
         xor dx,dx
 .digit: lodsb
-        cbw             ; 1 byte < 2 bytes `mov ah,0`.
+        cbw             ; ah = 0 (or 0xff).
         sub al,'0'      ; no range or minus check.
         imul dx,dx,10   ; only decimal.
         add dx,ax
         loop .digit
-        xchg ax,dx      ; 1 byte < 2 bytes `mov`.
+        xchg ax,dx      ; 1 byte [1a].
         add bp,4
         jmp putax
 
@@ -461,9 +461,9 @@ c: ; the story of a typical colon word:
         xchg ax,W[Latest] ; update latest.
         call .ax        ; link to old latest.
         call popax
-        xchg cx,ax      ; cx = len.
+        xchg cx,ax      ; cx = len [1a].
         call popax
-        xchg si,ax      ; si = addr.
+        xchg si,ax      ; si = addr [1a].
         mov al,cl
         stosb           ; length. not bounds checked!
         rep movsb       ; name characters.
@@ -531,7 +531,7 @@ c: ; the story of a typical colon word:
         call .head
 .8b:    mov al,B[.List] ; [8b] load xt offset byte.
         cbw             ; decompress.
-        xchg dx,ax      ; -128 <= dx <= 127.
+        xchg dx,ax      ; -128 <= dx <= 127 [1a].
         inc W[.8b+1]    ; [8c] point to next byte.
 .8d:    mov ax,XT       ; [8d] load xt.
         add W[.8d+1],dx ; [8e] mutate into next xt.
@@ -545,9 +545,8 @@ c: ; the story of a typical colon word:
 ;
 ; `cbw` [8b] negative offsets support final c.semi [8g]
 ; for shadowing and `c.semi -> c.ret` fallthru, which
-; saves 2 bytes jmp. 1 byte `xchg` < 2 byte `mov`.
-; self-modifying code [8c][8e] saves variable bytes.
-; code *is* data, anyways.
+; saves 2 bytes jmp. self-modifying code [8c][8e] saves
+; variable bytes: code *is* data, anyways.
 
 %macro DBO 1-* ; data byte offsets, to compress xt list.
     %rep %0
