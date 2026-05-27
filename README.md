@@ -55,10 +55,10 @@ install time and space. If you're not on x86 then try
 To save name bytes there's only one word at boot,
 which gives names to the rest of the builtins.
 
-Type `; 2+ <return>` to name the first word `2+`.
-Other inputs reply with `?` to let you know there
-was an error and the stacks were reset. See the
-Forth source for the full [wacky bootstrap][fs].
+Type `; ! <return>` to name the first word `!`.
+Other inputs reply with `?` to let you know there was
+an error and the stacks were reset. See the Forth
+source for the full [wacky bootstrap][fs].
 
 You can ask the Makefile for more info:
 
@@ -74,8 +74,8 @@ terse:    # just the code, no asides.
 (...)
 
 $ make words
-2+ 2u/ and invert 0= + drop dup swap >r r> >in
-dp sp@ rp@ @ ! key emit line lex find execute abort
+! @ >in dp sp@ rp@ 2+ 2u/ and invert 0= +
+>r r> swap drop dup key emit line lex find execute abort
 quit head, , ] compile, ; exit immediate ;
 ```
 

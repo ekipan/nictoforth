@@ -1,6 +1,6 @@
+; ! ; @ ; >in ; dp ; sp@ ; rp@
 ; 2+ ; 2u/ ; and ; invert ; 0= ; +
-; drop ; dup ; swap ; >r ; r>
-; >in ; dp ; sp@ ; rp@ ; @ ; !
+; >r ; r> ; swap ; drop ; dup
 ; key ; emit ; \ ; lex
 ; find ; execute ; abort ; quit
 ; head, ; , ; ] ; compile,

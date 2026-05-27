@@ -8,7 +8,7 @@
 ## Makefile variables you can override:
 
 SRC ?= nicto.asm
-ASM ?= nasm # yasm also works fine.
+ASM ?= nasm # I used yasm before but support has drifted.
 QEMU ?= qemu-system-i386 # or: qemu-kvm
 
 ##
@@ -67,8 +67,8 @@ run: o/boot    # qemu serial session. [!]
 
 # my maintainer phonies, caret ^ hides from "make help":
 
-list: o/list # ^ requires bat.
-	grep -P '^.{40}[^;]' $< | LESS=SFMR bat -pl nasm
+list: o/list # ^ needs bat. skip comments, blanks, macro filler.
+	grep -P '^.{40}[^;][^%]' $< | LESS=SFMR bat -pl nasm
 
 PHONIES = awk '/^[a-z][^/]/ {print$$1}' Makefile | tr -d :
 

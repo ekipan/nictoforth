@@ -520,11 +520,11 @@ c: ; the story of a typical colon word:
 ; [8a] read that once more then take a second to gawk
 ; at the code. cross-ref control (and data) flow:
 ;
-;   ... -> line [input "; 2+"] -> ... -> lex (";")
-;   -> find (c.prim) -> execute -> c.prim -> lex ("2+")
-;   -> c.head, c.ax [compile `2+`] -> quit.loop[6]
+;   ... -> line [input "; !"] -> ... -> lex (";")
+;   -> find (c.prim) -> execute -> c.prim -> lex ("!")
+;   -> c.head, c.ax [compile !=store] -> quit.loop[6]
 
-%define XT plus2 ; first word in this file. TODO
+%define XT store ; first word to be named.
 
 .prim:  ; ; ( "name" -- )
         call lex
@@ -538,10 +538,10 @@ c: ; the story of a typical colon word:
         jmp .ax
 
 ; the first time through:
-;   1. compile link and name: lex ("2+") -> c.head
-;   2. [8b] compute dx = udiv2-plus2.
-;   3. complete entry with xt: load plus2 [8d] -> c.ax.
-;   4. [8e] mutate [8d] into udiv2 for next time.
+;   1. compile link and name: lex ("!") -> c.head
+;   2. [8b] compute dx = fetch-store.
+;   3. complete entry with xt: load `store` [8d] -> c.ax.
+;   4. [8e] mutate [8d] into `fetch` for next time.
 ;
 ; `cbw` [8b] negative offsets support final c.semi [8g]
 ; for shadowing and `c.semi -> c.ret` fallthru, which
@@ -549,6 +549,7 @@ c: ; the story of a typical colon word:
 ; variable bytes: code *is* data, anyways.
 
 %macro DBO 1-* ; data byte offsets, to compress xt list.
+    %note XT
     %rep %0
         %if %1-XT < -128 || 127 < %1-XT
             %error DBO %1 <- out of range
@@ -559,10 +560,10 @@ c: ; the story of a typical colon word:
     %endrep
 %endmacro
 
-.List:  ; db udiv2-plus2, and-udiv2, invert-and, ...
-        DBO udiv2, and, invert, equal0, plus
-        DBO drop, dup, swap, rpush, rpop
-        DBO toin, dp, spfetch, rpfetch, fetch, store
+.List:  ; db fetch-store, toin-fetch, dp-toin, ...
+        DBO fetch, toin, dp, spfetch, rpfetch
+        DBO plus2, udiv2, and, invert, equal0, plus
+        DBO rpush, rpop, swap, drop, dup
         DBO key, emit, line, lex ; [8f]
         DBO find, execute, abort, quit
         DBO .head, .comma, .on, .call
@@ -571,7 +572,7 @@ c: ; the story of a typical colon word:
 
 ; [8f] enough for a quick smoke test:
 ;
-;   ; 2+ ; 2u/ ; and ; invert ( ... ) ; line ; lex
+;   ; ! ; @ ; >in ; dp ( ... ) ; line ; lex
 ;   lex 3 drop @ 2+ emit \ test, should print 5.
 ;   ( ... ) ; immediate ; exit immediate ; ; immediate
 ;
