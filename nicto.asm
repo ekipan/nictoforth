@@ -121,9 +121,12 @@ equal0: ; 0= ( n -- flag )
         jmp putax
 
 plus:   ; + ( n1 n2 -- n1+n2 )
-        mov ax,W[bp]
-        add W[bp+2],ax
-drop:   ; drop ( n -- ) free tail word!
+        call popax
+        add W[bp],ax
+        ret
+
+popax:  mov ax,W[bp]
+drop:   ; drop ( n -- )
         INC2 bp
         ret
 
@@ -190,10 +193,10 @@ fetch:  ; @ ( addr -- n )
         jmp putax
 
 store:  ; ! ( n addr -- )
-        mov di,W[bp]
-        mov ax,W[bp+2]
+        call popax
+        xchg di,ax
+        call popax
         stosw
-        add bp,4        ; 3 bytes `add` < 4 `inc`s.
         ret
 
 ; [3] INPUT/OUTPUT -----------------------------------
@@ -211,8 +214,7 @@ key:    ; key ( -- c )
 ; ah, saving a byte vs mov, but 8-shifting reg8 is UB.
 
 emit:   ; emit ( c -- )
-        mov al,B[bp]
-        INC2 bp
+        call popax
 .al:    mov ah,1        ; serial transmit.
 com1:   xor dx,dx       ; clobber.
         int 0x14
@@ -459,9 +461,10 @@ c: ; the story of a typical colon word:
         mov ax,W[Here]
         xchg ax,W[Latest] ; update latest.
         call .ax        ; link to old latest.
-        mov si,W[bp+2]  ; si = addr.
-        mov cx,W[bp]    ; cx = len.
-        add bp,4
+        call popax
+        xchg cx,ax      ; cx = len.
+        call popax
+        xchg si,ax      ; si = addr.
         mov al,cl
         stosb           ; length. not bounds checked!
         rep movsb       ; name characters.
@@ -469,8 +472,7 @@ c: ; the story of a typical colon word:
 
 ; 2. then add an xt of here+2 (it's complicated [8]):
 .comma: ; , ( n -- )
-        mov ax,W[bp]
-        INC2 bp
+        call popax
         jmp .ax
 
 ; 3. switch the compiler on:
@@ -482,8 +484,7 @@ c: ; the story of a typical colon word:
 .call:  ; compile, ( xt -- )
         mov al,0xe8
         call .al
-        mov ax,W[bp]
-        INC2 bp
+        call popax
         DEC2 ax
         sub ax,di       ; relative address.
 .ax:    mov di,W[Here]
