@@ -1,6 +1,6 @@
 ; (c) 2025-2026, see LICENSE (it's MIT).
 
-; contents: [0] design [1] basics [2] memory [3] i/o
+; contents: [0] design [1] basics [2] stack [3] i/o
 ;   [4] parse [5] interp [6] init [7] compile [8] boot
 ;
 ; diagrams: [0a] memory map, registers [5a] dict format
@@ -90,7 +90,43 @@ Main:   dw interpret  ; custom interpreter vector [6c].
 ; (B/W are mainly taste, but they do allow you to search
 ; byte/word in these comments and get less noise.)
 
-; [1] ARITHMETIC, STACK ------------------------------
+; [1] BASICS -----------------------------------------
+
+; squeezing bytes: shared tails pushax/putax/popax/drop
+; live in [2] so surrounding code can short jump.
+; xchg reg16,ax < mov; cbw < mov ah,0; for al < 128.
+
+store:  ; ! ( n addr -- )
+        call popax
+        xchg di,ax
+        call popax
+        stosw
+        ret
+
+fetch:  ; @ ( addr -- n )
+        mov si,W[bp]
+        lodsw
+        jmp putax
+
+toin:   ; >in ( -- addr )
+        mov ax,ToIn
+        jmp pushax
+
+dp:     ; dp ( -- addr ) address of `here`.
+        mov ax,Here
+        jmp pushax
+
+spfetch: ; sp@ ( -- addr )
+        mov ax,bp
+        jmp pushax
+
+rpfetch: ; rp@ ( -- addr )
+        mov ax,sp
+        INC2 ax         ; skip own return address.
+        jmp pushax
+
+; (I bet you're curious about the lack of dictionary
+; headers. better keep your boots [8] on.)
 
 plus2:  ; 2+ ( n -- n+2 )
         add W[bp],2
@@ -116,7 +152,7 @@ invert: ; invert ( n -- ~n )
 equal0: ; 0= ( n -- flag )
         xor ax,ax
         cmp W[bp],ax
-        jnz putax       ; not zero? put zero [2a].
+        jnz putax       ; not zero? put zero.
         dec ax
         jmp putax
 
@@ -125,28 +161,7 @@ plus:   ; + ( n1 n2 -- n1+n2 )
         add W[bp],ax
         ret
 
-popax:  mov ax,W[bp]
-drop:   ; drop ( n -- )
-        INC2 bp
-        ret
-
-dup:    ; dup ( n -- n n )
-        mov ax,W[bp]
-pushax: DEC2 bp         ; [2a]
-putax:  mov W[bp],ax    ; [2a]
-        ret
-
-%if 1 ; 8 bytes, plus 1 in c.List [8].
-swap:   ; swap ( x y -- y x )
-        mov ax,W[bp]
-        xchg W[bp+2],ax
-        jmp putax
-%endif
-
-; [1b] you can define all stack words in terms of
-; `sp@ 2+ @ !`, so `swap` comes and goes a lot for bytes.
-; (yeah this hurts. or bittersweet win. whichever
-; currently applies, I'm tired of editing.)
+; [2] STACK ------------------------------------------
 
 rpush:  ; >r ( n -- r:n )
         pop dx
@@ -160,41 +175,27 @@ rpop:   ; r> ( r:n -- n )
         push dx
         jmp pushax
 
-; (I bet you're curious about the lack of dictionary
-; headers. better keep your boots [8] on.)
-
-; [2] MEMORY -----------------------------------------
-
-; [2a] shared tails pushax/putax live here so
-; surrounding code saves bytes with short jumps.
-
-toin:   ; >in ( -- addr )
-        mov ax,ToIn
-        jmp pushax
-
-dp:     ; dp ( -- addr ) address of `here`.
-        mov ax,Here
-        jmp pushax
-
-spfetch: ; sp@ ( -- addr )
-        mov ax,bp
-        jmp pushax
-
-rpfetch: ; rp@ ( -- addr )
-        mov ax,sp
-        INC2 ax         ; skip own return address.
-        jmp pushax
-
-fetch:  ; @ ( addr -- n )
-        mov si,W[bp]
-        lodsw
+%if 1 ; 8 bytes, plus 1 in c.List [8].
+swap:   ; swap ( x y -- y x )
+        mov ax,W[bp]
+        xchg W[bp+2],ax
         jmp putax
+%endif
 
-store:  ; ! ( n addr -- )
-        call popax
-        xchg di,ax
-        call popax
-        stosw
+; you can define all stack words in terms of
+; `sp@ 2+ @ !`, so `swap` comes and goes a lot for bytes.
+; (yeah this hurts. or bittersweet win. whichever
+; currently applies, I'm tired of editing.)
+
+popax:  mov ax,W[bp]
+drop:   ; drop ( n -- )
+        INC2 bp
+        ret
+
+dup:    ; dup ( n -- n n )
+        mov ax,W[bp]
+pushax: DEC2 bp
+putax:  mov W[bp],ax
         ret
 
 ; [3] INPUT/OUTPUT -----------------------------------
@@ -523,7 +524,7 @@ c: ; the story of a typical colon word:
 ;   -> find (c.prim) -> execute -> c.prim -> lex ("2+")
 ;   -> c.head, c.ax [compile `2+`] -> quit.loop[6]
 
-%define XT plus2 ; first word in this file.
+%define XT plus2 ; first word in this file. TODO
 
 .prim:  ; ; ( "name" -- )
         call lex
