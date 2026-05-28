@@ -92,9 +92,9 @@ Main:   dw interpret  ; custom interpreter vector [6c].
 
 ; [1] BASICS -----------------------------------------
 
-; [1a] squeezing bytes: xchg with ax < mov (1), and for
-; al < 128: cbw < mov ah,0 (1). pushax/putax/popax/drop
-; shared tails live in [2] for short jumps (1).
+; [1a] squeezing bytes, one each: xchg with ax < mov;
+; for al < 128: cbw < mov ah,0. for short jumps, shared
+; tails pushax/putax/popax/drop live in [2].
 
 store:  ; ! ( n addr -- ) store n at addr.
         call popax
@@ -182,10 +182,10 @@ swap:   ; swap ( x y -- y x ) rearrange values.
         jmp putax
 %endif
 
-; you can define all stack words in terms of
-; `sp@ 2+ @ !`, so `swap` comes and goes a lot for bytes.
-; (yeah this hurts. or bittersweet win. whichever
-; currently applies, I'm tired of editing.)
+; `sp@ 2+ @ !` can define all stack operations, so
+; `swap` comes and goes a lot for bytes. (yeah this
+; hurts. or bittersweet win. whichever currently
+; applies, I'm tired of editing.)
 
 popax:  mov ax,W[bp]
 drop:   ; drop ( n -- ) discard value.
@@ -402,8 +402,9 @@ execute: ; execute ( ... xt -- ... ) jump to code.
 ; values there corrupts the in buffer tho, so it may
 ; also self-correct if bp and ToIn happen to collide!
 
-; [5e] costs 3 bytes to decouple, taking the flags from
-; the nt on the stack to be reusable from forth.
+; [5e] costs 2 bytes to decouple, taking the flags from
+; the nt on the stack to be reusable from forth:
+;   call popax | xchg si,ax | lodsw | lodsb (->al)
 
 ; [5f] State high byte is ignored, a milder gotcha
 ; than sectorforth's *wildly* dense routine I adored,
