@@ -96,31 +96,31 @@ Main:   dw interpret  ; custom interpreter vector [6c].
 ; al < 128: cbw < mov ah,0 (1). pushax/putax/popax/drop
 ; shared tails live in [2] for short jumps (1).
 
-store:  ; ! ( n addr -- )
+store:  ; ! ( n addr -- ) store n at addr.
         call popax
         xchg di,ax
         call popax
         stosw
         ret
 
-fetch:  ; @ ( addr -- n )
+fetch:  ; @ ( addr -- n ) fetch n from addr.
         mov si,W[bp]
         lodsw
         jmp putax
 
-toin:   ; >in ( -- addr )
+toin:   ; >in ( -- addr ) variable: parser pointer.
         mov ax,ToIn
         jmp pushax
 
-dp:     ; dp ( -- addr ) address of `here`.
+dp:     ; dp ( -- addr ) variable: compiler pointer.
         mov ax,Here
         jmp pushax
 
-spfetch: ; sp@ ( -- addr )
+spfetch: ; sp@ ( -- addr ) top of parameter stack.
         mov ax,bp
         jmp pushax
 
-rpfetch: ; rp@ ( -- addr )
+rpfetch: ; rp@ ( -- addr ) top of return stack.
         mov ax,sp
         INC2 ax         ; skip own return address.
         jmp pushax
@@ -128,20 +128,20 @@ rpfetch: ; rp@ ( -- addr )
 ; (I bet you're curious about the lack of dictionary
 ; headers. better keep your boots [8] on.)
 
-plus2:  ; 2+ ( n -- n+2 )
+plus2:  ; 2+ ( n -- n+2 ) add two (one cell width).
         add W[bp],2
         ret
 
-udiv2:  ; 2u/ ( u -- u/2 )
+udiv2:  ; 2u/ ( u -- u/2 ) right shift.
         shr W[bp],1
         ret
 
-and:    ; and ( n1 n2 -- n1&n2 )
+and:    ; and ( n1 n2 -- n1&n2 ) bitwise and.
         mov ax,W[bp]
         and W[bp+2],ax
         jmp drop        ; [1b]
 
-invert: ; invert ( n -- ~n )
+invert: ; invert ( n -- ~n ) bitwise not.
         not W[bp]
         ret
 
@@ -149,34 +149,34 @@ invert: ; invert ( n -- ~n )
 ; implementing `nand` for same code cost. delightfully
 ; goofy and an homage to my parentforths. I miss it.)
 
-equal0: ; 0= ( n -- flag )
+equal0: ; 0= ( n -- flag ) logical not: give -1 if zero.
         xor ax,ax
         cmp W[bp],ax
         jnz putax       ; not zero? put zero.
         dec ax
         jmp putax
 
-plus:   ; + ( n1 n2 -- n1+n2 )
+plus:   ; + ( n1 n2 -- n1+n2 ) addition.
         call popax
         add W[bp],ax
         ret
 
 ; [2] STACK ------------------------------------------
 
-rpush:  ; >r ( n -- r:n )
+rpush:  ; >r ( n -- r:n ) move value to return stack.
         pop dx
         push W[bp]
         push dx
         jmp drop
 
-rpop:   ; r> ( r:n -- n )
+rpop:   ; r> ( r:n -- n ) take value from return stack.
         pop dx
         pop ax
         push dx
         jmp pushax
 
 %if 1 ; 8 bytes, plus 1 in c.List [8].
-swap:   ; swap ( x y -- y x )
+swap:   ; swap ( x y -- y x ) rearrange values.
         mov ax,W[bp]
         xchg W[bp+2],ax
         jmp putax
@@ -188,11 +188,11 @@ swap:   ; swap ( x y -- y x )
 ; currently applies, I'm tired of editing.)
 
 popax:  mov ax,W[bp]
-drop:   ; drop ( n -- )
+drop:   ; drop ( n -- ) discard value.
         INC2 bp
         ret
 
-dup:    ; dup ( n -- n n )
+dup:    ; dup ( n -- n n ) duplicate value.
         mov ax,W[bp]
 pushax: DEC2 bp
 putax:  mov W[bp],ax
@@ -200,9 +200,9 @@ putax:  mov W[bp],ax
 
 ; [3] INPUT/OUTPUT -----------------------------------
 
-key:    ; key ( -- c )
+key:    ; key ( -- c ) serial receive wait loop.
         push pushax     ; defer pstack push after:
-.al:    mov ah,2        ; serial receive.
+.al:    mov ah,2
         call com1
         shl ah,1        ; [3a]
         jc .al          ; receive error?
@@ -212,9 +212,9 @@ key:    ; key ( -- c )
 ; [3a] `shr ah,8` might put error into carry *and* zero
 ; ah, saving a byte vs mov, but 8-shifting reg8 is UB.
 
-emit:   ; emit ( c -- )
+emit:   ; emit ( c -- ) serial transmit.
         call popax
-.al:    mov ah,1        ; serial transmit.
+.al:    mov ah,1
 com1:   xor dx,dx       ; clobber.
         int 0x14
         ret
@@ -270,7 +270,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 ; `lex` is just my quirky name for standard `parse-name`.
 ; it's short and more precise imo. lemme have this.
 
-lex:    ; lex ( "name" -- addr len )
+lex:    ; lex ( "name" -- addr len ) parse a word.
         ;DEBUG 'L'
         mov di,W[ToIn]
         xor cx,cx
@@ -393,7 +393,7 @@ dispatch: ; [5e] coupled to find: dl = flags+len.
         jc execute      ; immediate word?
         cmp B[State],0  ; [5f]
         jne c.call      ; compile mode?
-execute: ; execute ( ... xt -- ... )
+execute: ; execute ( ... xt -- ... ) jump to code.
         INC2 bp
         jmp W[bp-2]
 
@@ -455,8 +455,8 @@ quit:   ; quit ( -- ) everything else, then loop.
 
 c: ; the story of a typical colon word:
 
-; 1. first compile the link and name fields:
-.head:  ; head, ( addr len -- )
+; 1. first compile the first two fields:
+.head:  ; head, ( addr len -- ) compile link and name.
         mov ax,W[Here]
         xchg ax,W[Latest] ; update latest.
         call .ax        ; link to old latest.
@@ -470,17 +470,17 @@ c: ; the story of a typical colon word:
         jmp .done
 
 ; 2. then add an xt of here+2 (it's complicated [8]):
-.comma: ; , ( n -- )
+.comma: ; , ( n -- ) compile one cell.
         call popax
         jmp .ax
 
-; 3. switch the compiler on:
-.on:    ; ] ( -- )
+; 3. begin the definition:
+.on:    ; ] ( -- ) enter compile mode.
         mov B[State],1  ; for dispatch [5f].
         ret
 
-; 4. dispatch [5e] compiles words into the definition:
-.call:  ; compile, ( xt -- )
+; 4. dispatch [5e] compiles words into its body:
+.call:  ; compile, ( xt -- ) compile call instruction.
         mov al,0xe8
         call .al
         call popax
@@ -490,18 +490,18 @@ c: ; the story of a typical colon word:
         stosw
         jmp .done
 
-; 5. then switch off and tie it up:
-.semi:  ; ; ( -- ) immediate
+; 5. then tie it up:
+.semi:  ; ; ( -- ) immediate. leave compile mode, then:
         mov B[State],0
-.ret:   ; exit ( -- ) immediate
+.ret:   ; exit ( -- ) immediate. compile ret instruction.
         mov al,0xc3
 .al:    mov di,W[Here]
         stosb
 .done:  mov W[Here],di
         ret
 
-; 6. and optionally immediafy.
-.immed: ; immediate ( -- )
+; 6. and optionally extend the compiler with it:
+.immed: ; immediate ( -- ) mark latest word immediate.
         mov bx,W[Latest]
         or B[bx+2],Immediate
         ret
@@ -526,7 +526,7 @@ c: ; the story of a typical colon word:
 
 %define XT store ; first word to be named.
 
-.prim:  ; ; ( "name" -- )
+.prim:  ; ; ( "name" -- ) name a builtin word.
         call lex
         call .head
 .8b:    mov al,B[.List] ; [8b] load xt offset byte.
