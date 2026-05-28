@@ -423,9 +423,11 @@ abort:  ; abort ( -- ) reset param stack and:
         xor bp,bp       ; first push wraps to 0xfffe [0a].
 quit:   ; quit ( -- ) everything else, then loop.
         cld             ; standard stuff:
-        times 3 push cs
+        push cs         ; risk storing in memory.
         pop ds
+        push cs
         pop es
+        push cs
         pop ss          ; [6b]
         mov sp,$$       ; rstack under the kernel [0a].
         push abort      ; in case user types `r>` etc.
