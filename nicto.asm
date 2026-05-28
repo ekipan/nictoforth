@@ -471,7 +471,7 @@ c: ; the story of a typical colon word:
         jmp .done
 
 ; 2. then add an xt of here+2 (it's complicated [8]):
-.comma: ; , ( n -- ) compile one cell.
+.cell:  ; , ( n -- ) compile one cell.
         call popax
         jmp .ax
 
@@ -567,7 +567,7 @@ c: ; the story of a typical colon word:
         DBO rpush, rpop, swap, drop, dup
         DBO key, emit, line, lex ; [8f]
         DBO find, execute, abort, quit
-        DBO .head, .comma, .on, .call
+        DBO .head, .cell, .on, .call
         DBO .immed, .ret, .semi ; [8g]
         ; see full boostrap example in hello.fs.
 
