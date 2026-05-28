@@ -431,9 +431,11 @@ quit:   ; quit ( -- ) everything else, then loop.
         pop ss          ; [6b]
         mov sp,$$       ; rstack under the kernel [0a].
         mov W[State],sp ; low byte 0, execute mode [5f].
+%if 0 ; 6 bytes. seabios seems to take care of it idk.
+        mov ax,0xa7     ; 2400, no par, 2stop, 8bit.
+        call com1       ; serial init, dx = 0.
+%endif
         push abort      ; in case user types `r>` etc.
-        ; serial init omitted.
-        ; seabios seems to take care of it idk.
         call line
 .loop:  push .loop
         jmp [Main]      ; swappable [6c] interpreter.
