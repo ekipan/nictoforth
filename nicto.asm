@@ -98,8 +98,8 @@ Main:   dw interpret  ; custom interpreter vector [6c].
 
 store:  ; ! ( n addr -- ) store n at addr.
         call popax
-        xchg di,ax
-        call popax
+        xchg di,ax      ; di = addr [1a].
+        call popax      ; ax = n.
         stosw
         ret
 
@@ -372,7 +372,7 @@ find:   ; find ( addr len -- xt nt | addr len 0 )
 ; opens your eyes!)
 
 ok:     ;DEBUG 'K'
-        add bp,4        ; drop empty lex.
+        add bp,4        ; ( ... addr len=0 ) 2drop
         jg error        ; [5c] underflow?
 %if 1 ; 10 bytes. *the* iconic forth ux.
         mov al,'o'
@@ -380,15 +380,15 @@ ok:     ;DEBUG 'K'
         mov al,'k'
         call emit.al
 %endif
-        call line
+        call line       ; fill buffer.
 interpret: ; ( ... "name" -- ... ) default Main [6c].
-        call lex
+        call lex        ; ( ... addr len )
         jcxz ok         ; [5d] end of line?
-        call find
+        call find       ; ( ... xt nt | ... addr len 0 )
         ; [5c] possible underflow self-correction.
         jz missing      ; [5d] didn't find a word?
 dispatch: ; [5e] coupled to find: dl = flags+len.
-        INC2 bp         ; ( xt nt ) drop
+        INC2 bp         ; ( ... xt nt ) drop
         shl dl,1        ; rely on Immediate = 0x80.
         jc execute      ; immediate word?
         cmp B[State],0  ; [5f]
