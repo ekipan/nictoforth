@@ -304,8 +304,10 @@ lex:    ; lex ( "name" -- addr len ) parse a word.
 ; could also recover standard `parse-name` after
 ; defining `+!` and `1`:   : parse-name lex 1 >in +! ;
 
-%if 0 ; 26 bytes. immediates only, no lit.
-number: ; >number ( addr len 0 == n ) no error check.
+%if 0 ; 27 bytes. immediates only, no lit.
+missing:
+        INC2 bp         ; ( addr len 0 ) drop
+number: ; >number ( addr len -/- n ) no error check.
         mov si,W[bp+4]
         mov cx,W[bp+2]
         xor dx,dx
@@ -316,10 +318,8 @@ number: ; >number ( addr len 0 == n ) no error check.
         add dx,ax
         loop .digit
         xchg ax,dx      ; 1 byte [1a].
-        add bp,4
+        INC2 bp
         jmp putax
-
-missing equ number
 %else
 missing equ error       ; might correct underflow [5c].
 %endif
