@@ -287,10 +287,10 @@ lex:    ; lex ( "name" -- addr len ) parse a word.
         dec di          ; [4a] di = end of word.
 .eob:   mov W[ToIn],di
         sub di,cx       ; di = start of word.
-        sub bp,4
-        mov W[bp+2],di
-        mov W[bp+0],cx
-        ret             ; cxz if eob. [5d]
+        xchg ax,di
+        call pushax
+        mov ax,cx
+        jmp pushax      ; cxz if eob. [5d]
 
 ; the DEBUG macro exists because of the `scasb`
 ; instruction. why tf is the memory load on the rhs??
