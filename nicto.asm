@@ -137,17 +137,17 @@ udiv2:  ; 2u/ ( u -- u/2 ) right shift.
         ret
 
 and:    ; and ( n1 n2 -- n1&n2 ) bitwise and.
-        mov ax,W[bp]
-        and W[bp+2],ax
-        jmp drop        ; [1b]
+        call popax
+        and W[bp],ax
+        ret             ; [1b]
 
 invert: ; invert ( n -- ~n ) bitwise not.
         not W[bp]
         ret
 
-; [1b] (`INC2 bp` here instead would fall into invert,
-; implementing `nand` for same code cost. delightfully
-; goofy and an homage to my parentforths. I miss it.)
+; [1b] (delete `ret` to fall into invert and implement
+; `nand`. one less byte, delightfully goofy, and homage
+; to my parentforths!)
 
 equal0: ; 0= ( n -- flag ) logical not: give -1 if zero.
         xor ax,ax
