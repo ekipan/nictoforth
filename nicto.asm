@@ -308,8 +308,8 @@ lex:    ; lex ( "name" -- addr len ) parse a word.
 missing:
         INC2 bp         ; ( addr len 0 ) drop
 number: ; >number ( addr len -/- n ) no error check.
-        mov si,W[bp+4]
-        mov cx,W[bp+2]
+        mov si,W[bp+2]
+        mov cx,W[bp+0]
         xor dx,dx
 .digit: lodsb
         cbw             ; ah = 0 (or 0xff).
