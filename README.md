@@ -3,7 +3,7 @@
 # Nictoforth
 [top]: #nictoforth
 
-```txt
+```
 $ make help
 ## nictoforth is an x86 bootsector forth that:
 ##   - wants to be fun to read and hack on.
@@ -35,7 +35,7 @@ fine. Then `awk cat wc xargs` etc for info like
 `make glossary`. You can get them however you like,
 but if you have [Nix]:
 
-```txt
+```
 $ nix-shell  # get nasm and qemu.
 $ make run   # assemble and enter serial session.
 # try copypasting hello.fs.
@@ -62,7 +62,7 @@ source for the full [wacky bootstrap][fs].
 
 You can ask the Makefile for more info:
 
-```txt
+```
 $ make help # heavily abridged:
 (...)
 ## these phonies filter slices of the source:
@@ -119,10 +119,21 @@ real Forth.
 ; is reusable from forth. proud of that.
 ```
 
-The core assembly feels pretty done I think. A few
-tradeoffs are illustrated with `%if 0/1` macros but a
-lot more live in the comment prose. A few still in my
-head.
+**May 2026:** I _was_ satisfied the assembly core felt
+pretty done, but I've extracted words to push and pop
+to the pstack, squeezing more and more bytes and it
+might be possible to add number parsing of a sort!
+There's lots of tradeoffs I'm still weighing, check
+the log:
+
+```
+$ git log --stat 96386c3..1bb98a9 nicto.asm
+$ git diff 96386c3..1bb98a9 nicto.asm
+```
+
+**Earlier** tradeoffs are illustrated with `%if 0/1`
+macros and a lot more live in the comment prose.
+A few still in my head.
 
 You could:
 
