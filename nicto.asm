@@ -242,7 +242,7 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 %endif
 %if 1 ; 0 or 12 or 22 bytes. pick your backspace ux.
         cmp al,127      ; [3b]
-        jne .check      ; not delete?
+        jne .nobsp      ; not delete?
         dec di
         jns .bsp        ; di >= 0, still in buffer?
         inc di
@@ -255,8 +255,9 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
     %endif
         mov al,8
         jmp .echo       ; move cursor back.
+.nobsp:
 %endif
-.check: cmp al,13
+        cmp al,13
         jne .store      ; not a carriage return?
         mov ax,32       ; ah = zero terminator.
         stosw           ; [3c]
