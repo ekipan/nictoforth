@@ -145,7 +145,7 @@ invert: ; invert ( n -- ~n ) bitwise not.
 ; to my parentforths!)
 
 equal0: ; 0= ( n -- flag ) logical not: give -1 if zero.
-        xor ax,ax
+        xor ax,ax       ; ax = 0 [2a].
         cmp W[bp],ax
         jnz putax       ; not zero? put zero.
         dec ax
@@ -182,9 +182,11 @@ swap:   ; swap ( x y -- y x ) rearrange values.
 ; hurts. or bittersweet win. whichever currently
 ; applies, I'm tired of editing.)
 
-; [2a] squeezing bytes, one each: shared tails
-; popax/pushax/etc live here for short jumps.
-; xchg with ax < mov; for al < 128: cbw < mov ah,0.
+; [2a] squeezing bytes, one each:
+; - xor r16,r16 < mov r16,0
+; - xchg with ax < mov
+; - cbw < mov ah,0 ; (for al < 128)
+; - short jumps to shared tails popax/pushax/etc here.
 
 popcxax:mov cx,W[bp]
 drop2:  INC2 bp
@@ -216,7 +218,7 @@ key:    ; key ( -- c ) serial receive wait loop.
 emit:   ; emit ( c -- ) serial transmit.
         call popax
 .al:    mov ah,1
-com1:   xor dx,dx       ; clobber.
+com1:   xor dx,dx       ; dx = com1 [2a].
         int 0x14
         ret
 
@@ -230,7 +232,7 @@ com1:   xor dx,dx       ; clobber.
 line:   ; line ( -- ) reset `>in`, fill buffer.
         mov al,10
         call emit.al    ; move to next line.
-        xor di,di       ; buffer at addr 0 [0a].
+        xor di,di       ; di = buffer at addr 0 [0a].
         mov W[ToIn],di  ; parse [4] from there later.
         jmp .wait
 .store: stosb           ; store and loop.
@@ -274,16 +276,16 @@ line:   ; line ( -- ) reset `>in`, fill buffer.
 
 lex:    ; lex ( "name" -- addr len ) parse a word.
         ;DEBUG 'L'
-        mov di,W[ToIn]
-        xor cx,cx
-        mov al,32       ; space.
+        mov di,W[ToIn]  ; di = unparsed input buffer.
+        xor cx,cx       ; cx = len (0).
+        mov al,32       ; al = space.
 .skip:  ;DEBUG '.'
         cmp B[di],0     ; zero terminator [3c].
         je .eob         ; end-of-buffer?
         scasb ; cmp al,B[di++]
         jae .skip       ; space or control?
 .scan:  ;DEBUG '!'
-        inc cx          ; cx = len.
+        inc cx          ; count scanned character.
         scasb ; cmp al,B[di++]
         jb .scan        ; name character?
         dec di          ; [4a] di = end of word.
@@ -348,20 +350,20 @@ find:   ; find ( addr len -- xt nt | addr len 0 )
 .prev:  mov bx,W[bx]    ; bx = nt (or 0).
         test bx,bx
         jz .eod         ; end-of-dictionary?
-        mov si,bx
-        lodsw           ; skip link.
+        mov si,bx       ; si = entry.
+        lodsw           ; (skip link.)
         lodsb           ; al = flags+len.
         mov dl,al       ; needed for dispatch [5e].
         and al,Hidden|Length
         cmp al,B[bp+2]
         jne .prev       ; hidden or wrong length?
-        mov di,W[bp+4]
-        mov cx,W[bp+2]
+        mov di,W[bp+4]  ; di = parsed name.
+        mov cx,W[bp+2]  ; cx = len.
         repe cmpsb
         jne .prev       ; name characters differ?
         lodsw           ; [5b] found: ax = xt, so:
         INC2 bp         ; drop slot and:
-        dec cx          ; clear z.
+        dec cx          ; clear z (cx = -1).
         mov W[bp+2],ax
 .eod:   mov W[bp+0],bx
         ret             ; nz if found. [5d]
@@ -432,7 +434,7 @@ quit:   ; quit ( -- ) everything else, then loop.
         mov W[State],sp ; low byte 0, execute mode [5f].
 %if 0 ; 6 bytes. seabios seems to take care of it idk.
         mov ax,0xa7     ; 2400, no par, 2stop, 8bit.
-        call com1       ; serial init, dx = 0.
+        call com1       ; serial init.
 %endif
         push abort      ; in case user types `r>` etc.
         call line
