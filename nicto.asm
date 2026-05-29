@@ -59,8 +59,8 @@
 ; registers:
 ;   subroutine threaded so x86 ip = forth ip.
 ;   bp = param stack pointer, sp = return stack pointer.
-;   ax = scratch, or input to: pushax emit.al etc.
-;   bx cx dx si di = scratch, except couplings:
+;   ax bx cx dx si di = scratch, except couplings:
+;     popax -ax-> ... -ax-> pushax/emit.al/etc [2a],
 ;     find -dl-> dispatch [5e],
 ;     lex -cxz-> | find -zf-> interpret [5d].
 
@@ -92,14 +92,9 @@ Main:   dw interpret  ; custom interpreter vector [6c].
 
 ; [1] BASICS -----------------------------------------
 
-; [1a] squeezing bytes, one each: xchg with ax < mov;
-; for al < 128: cbw < mov ah,0. for short jumps, shared
-; tails pushax/putax/popax/drop live in [2].
-
 store:  ; ! ( n addr -- ) store n at addr.
-        call popax
-        xchg di,ax      ; di = addr [1a].
-        call popax      ; ax = n.
+        call popcxax    ; ax = n, see [2a].
+        mov di,cx       ; di = addr.
         stosw
         ret
 
@@ -139,13 +134,13 @@ udiv2:  ; 2u/ ( u -- u/2 ) right shift.
 and:    ; and ( n1 n2 -- n1&n2 ) bitwise and.
         call popax
         and W[bp],ax
-        ret             ; [1b]
+        ret             ; [1a]
 
 invert: ; invert ( n -- ~n ) bitwise not.
         not W[bp]
         ret
 
-; [1b] (delete `ret` to fall into invert and implement
+; [1a] (delete `ret` to fall into invert and implement
 ; `nand`. one less byte, delightfully goofy, and homage
 ; to my parentforths!)
 
@@ -187,6 +182,12 @@ swap:   ; swap ( x y -- y x ) rearrange values.
 ; hurts. or bittersweet win. whichever currently
 ; applies, I'm tired of editing.)
 
+; [2a] squeezing bytes, one each: shared tails
+; popax/pushax/etc live here for short jumps.
+; xchg with ax < mov; for al < 128: cbw < mov ah,0.
+
+popcxax:mov cx,W[bp]
+drop2:  INC2 bp
 popax:  mov ax,W[bp]
 drop:   ; drop ( n -- ) discard value.
         INC2 bp
@@ -206,7 +207,7 @@ key:    ; key ( -- c ) serial receive wait loop.
         call com1
         shl ah,1        ; [3a]
         jc .al          ; receive error?
-        cbw             ; only ascii [1a].
+        cbw             ; only ascii [2a].
         ret
 
 ; [3a] `shr ah,8` might put error into carry *and* zero
@@ -287,7 +288,7 @@ lex:    ; lex ( "name" -- addr len ) parse a word.
         dec di          ; [4a] di = end of word.
 .eob:   mov W[ToIn],di
         sub di,cx       ; di = start of word.
-        xchg ax,di
+        xchg ax,di      ; 1 byte [2a].
         call pushax
         mov ax,cx
         jmp pushax      ; cxz if eob. [5d]
@@ -304,22 +305,21 @@ lex:    ; lex ( "name" -- addr len ) parse a word.
 ; could also recover standard `parse-name` after
 ; defining `+!` and `1`:   : parse-name lex 1 >in +! ;
 
-%if 0 ; 27 bytes. immediates only, no lit.
+%if 0 ; 23 bytes. immediates only, no lit.
 missing:
         INC2 bp         ; ( addr len 0 ) drop
 number: ; >number ( addr len -/- n ) no error check.
-        mov si,W[bp+2]
-        mov cx,W[bp+0]
-        xor dx,dx
+        call popcxax    ; cx = len.
+        xchg si,ax      ; si = characters [2a].
+        xor dx,dx       ; dx = n.
 .digit: lodsb
-        cbw             ; ah = 0 (or 0xff).
+        cbw             ; ah = 0 (or 0xff) [2a].
         sub al,'0'      ; no range or minus check.
         imul dx,dx,10   ; only decimal.
         add dx,ax
         loop .digit
-        xchg ax,dx      ; 1 byte [1a].
-        INC2 bp
-        jmp putax
+        xchg ax,dx      ; 1 byte [2a].
+        jmp pushax      ; TODO make this a short jump!
 %else
 missing equ error       ; might correct underflow [5c].
 %endif
@@ -462,11 +462,9 @@ c: ; the story of a typical colon word:
 .head:  ; head, ( addr len -- ) compile link and name.
         mov ax,W[Here]
         xchg ax,W[Latest] ; update latest.
-        call .ax        ; link to old latest.
-        call popax
-        xchg cx,ax      ; cx = len [1a].
-        call popax
-        xchg si,ax      ; si = addr [1a].
+        call .ax        ; link old latest, di = entry.
+        call popcxax    ; cx = len.
+        xchg si,ax      ; si = characters [2a].
         mov al,cl
         stosb           ; length. not bounds checked!
         rep movsb       ; name characters.
@@ -534,7 +532,7 @@ c: ; the story of a typical colon word:
         call .head
 .8b:    mov al,B[.List] ; [8b] load xt offset byte.
         cbw             ; decompress.
-        xchg dx,ax      ; -128 <= dx <= 127 [1a].
+        xchg dx,ax      ; -128 <= dx <= 127 [2a].
         inc W[.8b+1]    ; [8c] point to next byte.
 .8d:    mov ax,XT       ; [8d] load xt.
         add W[.8d+1],dx ; [8e] mutate into next xt.
