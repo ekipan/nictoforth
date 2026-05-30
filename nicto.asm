@@ -209,11 +209,12 @@ key:    ; key ( -- c ) serial receive wait loop.
         call com1
         shl ah,1        ; [3a]
         jc .al          ; receive error?
-        cbw             ; only ascii [2a].
+        cbw             ; ah = 0 (if ascii) [2a].
         ret
 
 ; [3a] `shr ah,8` might put error into carry *and* zero
-; ah, saving a byte vs mov, but 8-shifting reg8 is UB.
+; ah, saving a byte vs `mov`, but 8-shifting reg8 is UB.
+; the `cbw` also saves that byte but no nonascii input.
 
 emit:   ; emit ( c -- ) serial transmit.
         call popax
